@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fourjo.idle.goodgame.gg.repository.AccountRepository">
+
+    <resultMap id="uesrDto" type="fourjo.idle.goodgame.gg.entity.UserMst">
+        <result property="userIndex" column="userIndex"></result>
+        <result property="userId" column="userId"></result>
+        <result property="userPw" column="userPw"></result>
+        <result property="userNick" column="userNick"></result>
+        <result property="userGender" column="userGender"></result>
+        <result property="userGender" column="userGender"></result>
+        <result property="userRegDate" column="userRegDate"></result>
+        <result property="userEmail" column="userEmail"></result>
+        <result property="roleId" column="roleId"></result>
+        <result property="roleName" column="roleName"></result>
+    </resultMap>
+
+    <resultMap id="empDto" type="fourjo.idle.goodgame.gg.entity.EmpMst">
+        <result property="empIndex" column="empIndex"></result>
+        <result property="empId" column="empId"></result>
+        <result property="empPw" column="empPw"></result>
+        <result property="empName" column="empName"></result>
+        <result property="empEmail" column="empEmail"></result>
+        <result property="empPhone" column="empPhone"></result>
+        <result property="empGender" column="empGender"></result>
+        <result property="roleId" column="roleId"></result>
+        <result property="roleName" column="roleName"></result>
+    </resultMap>
+
+    <insert id="registerUser" parameterType="fourjo.idle.goodgame.gg.web.dto.account.UserDto">
+        insert into user_mst
+        values(0, #{userId}, #{userPw}, #{userNick}, #{userGender}, now(), #{userEmail})
+    </insert>
+    <insert id="saveUserRole" parameterType="fourjo.idle.goodgame.gg.web.dto.account.RoleDtlDto">
+        insert into role_dtl
+        values(0, null, #{userId}, 1)
+    </insert>
+
+
+    <insert id="registerEmp" parameterType="fourjo.idle.goodgame.gg.web.dto.account.EmpDto">
+        insert into emp_mst
+        values(0, #{empId}, #{empPw}, #{empName}, now(), #{empEmail},#{empPhone}, #{empGender})
+    </insert>
+
+    <insert id="saveEmpRole" parameterType="fourjo.idle.goodgame.gg.web.dto.account.RoleDtlDto">
+        insert into role_dtl
+        values(0, #{empId}, null, 2)
+    </insert>
+
+
+    <select id="findUserByUserIdForError" parameterType="string" resultType="string">
+        select
+            userId
+        from user_mst where userId = #{userId}
+    </select>
+
+    <select id="findNickNameByNickNameForError" parameterType="string" resultType="string">
+        select
+        userNick
+        from user_mst where userNick = #{userNick}
+    </select>
+
+    <select id="findEmpByEmpIdForError" parameterType="string" resultType="string">
+        select
+        empId
+        from emp_mst where empId = #{empId}
+    </select>
+
+    <select id="findUserByUserId" parameterType="string" resultType="fourjo.idle.goodgame.gg.entity.UserMst">
+        select
+            um.userIndex,
+            um.userId,
+            um.userPw,
+            um.userNick,
+            um.userGender,
+            um.userRegDate,
+            um.userEmail,
+
+            rd.roleId,
+            rm.roleName
+        from user_mst um
+            left join role_dtl rd on(um.userId = rd.userId)
+            left join role_mst rm on(rm.roleId = rd.roleId)
+        where
+            um.userId = #{userId}
+    </select>
+
+    <select id="findEmpByEmpId" parameterType="string" resultType="fourjo.idle.goodgame.gg.entity.EmpMst">
+        select
+            em.empIndex,
+            em.empId,
+            em.empPw,
+            em.empName,
+            em.empRegNum,
+            em.empEmail,
+            em.empPhone,
+            em.empGender,
+
+            rd.roleId,
+            rm.roleName
+        from emp_mst em
+            left join role_dtl rd on(em.empId = rd.empId)
+            left join role_mst rm on(rm.roleId = rd.roleId)
+        where
+            em.empId = #{empId}
+    </select>
+
+</mapper>

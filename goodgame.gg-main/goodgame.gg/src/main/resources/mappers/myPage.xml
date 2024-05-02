@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org// Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fourjo.idle.goodgame.gg.repository.MyPageRepository">
+
+    <!--0. 더미데이터 생성-->
+    <insert id="insertUserData" parameterType="fourjo.idle.goodgame.gg.web.dto.mypage.UserDTO">
+        INSERT INTO user_mst (userIndex, userId, userPw, userNick, userGender, userRegDate, userEmail)
+        VALUES (0, #{userId}, #{userPw}, #{userNick}, #{userGender},now(),#{userEmail});
+    </insert>
+
+    <!--1. 회원탈퇴-->
+    <!--<delete id="deleteUserAllData" parameterType="fourjo.idle.goodgame.gg.web.dto.mypage.UserDTO">
+        delete from user_mst where userId=#{userId}
+    </delete>-->
+    <delete id="deleteUserAllData" parameterType="integer">
+        delete from user_mst WHERE userIndex = #{userIndex}
+    </delete>
+    <select id="pwCheck" resultType="java.lang.String">
+        select userPw from user_mst WHERE userIndex = #{userIndex}
+    </select>
+
+    <!--===================================================================-->
+    <!--//BindingException : Parameter '파라미터명' not found. Available parameters are [arg1, arg0, param1, param2]
+    발생원인 : MyBatis를 이용한 SQL Mapper의 메소드는 하나의 파라미터만을 읽음. 즉, 파라미터의 개수가 2개 이상일 때 발생
+    발생 예시: 하나의 파라미터만 읽기 때문에 2개 이상에 파라미터를 주는 경우 해당데이터가 어떤 것인지를 명시하지 않으면 에러 발생
+    해결 방안: @Param 어노테이션을 사용하여 명시-->
+    <!--===================================================================-->
+
+    <!--2. 회원정보 수정-->
+    <update id="updateMypageInfo" parameterType="fourjo.idle.goodgame.gg.web.dto.mypage.UserDTO">
+        UPDATE user_mst SET
+        userNick = #{userNick},
+        userEmail = #{userEmail},
+        userGender = #{userGender}
+        WHERE
+        userIndex = #{userIndex}
+    </update>
+
+
+    <!--3. 내가 쓴 글 목록-->
+    <select id="searchMyBoardListByIndex" parameterType="fourjo.idle.goodgame.gg.web.dto.mypage.BoardSearchDTO" resultType="fourjo.idle.goodgame.gg.web.dto.mypage.BoardAndLikeDTO">
+        SELECT distinct bm.boardIndex, bm.boardSubject,bm.userIndex, bm.boardContent, bm.boardRegDate, bm.boardVisit, blm.boardLike
+        FROM board_mst bm
+        LEFT JOIN board_like_mst blm ON bm.userIndex = blm.userIndex
+        WHERE bm.userIndex = #{userIndex}
+        order by boardIndex desc
+        <if test='limit == "Y"'>
+                limit #{index},#{count}
+        </if>
+
+    </select>
+
+    <!--4. 내가 쓴 댓글 목록-->
+    <select id="searchMyReplyListByIndex"  parameterType="fourjo.idle.goodgame.gg.web.dto.mypage.ReplySearchDTO" resultType="fourjo.idle.goodgame.gg.web.dto.mypage.ReplyDTO">
+        SELECT * FROM reply_mst
+        WHERE userIndex = #{userIndex}
+        order by boardIndex desc
+        <if test='limit == "Y"'>
+            limit #{index},#{count}
+        </if>
+    </select>
+
+    <!--5. 일단 하나만 불러오자-->
+    <select id="selectOneData" resultType="fourjo.idle.goodgame.gg.web.dto.mypage.UserDTO">
+        select * from user_mst where userIndex=#{userIndex}
+    </select>
+
+    <!--6. selectAllData-->
+    <select id="totalBoardCount" parameterType="integer" resultType="integer">
+        SELECT COUNT(*) FROM board_mst WHERE userIndex = #{userIndex}
+    </select>
+
+    <select id="totalReplyCount" parameterType="integer" resultType="integer">
+        SELECT COUNT(*) FROM reply_mst WHERE userIndex = #{userIndex}
+    </select>
+
+    <delete id="deleteBoardByUserIndexAndBoardIndex" parameterType="integer">
+        delete from board_mst where boardIndex = #{boardIndex} and userIndex = #{userIndex}
+    </delete>
+
+    <delete id="deleteBoardReplyByUserIndexAndBoardIndexAndBoardGroup" parameterType="integer">
+        delete from reply_mst
+        where
+        boardIndex = #{boardIndex} and
+        userIndex = #{userIndex} and
+        replyGroup  = #{replyGroup} and
+        replySequence = ${replySequence}
+    </delete>
+</mapper>

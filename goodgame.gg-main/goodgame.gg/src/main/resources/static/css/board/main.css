@@ -1,0 +1,442 @@
+.main-bar{
+
+    top: 0; /* 화면의 맨 위에 배치합니다. */
+    left: 0; /* 좌측 정렬합니다. */
+    width: 100%; /* 화면 전체 너비를 사용합니다. */
+    height: 100px; /* 바의 높이를 지정합니다. */
+    color : white;
+} 
+
+.container {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+    font-size: 15px;
+}
+
+.board-header{
+    display: block;
+    min-width: 900px;
+    height: 275px;
+    background-image: url("/static/images/background/irellia.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+#letter {
+    width: 1050px;
+    margin: 32px auto;
+    color: rgb(249, 249, 249);
+    font-weight: 700;
+    font-size: 48px;
+}
+
+.board-container {
+    width: 1050px;
+}
+
+.board-info .board-href{
+    text-align: center;  
+    text-decoration: none; 
+    color: inherit; 
+  
+}
+.board-table {
+    color: rgb(204, 204, 204);
+    width: 1050px;
+}
+
+.board-table thead tr th{
+    background-color: #161616;
+    border-left: none;
+    border-right: none;
+    padding: 20px 15px;
+}
+
+.board-row td {
+    padding: 20px 15px;
+}
+
+.write-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0px;
+    width: 100%;
+    height: 70px;
+}
+
+.write-btn {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: 1px solid #dbdbdb;
+}
+
+.write-btn:hover {
+    background-color: #345ae0;
+    color: #ffffff;
+}
+
+.search-select, .search-input {
+    padding: 10px;
+    height: 40px;
+    background-color: transparent;
+    border-radius: 0px;
+    color: #ffffff;
+    border: 1px solid #515151;
+}
+
+.search-select option{
+    background: rgb(36, 37, 38);
+    border-radius: 0px;
+    border: 1px solid #ffffff;
+}
+
+.search-button {
+    padding: 10px;
+    width: 100px;
+    height: 40px;
+    border: 1px solid #46cfa7;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: #46cfa7;
+    color: #ffffff
+}
+
+.search-button:hover {
+    border: 1px solid #1ccf99;
+    background-color: #1ccf99;
+    color: #ffffff;
+    font-weight: 700;
+    
+}
+
+.right-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-table thead tr th:nth-child(1){width: 150px;}
+.board-table thead tr th:nth-child(2){width: 250px;}
+.board-table thead tr th:nth-child(3){width: 250px;}
+.board-table thead tr th:nth-child(4){width: 200px;}
+.board-table thead tr th:nth-child(5){width: 200px;}
+.board-table thead tr th:nth-child(6){width: 200px;}
+
+.board-table tbody tr td{
+    padding: 15px;
+    border-left: none;
+    border-right: none;
+    border-bottom: 0.1px solid #000000;
+    padding: 5px;
+
+    text-align: center;
+    font-size: 14px;
+    height: 60px;
+    background-color: #25272A;
+}
+
+.page-controller {
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    align-items: center;
+    margin: 10px 0px;
+}
+.pre-button,
+.next-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 28px;
+    margin: 0px 4px;
+    border: 1px solid #7B7A8E;
+    border-radius: 3px;
+
+    padding: 2px;
+    color: white;
+    cursor: pointer;
+}
+
+.pre {
+    transform: rotate(180deg);
+    size: 20px;
+}
+
+.page-numbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 200px; */
+}
+
+.page-numbers li {
+    list-style-type: none;
+    width: 36px;
+    height: 28px;
+}
+
+.page-numbers li span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid #7B7A8E;
+    border-radius: 3px;
+
+    font-weight: bold;
+    text-decoration: none;
+    color: #9E9EB1;
+
+    cursor: pointer;
+
+}
+.page-button {
+    width: 100%;
+    height: 100%;
+    
+}
+.page-controller li {
+    list-style-type: none;
+    border-radius: 5px;
+    margin: 0px 5px;
+}
+
+.page-controller a:hover {
+    background-color: #202020;
+}
+
+.page-controller .disabled {
+    color: #9E9EB1;
+    cursor: auto;
+}
+
+.page-numbers .disabled {
+    background-color: #515151;
+    border: 1px solid #515151;
+    color: white;
+    cursor: auto;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container .right-items {
+    display: flex;
+    align-items: center;
+}
+
+
+.search-container select,
+.search-container input[type="search"],
+.search-container button {
+   
+    font-size: 14px; 
+    height: 25px;
+}
+
+.reply-blue {
+    font-weight: bold;
+    color: #99ccff;
+}
+
+.board-thumb {
+    margin-left: auto; 
+}
+
+.board-thumb img {
+    height: 50px;
+}
+
+.board-info {
+    flex-grow: 1;
+    padding-right: 20px; 
+    width: 40%; 
+}
+
+.left-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.insert-button,
+.all-btn,
+.view-btn,
+.like-btn {
+    padding: 10px; 
+    border: 1px solid #515151;
+    cursor: pointer;
+    background-color: transparent; 
+    border-radius: 0.5px;
+    color: #ffffff; 
+    font-weight: bold; 
+}
+
+.insert-button:active,
+.view-btn:active,
+.like-btn:active {
+    background-color: #333; 
+}
+
+
+.insert-button:hover {
+    background-color: #636363;
+    color : white;
+}
+
+
+.insert-button:hover,
+.view-btn:hover,
+.like-btn:hover {
+    background-color: #191919; 
+}
+
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ페이징ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.page-numbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0px;
+
+}
+
+/* @import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap'); */
+
+.wrapper{
+  display: flex;
+  position: relative;
+}
+
+.wrapper .sidebar{
+  width: 200px;
+  height: 60px;
+  background: rgb(36, 37, 38);
+  padding: 30px 0px;
+  position: fixed;
+}
+
+.wrapper .sidebar h2{
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  bottom: 7px;
+}
+
+.wrapper .main_content .social_media{
+  position: absolute;
+  top: 770px;
+  left: 87px;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.wrapper .main_content .social_media a{
+  display: block;
+  width: 40px;
+  background: #414045;
+  height: 40px;
+  line-height: 45px;
+  text-align: center;
+  margin: 0 5px;
+  color: #0AC8B9;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.wrapper .main_content{
+  width: 100%;
+  margin-left: 200px;
+}
+
+.wrapper .main_content .header{
+  padding: 20px;
+  background: #fff;
+  color: #717171;
+  border-bottom: 1px solid #e0e4e8;
+}
+
+.wrapper .main_content .info{
+  margin: 20px;
+  color: #ababab;
+  line-height: 25px;
+}
+
+.wrapper .main_content .info div{
+  margin-bottom: 20px;
+}
+
+.wrapper .main_content .header .top_menu {
+   /* float: right; */
+   width: 110px;
+   height: 60px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: pointer;
+   transition: 500ms;
+}
+.wrapper .main_content .header .top_menu a{
+  margin: 40px;
+  display: block;
+  padding: 23px;
+  background-color: #ffffff;
+}
+.wrapper .main_content .header .top_menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+.wrapper .main_content .header .top_menu a:hover {
+  background-color: #111;
+  color: #fff;
+}
+
+.wrapper .sidebar{
+    position: absolute;
+    left: 93px;
+    top: 0%;
+    transform: translate(-50%, -50%);
+    perspective: 1000px;
+}
+
+.wrapper .sidebar .flip-btn{
+    width: 200px;
+    height: 100px;
+    color: #fff;
+    text-align: center;
+    line-height: 100px;
+    transform-style: preserve-3d;
+    transition: .5s;
+    cursor: pointer;
+}
+
+.wrapper .sidebar .flip-btn:hover{
+    transform:rotateX(-90deg) ;
+}
+
+.wrapper .sidebar .flip-btn .front{
+    background-color: rgb(36, 37, 38);
+    height: 100px;
+    transform: translateZ(50px);
+    font-weight: Bold;
+    font-size: 20px;
+}
+.wrapper .sidebar .flip-btn .back{
+    background-color: rgb(36, 37, 38);
+    height: 100px;
+    transform: rotateX(90deg) translateZ(150px);
+}
+
+

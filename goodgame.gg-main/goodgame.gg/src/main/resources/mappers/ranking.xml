@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fourjo.idle.goodgame.gg.repository.RankingRepository">
+
+    <select id="getRankingList" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingSearchDto" resultType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+<!--        select-->
+<!--        row_number() over(order by rankingIndex asc) as rankingRowNum,-->
+<!--        gameName,tagLine,summonerLevel,profileIconId,queueType,tier,rankValue,leaguePoints,-->
+<!--        wins,losses,winRate-->
+<!--        from highrank_mst-->
+        select
+        (@rank := @rank + 1) AS rankingRowNum,
+        gameName,
+        tagLine,
+        summonerLevel,
+        profileIconId,
+        queueType,
+        tier,
+        rankValue,
+        leaguePoints,
+        wins,
+        losses,
+        winRate
+        FROM
+        highrank_mst,
+        (SELECT @rank := #{index}) r
+
+        <where>
+            <if test='queueType == "solo"'>
+                queueType = 'RANKED_SOLO_5x5'
+                <if test='gameName != null and gameName != ""'>
+                    and gameName = #{gameName}
+                </if>
+                <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                    and gameName = #{gameName} and tagLine = #{tagLine}
+                </if>
+                <if test='tier == "all"'>
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "challenger"'>
+                    and tier = 'CHALLENGER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "grandmaster"'>
+                    and tier = 'GRANDMASTER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "master"'>
+                    and tier = 'MASTER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+            </if>
+
+            <if test='queueType == "flex"'>
+                queueType = 'RANKED_FLEX_SR'
+                <if test='gameName != null and gameName != ""'>
+                    and gameName = #{gameName}
+                </if>
+                <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                    and gameName = #{gameName} and tagLine = #{tagLine}
+                </if>
+                <if test='tier == "all"'>
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "challenger"'>
+                    and tier = 'CHALLENGER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "grandmaster"'>
+                    and tier = 'GRANDMASTER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "master"'>
+                    and tier = 'MASTER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+            </if>
+        </where>
+        <if test='limit == "Y"'>
+            limit #{index}, #{count}
+        </if>
+    </select>
+
+
+    <select id="getRankingTotalCount" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingSearchDto" resultType="integer">
+        select count(rankingIndex) from highrank_mst
+
+        <where>
+            <if test='queueType == "solo"'>
+                queueType = 'RANKED_SOLO_5x5'
+                <if test='gameName != null and gameName != "" '>
+                    and gameName = #{gameName}
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != "" '>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+
+                <if test='tier == "all"'>
+                    <if test='gameName != null and gameName != "" '>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "challenger"'>
+                    and tier = 'CHALLENGER'
+                    <if test='gameName != null and gameName != "" '>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "grandmaster"'>
+                    and tier = 'GRANDMASTER'
+                    <if test='gameName != null and gameName != "" '>
+                        and gameName = #{gameName}
+                        <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                            and gameName = #{gameName} and tagLine = #{tagLine}
+                        </if>
+                    </if>
+
+                </if>
+                <if test='tier == "master"'>
+                    and tier = 'MASTER'
+                    <if test='gameName != null and gameName != "" '>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+            </if>
+
+            <if test='queueType == "flex"'>
+                queueType = 'RANKED_FLEX_SR'
+                <if test='gameName != null and gameName != "" '>
+                    and gameName = #{gameName}
+                </if>
+                <if test='gameName != null and gameName != "" and tagLine != null and tagLine != "" '>
+                    and gameName = #{gameName} and tagLine = #{tagLine}
+                </if>
+                <if test='tier == "all"'>
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "challenger"'>
+                    and tier = 'CHALLENGER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "grandmaster"'>
+                    and tier = 'GRANDMASTER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+                <if test='tier == "master"'>
+                    and tier = 'MASTER'
+                    <if test='gameName != null and gameName != ""'>
+                        and gameName = #{gameName}
+                    </if>
+                    <if test='gameName != null and gameName != "" and tagLine != null and tagLine != ""'>
+                        and gameName = #{gameName} and tagLine = #{tagLine}
+                    </if>
+                </if>
+            </if>
+        </where>
+        <if test='limit == "Y"'>
+            limit #{index}, #{count}
+        </if>
+    </select>
+
+
+
+
+
+
+
+
+
+    <!--highrank_mst-->
+    <insert id="insertRankingLeagueV4" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+            insert into highrank_mst
+            values( 0, #{gameName}, #{tagLine}, #{profileIconId}, #{summonerLevel}, #{queueType}, #{tier}, #{rankValue},#{leaguePoints},#{wins},#{losses},#{winRate},#{summonerId},#{puuid} )
+    </insert>
+
+    <update id="updateRankingSummonerV4" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+            update highrank_mst set summonerLevel = #{summonerLevel}, profileIconId = #{profileIconId}, puuid = #{puuid}
+            where rankingIndex = #{rankingIndex}
+    </update>
+
+    <update id="updateRankingAccountV1" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+            update highrank_mst set gameName = #{gameName}, tagLine = #{tagLine}
+            where rankingIndex = #{rankingIndex}
+    </update>
+
+
+    <select id="pullSummonerIdList" resultType="string">
+        SELECT summonerId from highrank_mst
+    </select>
+
+    <select id="pullPuuidList" resultType="string">
+        SELECT puuid from highrank_mst
+    </select>
+
+    <delete id="truncateTable">
+        TRUNCATE TABLE highrank_mst
+    </delete>
+
+
+    <!--highrank_mst-->
+    <insert id="insertLowRankingLeagueV4" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+        insert into lowrank_mst
+        values( 0, #{gameName}, #{tagLine}, #{profileIconId}, #{summonerLevel}, #{queueType}, #{tier}, #{rankValue},#{leaguePoints},#{wins},#{losses},#{winRate},#{summonerId},#{puuid} )
+    </insert>
+
+    <update id="updateLowRankingSummonerV4" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+        update lowrank_mst set summonerLevel = #{summonerLevel}, profileIconId = #{profileIconId}, puuid = #{puuid}
+        where rankingIndex = #{rankingIndex}
+    </update>
+
+    <update id="updateLowRankingAccountV1" parameterType="fourjo.idle.goodgame.gg.web.dto.ranking.RankingDto">
+        update lowrank_mst set gameName = #{gameName}, tagLine = #{tagLine}
+        where rankingIndex = #{rankingIndex}
+    </update>
+
+    <select id="pullLowSummonerIdList" resultType="string">
+        SELECT summonerId from lowrank_mst
+    </select>
+
+    <select id="pullLowPuuidList" resultType="string">
+        SELECT puuid from lowrank_mst
+    </select>
+
+    <delete id="truncateLowTable">
+        TRUNCATE TABLE lowrank_mst
+    </delete>
+
+
+    <select id="checkNick" parameterType="string" resultType="integer">
+        select count(gameName) from highrank_mst where gameName = #{gameName}
+
+
+    </select>
+
+
+
+
+
+</mapper>

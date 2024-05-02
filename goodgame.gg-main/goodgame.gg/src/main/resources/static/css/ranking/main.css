@@ -1,0 +1,528 @@
+
+body {
+    font: 600 16px/18px 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #010A13;
+}
+
+/*여기*/
+.menu-li{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+main {
+    font-weight: normal;
+}
+
+/*여기*/
+.content-header{
+    display: block;
+    min-width: 900px;
+    height: 275px;
+    background-image: url("/static/images/background/vayne.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+/*여기*/
+.header-h1{
+    width: 900px;
+    margin: 32px auto;
+    font-size: 48px;
+    color: white;
+}
+
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+/*여기*/
+.content-nav{
+    width: 900px;
+    box-sizing: border-box;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*여기*/
+.queue-solo,.queue-flex{
+    display: inline-block;
+    block-size: 40px;
+    line-height: 38px;
+    cursor: pointer;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 14px;
+    color: white;
+    margin: 0 auto;
+    font-weight: normal;
+    border: 1px solid #393939;
+    border-radius: 4px;
+
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.queue-solo:hover, .queue-flex:hover {
+    background-color: #202020;
+}
+
+.selected {
+    background-color: #515163; /* 클릭 후 배경색 */
+    font-weight: bold;
+    border-radius: 4px;
+
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.content-container{
+    width: 900px;
+    justify-content: center;
+    flex-direction: column;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.info-container{
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    color: #9E9EB1;
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.select-search-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #31313C;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    padding: 4px;
+    height: 40px;
+}
+
+
+.select-button{
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 165px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid #7B7A8E;
+    background-color: #31313C;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    padding: 0px 0px 0px 7px;
+}
+
+
+.select-button img{
+    margin-right: 2px;
+}
+
+
+
+
+.arrow{
+    position: absolute;
+    right: 10px;
+    color: #7B7A8E;
+    font-size: 8px;
+    transform: scaleX(1.5);
+}
+
+.select-div {
+    flex-direction: column;
+    position: absolute;
+    border-radius: 6px;
+    background-color: #31313C;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* 그림자 추가 */
+    z-index: 1;
+
+}
+
+.select-item {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    border-top: 1px solid #202020;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 165px;
+    height: 40px;
+    font-size: 14px;
+    padding: 0px 5px;
+    color: lightgray;
+    gap: 4px;
+}
+
+.select-item-all {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    height: 40px;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0px 10px;
+    color: lightgray;
+}
+
+
+
+.selectButton-clicked {
+    background-color: #282830
+}
+
+
+.select-item:hover {
+    background-color: #282830
+}
+.select-item-all:hover {
+    background-color: #282830
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.search-container{
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 40px;
+    width: 240px;
+
+}
+
+.search-container img{
+    position: absolute;
+    right: 205px;
+}
+
+.search-input {
+    border-radius: 4px;
+    background-color: #1c1c1f;
+    border: none;
+    height: 40px;
+    width: 240px;
+    color: white;
+    outline: none;
+    font-size: 12px;
+    padding: 0px 12px 0px 40px;
+}
+
+
+.search-button {
+    height: 32px;
+}
+
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.ranking-table{
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow: hidden;
+    width: 100%;
+    table-layout: fixed;
+    font-size: 13px;
+
+}
+
+thead tr:first-child th:first-child {
+    border-top-left-radius: 4px;
+}
+
+thead tr:first-child th:last-child {
+    border-top-right-radius: 4px;
+}
+
+
+.ranking-thead th {
+    height: 24px;
+    text-align: left;
+    font-weight: normal;
+    background-color: #282830;
+    color: #7B7A8E;
+}
+
+.num {
+    padding: 4px 0px 4px 12px;
+    width: 28px;
+
+}
+
+.summoner {
+    padding: 4px;
+    max-width: 330px;
+
+}
+
+.tier {
+    padding: 4px;
+    width: 110px;
+
+
+}
+
+.lp {
+    padding: 4px;
+    width: 70px;
+
+
+}
+
+.level {
+    width: 50px;
+
+
+}
+
+.winRate {
+    padding: 4px 12px 4px 4px;
+    width: 130px;
+
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+.ranking-tbody tr{
+    background-color: #31313C;
+    border-top: 1px solid #202020; /* 행의 상단에만 외곽선을 적용 */
+    border-bottom: 1px solid #202020; /* 행의 하단에만 외곽선을 적용 */
+    color: #9E9EB1;
+
+}
+.ranking-tbody td{
+    border: none;
+    height: 32px;
+}
+
+.td-num{
+    padding: 4px 0px 4px 12px;
+}
+
+.td-name{
+    padding: 4px 0px;
+
+}
+
+.td-name-span{
+    margin-left: 6px;
+    color: white;
+}
+.summoner-link{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+
+.td-tier{
+    padding: 4px 0px;
+
+}
+
+.td-lp{
+    padding: 4px 0px;
+}
+
+.td-level{
+    padding: 4px 0px;
+}
+
+.td-winRate{
+    padding: 4px 12px 4px 0px;
+
+}
+
+
+.td-winRate-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: transparent;
+
+}
+
+.winRate-chart{
+    display: inline-flex;
+    flex-direction: row;
+    width: 100px;
+    height: 20px;
+}
+
+
+.wins {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: #5383e8; /* 승리 부분의 색 */
+    text-align: left;
+    color: white;
+}
+
+.wins span{
+    margin-left: 8px;
+}
+
+
+.losses {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: #e84057;
+    color: white;
+    text-align: right;
+}
+
+.losses span{
+    margin-right: 8px;
+}
+
+.windRate-color{
+    color: #e84057;
+}
+
+.ranking-tbody tr:hover{
+    background-color: #282830;
+}
+
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+
+.bottom-container{
+    background-color: #31313C;
+    height: 100px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: #7B7A8E;
+    margin-bottom: 50px;
+}
+
+.page-controller {
+    display: flex; /* Flexbox를 사용하여 내부 요소들을 가로로 정렬 */
+    align-items: center; /* 요소들을 세로 축 중앙 정렬 */
+    justify-content: center;
+    font-size: 12px;
+}
+
+.pre-button,.next-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 22px;
+    margin: 0px 4px;
+    border: 1px solid #7B7A8E;
+    border-radius: 3px;
+    padding: 2px;
+    color: white;
+    background-color: #31313C;
+    cursor: pointer;
+}
+
+.pre {
+    transform: rotate(180deg);
+    size: 20px;
+ }
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+
+.page-numbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0px;
+
+}
+
+.page-numbers li {
+    list-style-type: none;
+}
+
+.page-numbers li span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 22px; /* 너비 */
+    height: 22px;
+    margin: 0px 4px;
+
+    border: 1px solid #7B7A8E;
+    border-radius: 3px;
+    padding: 2px;
+
+    font-weight: bold;
+    text-decoration: none;
+    color: #9E9EB1;
+
+    cursor: pointer;
+
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+
+
+.page-controller a:hover {
+    background-color: #202020;
+}
+
+.page-controller .disabled {
+    color: #9E9EB1;
+    cursor: auto;
+}
+
+.page-numbers .disabled {
+    background-color: #515151;
+    border: 1px solid #515151;
+    color: white;
+    cursor: auto;
+}
+
+/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+
+footer {
+
+    padding: 20px 20px;
+
+}
+
+
+.footer-text {
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-size: 12px;
+    color: #7B7A8E;
+}

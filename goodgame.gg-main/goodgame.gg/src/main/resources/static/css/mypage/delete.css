@@ -1,0 +1,42 @@
+.main-content {
+    display: flex;
+    justify-content: center;
+    justify-content: center;
+
+    margin-top: 20px;
+}
+.info{
+    color: #ffffff;
+    width: 550px;
+    font-weight: 400;
+}
+
+.info h1{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info div p{
+    text-align: center;
+}
+
+.btn-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 20px;
+}
+
+#check-user-pw-button {
+    width: 100px;
+    padding: 5px;
+
+    margin-right: 20px;
+}
+
+#delete-button{
+    width: 100px;
+    padding: 5px;
+}
+

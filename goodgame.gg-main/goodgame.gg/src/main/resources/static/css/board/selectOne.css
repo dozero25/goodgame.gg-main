@@ -1,0 +1,467 @@
+.main-bar {
+    top: 0;
+    /* 화면의 맨 위에 배치합니다. */
+    left: 0;
+    /* 좌측 정렬합니다. */
+    width: 100%;
+    /* 화면 전체 너비를 사용합니다. */
+    height: 100px;
+    /* 바의 높이를 지정합니다. */
+    background-color: #0000ff;
+    /* 바의 배경색을 지정합니다. */
+    color: white;
+}
+
+body {
+    /* font-family: Arial, sans-serif; */
+    color: #333;
+}
+
+.board-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.board-img-header{
+    display: block;
+    min-width: 900px;
+    height: 275px;
+    background-image: url("/static/images/background/irellia.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+#letter {
+    width: 1050px;
+    margin: 32px auto;
+    color: rgb(249, 249, 249);
+    font-weight: 700;
+    font-size: 48px;
+}
+
+.update-btn{
+    padding: 10px;
+    border: 2px solid #515151;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #ffffff;
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+.update-btn:hover{
+    border: 2px solid #0AC8B9;
+    background-color: #0AC8B9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.delete-btn {
+    background-color: transparent;
+    padding: 10px;
+    border: 2px solid #515151;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #ffffff;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #c50000;
+    border: 2px solid #c50000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sub {
+    margin-top: 20px;
+}
+
+.selectOne-hr {
+    border: none;
+    border-top: 2px solid #000000;
+
+}
+
+.boardFile {
+    position: relative;
+    margin-left: 35px;
+    z-index: 9999;
+}
+
+.board-header {
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+
+.board-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: rgb(194, 194, 194);
+}
+
+.selectOne-hr {
+    font-size: 5px;
+}
+
+.returnBoard {
+    padding: 10px;
+    border: 2px solid #515151;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #ffffff;
+    font-weight: bold;
+
+    transition: 0.3s;
+}
+
+.returnBoard:hover {
+    border: 2px solid #0AC8B9;
+    background-color: #0AC8B9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.board-meta {
+    margin-top: 0px;
+    font-size: 14px;
+    color: #777;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-info-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-bar-mar{
+    margin: 0px 8px;
+}
+
+.info-bar-text{
+    color: #ffffff;
+}
+
+.board-content {
+    margin-bottom: 10px;
+    line-height: 1.6;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.boardContent {
+    width: 712px;
+    padding-top: 10px;
+    padding-left: 10px;
+    border-radius: 4px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid #C89B3C;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.boardFile {
+    width: 100px;
+    height: 100px;
+}
+
+.boardFile:hover {
+    transform: scale(6);
+    /* 1.2는 이미지의 현재 크기보다 20% 크게 만듭니다. */
+    margin-left: 250px;
+    transition: margin-left 1s ease, transform 1s ease;
+    /* transform 및 margin-right에 애니메이션 효과 적용 */
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.board-reply {
+    margin-top: 20px;
+}
+
+.reply {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.reply-user {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.reply-date {
+    font-size: 12px;
+    color: #777;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #000;
+    background-color: #000;
+    border: 2px solid #000;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.replyUpdate-btn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+
+    width: 50px;
+    height: 20px;
+    border-radius: 20px;
+}
+
+.replyDelete-btn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+
+    width: 50px;
+    height: 20px;
+    border-radius: 20px;
+}
+.reply-group-insert{
+    background-color: #202A48;
+    color: white;
+    border: none;
+    border-radius: 4px;
+
+    padding: 5px 10px;
+}
+
+.replyGroupUpdateBtn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.replyGroupDeleteBtn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.replySequenceUpdateBtn {
+    background-color: #686b72;
+    color: white;
+    border: none;
+
+    width: 36px;
+    height: 20px;
+    border-radius: 20px;
+    font-size: 0.5em;
+}
+
+.replySequenceDeleteBtn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+}
+
+.button:hover {
+    background-color: #666;
+    border-color: #666;
+}
+
+.emoji {
+    margin-right: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reply-table-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    margin-right: 30px;
+    table-layout: fixed;
+
+    width: 690px;
+    padding: 20px;
+    border: 2px solid #1E282D;
+    border-radius: 4px;
+}
+
+.reply-table-info td, .reply-table-info th {
+    border: none;
+}
+
+.reply-table thead {
+    color: #707070;
+
+}
+
+.reply-squTable {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+
+    background-color: transparent;
+    border: 2px solid #1E282D;
+    border-radius: 4px;
+    width: 650px;
+    margin-right: 5px;
+    margin-left:70px; 
+    font-size: 0.8em;
+}
+
+.reply-squTable td, .reply-squTable th {
+    border: none;
+}
+
+.GroupRegDate {
+    font-weight: normal;
+}
+
+.reply-update-box {
+    margin: 10px 0px;
+}
+
+.rply-update-input {
+    background-color: transparent;
+    color: rgb(250, 250, 250);
+    width: 530px;
+    height: 36px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    word-break: break-all;
+}
+
+.rply-update-btn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+
+    height: 40px;
+    
+    padding: 5px 10px;
+    border-radius: 4px;
+
+}
+
+.reply-content {
+    width: 670px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #1E282D;
+}
+
+.reply-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.repInsert-btn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+
+    border-radius: 4px;
+    padding: 5px 10px;
+
+    margin-top: 10px;
+}
+
+.reply-content {
+    height: 50px;
+}
+
+.reg-btn-box{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+    width: 725px;
+}
+
+.replyGroupBtn-box {
+    margin-left: 25px;
+    margin-top: 15px;
+    /* 댓글 높이 오류*/
+}
+
+
+.replyGroup-input {
+    background-color: transparent;
+    color: #ffffff;
+    width: 590px;
+    height: 30px;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 7px;
+    border: 2px solid #1E282D;
+}
+
+.reg-gro-btn {
+    background-color: #202A48;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-top: 10px;
+}
+
+.GroupContent,
+.SquenceContent {
+    color: white;
+}
+
+.GroupContent,.SquenceContent {
+    height: auto;
+    padding: 10px 0px;
+}
+
+
+
+.like-btn{
+    background-image: url("/static/images/bee.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#like-btn {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    filter : grayscale(100%);
+}
+
+.table-info-th {
+    color:#ffffff; 
+    padding-right: 10px;
+}

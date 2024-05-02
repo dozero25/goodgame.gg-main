@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fourjo.idle.goodgame.gg.repository.BoardRepository">
+
+
+    <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ게시글 작성ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    <insert id ="boardInsert"  parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+        insert into board_mst
+        values(0, #{boardSubject}, #{userIndex}, #{boardContent}, now(), #{boardVisit},
+       #{boardUploadName},#{boardUploadSize},#{boardUploadLocation}, #{boardLikeCount});
+    </insert>
+
+    <insert id ="registerBoardImg"  parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+        insert into board_mst
+        values(0, #{boardSubject}, #{userIndex}, #{boardContent}, now(), #{boardVisit},
+        #{boardUploadName},#{boardUploadSize},#{boardUploadLocation}, #{boardLikeCount});
+    </insert>
+
+
+    <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ게시글 수정ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+
+    <update id ="boardUpdateOKByBoardIndex" parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO" >
+        update board_mst set boardSubject = #{boardSubject}, boardContent =  #{boardContent} where boardIndex = #{boardIndex};
+    </update>
+
+    <update id="boardFileUpdate" parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+        update board_mst
+        set boardSubject = #{boardSubject}, boardContent =  #{boardContent},
+            boardUploadName = #{boardUploadName}, boardUploadSize = #{boardUploadSize}, boardUploadLocation = #{boardUploadLocation}
+        where boardIndex = #{boardIndex};
+    </update>
+
+
+    <select id = "loadUpdatePageByBoardIndex" parameterType="integer" resultType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+        SELECT
+        b.boardIndex, b.boardSubject, u.userNick, u.userId, u.userIndex, b.boardContent, b.boardRegDate, b.boardVisit, b.boardUploadName, b.boardUploadSize, b.boardUploadLocation,
+        COUNT(r.replyIndex) AS replyCount , b.boardLikeCount
+
+        FROM
+        board_mst b
+
+        JOIN user_mst u ON b.userIndex = u.userIndex
+
+        LEFT JOIN reply_mst r ON b.boardIndex = r.boardIndex
+
+        where  b.boardIndex = #{boardIndex}
+    </select>
+
+
+    <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ게시물 삭제ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+
+    <delete id ="boardDeleteByBoardIndex" parameterType="integer">
+        delete from board_mst where  boardIndex = #{boardIndex}
+    </delete>
+
+
+    <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ 상세보기페이지 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+
+
+    <select id ="boardSelectOneByBoardIndex" parameterType="integer" resultType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+        SELECT
+        b.boardIndex, b.boardSubject, u.userNick, u.userId, u.userIndex, b.boardContent, b.boardRegDate, b.boardVisit, b.boardUploadName, b.boardUploadSize, b.boardUploadLocation,
+        COUNT(r.replyIndex) AS replyCount , b.boardLikeCount
+
+        FROM
+        board_mst b
+
+        JOIN user_mst u ON b.userIndex = u.userIndex
+
+        LEFT JOIN reply_mst r ON b.boardIndex = r.boardIndex
+
+        where b.boardIndex = #{boardIndex}
+    </select>
+
+
+
+    <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ게시물 검색 및 목록ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    <select id ="boardSearchAllBySubjectAndUserIndexAndContent" resultType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+
+        SELECT
+        b.boardIndex, b.boardSubject, u.userIndex, u.userId, u.userNick, b.boardRegDate, b.boardVisit, b.boardUploadName, b.boardUploadSize, b.boardUploadLocation,
+        COUNT(r.replyIndex) AS replyCount,b.boardLikeCount
+
+        FROM
+        board_mst b
+
+        JOIN user_mst u ON b.userIndex = u.userIndex
+
+        LEFT JOIN reply_mst r ON b.boardIndex = r.boardIndex
+
+        <choose>
+            <when test='searchKey=="1"'> where boardSubject like CONCAT('%', #{searchValue}, '%') </when>
+            <when test='searchKey=="2"'> where u.userNick like CONCAT('%', #{searchValue}, '%') </when>
+            <when test='searchKey=="3"'> where boardContent like CONCAT('%', #{searchValue}, '%') </when>
+            <when test='searchKey=="4"'> where( boardSubject like CONCAT('%', #{searchValue}, '%')  or
+                boardContent like CONCAT('%', #{searchValue}, '%'))  </when>
+            <when test='searchKey=="view"'> where boardVisit  >= #{searchValue}  </when>
+            <when test='searchKey=="like"'> where boardLikeCount  >= #{searchValue}  </when>
+            <when test='searchKey=="all"'>where 1=1</when>
+        </choose>
+        GROUP BY b.boardIndex, b.boardSubject, u.userId, b.boardRegDate,b.boardVisit, b.boardUploadName, b.boardUploadSize, b.boardUploadLocation
+            order by boardIndex desc
+        <if test='limit == "Y"'>
+            limit #{index}, #{count}
+
+        </if>
+
+    </select>
+
+    <select id ="boardTotalCount" parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardSearchDTO" resultType="integer">
+        SELECT COUNT(*)
+        FROM
+        (
+        SELECT
+        b.boardIndex, b.boardSubject, u.userIndex, u.userId, u.userNick, b.boardRegDate, b.boardVisit, b.boardUploadName, b.boardUploadSize, b.boardUploadLocation,
+        COUNT(r.replyIndex) AS replyCount,b.boardLikeCount
+        FROM
+        board_mst b
+        JOIN
+        user_mst u ON b.userIndex = u.userIndex
+        LEFT JOIN
+        reply_mst r ON b.boardIndex = r.boardIndex
+        <choose>
+            <when test='searchKey=="1"'> where boardSubject like CONCAT('%', #{searchValue}, '%') </when>
+            <when test='searchKey=="2"'> where u.userNick like CONCAT('%', #{searchValue}, '%') </when>
+            <when test='searchKey=="3"'> where boardContent like CONCAT('%', #{searchValue}, '%') </when>
+            <when test='searchKey=="4"'> where( boardSubject like CONCAT('%', #{searchValue}, '%')  or
+                boardContent like CONCAT('%', #{searchValue}, '%'))  </when>
+            <when test='searchKey=="view"'> where boardVisit  >= #{searchValue}  </when>
+            <when test='searchKey=="like"'> where boardLikeCount  >= #{searchValue}  </when>
+
+        </choose>
+        GROUP BY
+        b.boardIndex, b.boardSubject, u.userId, b.boardRegDate, b.boardVisit, b.boardUploadName, b.boardUploadSize, b.boardUploadLocation
+        ORDER BY
+        boardIndex DESC
+        ) AS subquery;
+
+
+    </select>
+
+
+    <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ좋아요 추천ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ  -->
+    <select id = "likeByBoardIndexAndUserIndex" parameterType="integer" resultType="integer">
+        select count(userIndex) from board_like_mst
+        where boardIndex = #{boardIndex} and userIndex = #{userIndex};
+    </select>
+
+    <select id = "likeCountByBoardIndex" parameterType="integer" resultType="integer">
+        select count(boardIndex) from board_like_mst
+        where boardIndex = #{boardIndex};
+    </select>
+
+    <update id ="likeUpdate" parameterType="integer">
+        update board_mst set boardLikeCount = (select count(boardIndex) from board_like_mst
+        where boardIndex = #{boardIndex}) where boardIndex = #{boardIndex}
+    </update>
+
+    <insert id ="likeAdd" parameterType="integer">
+       insert into board_like_mst (boardLikeId, boardIndex, userIndex, boardLike, boardBad)
+        select 0,  #{boardIndex}, #{userIndex}, 1, 0
+        from dual
+        where NOT EXISTS(
+        select 1 from board_like_mst where boardIndex = #{boardIndex} and userIndex = #{userIndex}
+        )
+    </insert>
+
+    <delete id ="likeCancel" parameterType="integer">
+        delete from board_like_mst where userIndex = #{userIndex} and boardIndex = #{boardIndex}
+    </delete>
+
+
+    <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ조회수ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    <update id = "boardViewCount" parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardDTO">
+        update board_mst set boardVisit = boardVisit + 1
+        where boardIndex = #{boardIndex}
+    </update>
+
+
+    <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ댓글 작성ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    <insert id ="boardReplyInsertByReplyGroup"  parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardReplyDTO">
+        insert into reply_mst
+        values(0, #{boardIndex}, #{userIndex}, #{replyContent}, #{replyGroup}, #{replySequence}, now())
+    </insert>
+
+    <insert id ="boardReplyInsertByReplySequence"  parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardReplyDTO">
+        insert into reply_mst
+        values(0, #{boardIndex}, #{userIndex}, #{replyContent}, #{replyGroup}, #{replySequence}, now())
+    </insert>
+
+
+    <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ댓글 수정ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    <update id="boardReplyUpdateByReplyIndex"  parameterType="fourjo.idle.goodgame.gg.web.dto.board.BoardReplyDTO">
+        update reply_mst
+        set replyContent = #{replyContent}
+        where replyIndex = #{replyIndex}
+    </update>
+
+
+    <select id="boardReplyUpdateSelectOneByReplyIndex"  parameterType="integer" resultType="fourjo.idle.goodgame.gg.web.dto.board.BoardReplyDTO">
+        select replyIndex, boardIndex, user_mst.userIndex, user_mst.userId, user_mst.userNick, replyContent, replyGroup, replySequence, replyRegDate
+        from reply_mst
+        INNER JOIN user_mst ON reply_mst.userIndex = user_mst.userIndex
+        where
+        reply_mst.replyIndex = #{replyIndex}
+    </select>
+
+
+    <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ댓글 삭제ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+<!--    <delete id="boardReplyDeleteByReplyIndexAndBoardIndex" parameterType="integer">-->
+<!--        DELETE-->
+<!--        FROM reply_mst AS outer_reply-->
+<!--        WHERE EXISTS (-->
+<!--        SELECT 1-->
+<!--        FROM (-->
+<!--        SELECT *-->
+<!--        FROM reply_mst-->
+<!--        WHERE replyIndex = #{replyIndex} AND boardIndex = #{boardIndex}-->
+<!--        ) AS inner_reply-->
+<!--        WHERE outer_reply.boardIndex = inner_reply.boardIndex-->
+<!--        AND outer_reply.replyGroup = inner_reply.replyGroup-->
+<!--        AND outer_reply.replySequence >= 1-->
+<!--        )-->
+<!--    </delete>-->
+    <delete id="boardReplyDeleteByReplyIndexAndBoardIndex" parameterType="integer">
+        DELETE outer_reply
+        FROM reply_mst AS outer_reply
+        JOIN (
+        SELECT replyGroup
+        FROM reply_mst
+        WHERE replyIndex = #{replyIndex}
+        AND boardIndex = #{boardIndex}
+        AND replySequence >= 1
+        ) AS inner_criteria ON outer_reply.replyGroup = inner_criteria.replyGroup
+        WHERE outer_reply.boardIndex = #{boardIndex};
+    </delete>
+
+    <delete id="boardReplyDeleteByReplyIndex" parameterType="integer">
+        DELETE
+        FROM reply_mst
+        WHERE replyIndex = #{replyIndex}
+    </delete>
+
+
+    <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ댓글 전체 목록ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
+    <select id="boardReplySelectAll" parameterType="list" resultType="fourjo.idle.goodgame.gg.web.dto.board.BoardReplyDTO">
+        select replyIndex, boardIndex, user_mst.userIndex, user_mst.userId, user_mst.userNick, replyContent, replyGroup, replySequence, replyRegDate
+        from reply_mst
+        INNER JOIN user_mst ON reply_mst.userIndex = user_mst.userIndex
+        where
+        reply_mst.boardIndex = #{boardIndex}
+        order by
+        reply_mst.replyGroup ASC, reply_mst.replySequence ASC
+    </select>
+
+
+    <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ댓글 작성 보조ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->
+    <!-- 댓글 개수 -->
+    <select id ="boardReplyGroupCount" resultType="integer">
+        select ifnull(MAX(replyGroup) + 1, 1) as maxCount
+        from reply_mst
+        where boardIndex = #{boardIndex}
+    </select>
+
+    <!-- 대댓글 갯수 -->
+    <select id ="boardReplySequenceCount" resultType="integer">
+        select MAX(replySequence) + 1 as maxCount
+        from reply_mst
+        where boardIndex = #{boardIndex}
+        and replyGroup = #{replyGroup}
+    </select>
+
+</mapper>

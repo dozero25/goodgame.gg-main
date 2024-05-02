@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/board/insert.css">
+
+    <title>GoodGame.gg</title>
+
+
+ </head>
+ <body>
+
+    <header class="header-box">
+        
+    </header>
+    <div class="board-header">
+        <h1 id="letter">커뮤니티</h1>
+    </div>
+        <main>
+            <div id="board-container">               
+                <div class="board-container">
+                    <div class="board-detail">
+                        <div class="title-detail">
+                            <div>
+                                <div class="insert-title-box">
+                                    <div class="insertTitle">제목</div>
+                                </div>
+                                <input type="text" id= "subject" name="boardSubject" class="boardSubject" placeholder="제목을 입력하세요" autocomplete="off" required>
+                            </div>
+                        </div>
+
+                        <div class="content-detail">
+
+                            <div>
+                                <div class="content-detail-box">
+                                    <div class="insertContent">내용</div>
+                                </div>
+                                <div>
+                                    <textarea id = "content" class="boardContent" name="boardContent" cols="100" rows="30"></textarea>
+                                </div>
+                                <div>
+                                    <form id="uploadForm" method="post" enctype="multipart/form-data">
+                                        <input type="file" id="uploadFile"  class="uploadFile" name="file">
+                                    </form>
+                                </div>
+                            </div>
+                            <input type="hidden" class="boardUploadName">
+                            <input type="hidden" class="boardUploadName">
+                            <input type="hidden" class="boardUploadName">
+                        </div>
+
+                        <div class = "insert-btn">
+                            <button type="submit" class="insert-complete">작성완료</button>
+                            <button type="button" class="insert-cancel">작성취소</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+</body>
+<script src="/static/js/principal/principal.js"></script>
+<script src="/static/js/header/header.js"></script>
+ <script src="/static/js/board/insert.js"></script>
+</html>

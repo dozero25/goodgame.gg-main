@@ -1,0 +1,146 @@
+
+
+.board-header{
+    display: block;
+    min-width: 900px;
+    height: 275px;
+    background-image: url("/static/images/background/irellia.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+#letter {
+    width: 1050px;
+    margin: 32px auto;
+    color: rgb(249, 249, 249);
+    font-weight: 700;
+    font-size: 48px;
+}
+.update-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.update-detail {
+    width: 100%;
+}
+
+
+.title-detail{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: rgb(194, 194, 194);
+}
+
+.content-detail{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 15px;
+}
+
+.updateBoardSubject{
+    color:rgb(250, 250, 250);
+    width:714px;
+    height:36px;
+    border-radius: 4px;
+    margin-top:5px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid #C89B3C;
+    font-size: 14px;
+}
+.updateBoardContent {
+    width: 712px;
+    padding-top: 10px;
+    padding-left: 10px;
+    border-radius: 4px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid #C89B3C;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.update-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 10px;
+
+}
+.update-title-box, .content-detail-box{
+    margin-bottom: 10px;
+}
+
+.updateTitle,  .updateContent{
+    color:rgb(164, 167, 170);
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.updateUserNick {
+    color:rgb(164, 167, 170);
+    font-weight: bold;
+}
+.updateRegDate{
+    font-weight: bold;
+    color:rgb(164, 167, 170);
+}
+
+.updateUserNickAndContent{
+    width: 720px;
+    margin: 10px 0px 10px 15px;
+}
+
+.updateUserNickAndContent input {
+    border: none;
+}
+
+.userNickView, .boardRegDateView{
+    border-radius: 5px;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.update-complete{
+    background-color: #202A48;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+.update-cancel{
+    background-color: #202A48;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-top: 10px;
+}
+
+.boardUploadName{
+    margin-left: 40px;
+}
+
+.updateUploadFile {
+    margin-top:5px;
+}
+#uploadForm{
+    color: #ffffff;
+    display: flex;
+}

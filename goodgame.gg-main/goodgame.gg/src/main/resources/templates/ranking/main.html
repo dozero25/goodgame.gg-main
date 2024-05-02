@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랭킹</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/css/ranking/main.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+</head>
+<body>
+
+    <header class="header-box">
+        
+    </header>
+
+    <main>
+        <div class="content-header">
+            <h1 class="header-h1">랭킹</h1>
+
+        </div>
+        <nav class="content-nav">
+            <h2 class="queue-solo selected">솔로랭크</h2>
+            <span class="queue-flex">자유랭크</span>
+        </nav>
+        <div class="content-container">
+
+            <div class="info-container">
+
+
+            </div>
+
+            <div class="mid-container">
+
+                <div class="select-search-container">
+                    <div class="select-container">
+                        <button type="button" class="select-button">
+                            <span>ALL</span>
+                            <span class="arrow">▼</span>
+                        </button>
+                        <div class="select-div" style="display: none">
+                            <button type="button" class="select-item-all" value="all">
+                                <span>ALL</span>
+                            </button>
+                            <button type="button" class="select-item" value="challenger">
+                                <img src="/static/images/ranking/tier/challenger.png" width="22" height="22">
+                                <span>CHALLENGER</span>
+                            </button>
+                            <button type="button" class="select-item" value="grandmaster">
+                                <img src="/static/images/ranking/tier/grandmaster.png" width="22" height="22">
+                                <span>GRANDMASTER</span>
+                            </button>
+                            <button type="button" class="select-item" value="master">
+                                <img src="/static/images/ranking/tier/master.png" width="22" height="22">
+                                <span>MASTER</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="search-container">
+                        <img src="/static/images/ranking/icon/icon-search-dark.svg">
+                        <input class="search-input" placeholder="플레이어 이름#KR1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="ranking-container">
+                <table class="ranking-table">
+                    <thead class="ranking-thead">
+                    <tr>
+                        <th class="num">No.</th>
+                        <th class="summoner">소환사</th>
+                        <th class="tier">티어</th>
+                        <th class="lp">LP</th>
+                        <th class="level">레벨</th>
+                        <th class="winRate">승률</th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="ranking-tbody">
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bottom-container">
+
+                <div class="total-page-count">
+
+                </div>
+                <div class="page-controller">
+
+                </div>
+            </div>
+        </div>
+    </main>
+        
+
+    <footer>
+        <div class="footer-text">
+                <p >© 2024 GoodGame.gg is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing
+                    League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</p>
+            </div>
+    </footer>
+
+</body>
+<script src="/static/js/principal/principal.js"></script>
+<script src="/static/js/header/header.js"></script>
+<script src="/static/js/ranking/main.js"></script>
+</html>

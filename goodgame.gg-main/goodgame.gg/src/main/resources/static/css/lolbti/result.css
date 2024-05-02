@@ -1,0 +1,19 @@
+#result{
+  display: none;
+  background-color: whitesmoke;
+  width: 100%;
+ 
+  text-align: center;
+  border-radius: 20px;
+}
+
+.resultname{
+  font-size: 26px;
+}
+
+.resultDesc{
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 목록</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/duo/main.css">
+
+</head>
+<body>
+    <header class="header-box">
+        
+    </header>
+    <div class="duo-header">
+        <h1 id="letter">듀오 찾기</h1>
+    </div>
+<main class="container">
+
+    <div class="duo-container">
+
+        <div class="search-container">
+
+            <div class="que-selector">
+                <div id="que-selectField">
+                    <p id="que-selectText">게임타입 전체</p>
+                    <img src="static/images/duo/down.png" id="que-arrowIcon">
+                </div>
+
+                <ul id="que-list" class="que-hide">
+                    <li class="que-options" value="">
+
+                        <p>게임타입 전체</p>
+                    </li>
+                    <li class="que-options" value="솔로랭크">
+                        <p>솔로랭크</p>
+                    </li>
+                    <li class="que-options" value="자유랭크">
+                        <p>자유랭크</p>
+                    </li>
+                    <li class="que-options" value="일반게임">
+                        <p>일반게임</p>
+                    </li>
+                    <li class="que-options" value="칼바람나락">
+                        <p>칼바람나락</p>
+                    </li>
+
+                </ul>
+            </div>
+
+
+            <div class="tier-selector">
+                <div id="tier-selectField">
+                    <p id="tier-selectText">티어 전체</p>
+                    <img src="static/images/duo/down.png" id="tier-arrowIcon">
+                </div>
+
+                <ul id="tier-list" class="tier-hide">
+                    <li class="tier-options" value="">
+
+                        <p>티어 전체</p>
+                    </li>
+                    <li class="tier-options" value="챌린저">
+                        <img src="static/images/duo/tier/챌린저.png">
+                        <p>챌린저</p>
+                    </li>
+                    <li class="tier-options" value="그랜드마스터">
+                        <img src="static/images/duo/tier/그랜드마스터.png">
+                        <p>그랜드마스터</p>
+                    </li>
+                    <li class="tier-options" value="마스터">
+                        <img src="static/images/duo/tier/마스터.png">
+                        <p>마스터</p>
+                    </li>
+                    <li class="tier-options" value="다이아몬드">
+                        <img src="static/images/duo/tier/다이아몬드.png">
+                        <p>다이아몬드</p>
+                    </li>
+                    <li class="tier-options" value="에메랄드">
+                        <img src="static/images/duo/tier/에메랄드.png">
+                        <p>에메랄드</p>
+                    </li>
+                    <li class="tier-options" value="플래티넘">
+                        <img src="static/images/duo/tier/플래티넘.png">
+                        <p>플래티넘</p>
+                    </li>
+                    <li class="tier-options" value="골드">
+                        <img src="static/images/duo/tier/골드.png">
+                        <p>골드</p>
+                    </li>
+                    <li class="tier-options" value="실버">
+                        <img src="static/images/duo/tier/실버.png">
+                        <p>실버</p>
+                    </li>
+                    <li class="tier-options" value="브론즈">
+                        <img src="static/images/duo/tier/브론즈.png">
+                        <p>브론즈</p>
+                    </li>
+                    <li class="tier-options" value="아이언">
+                        <img src="static/images/duo/tier/아이언.png">
+                        <p>아이언</p>
+                    </li>
+                    <li class="tier-options" value="언랭크">
+                        <img src="static/images/duo/tier/언랭크.png">
+                        <p>언랭크</p>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="position-selector">
+                <div id="position-selectField">
+                    <p id="position-selectText">상관 없음</p>
+                    <img src="static/images/duo/down.png" id="position-arrowIcon">
+                </div>
+
+                <ul id="position-list" class="position-hide">
+
+                    <li class="position-options" value="">
+                        <img src="static/images/duo/position/.png">
+                        <p>상관 없음</p>
+                    </li>
+                    <li class="position-options" value="탑">
+                        <img src="static/images/duo/position/탑.png">
+                        <p>탑</p>
+                    </li>
+                    <li class="position-options" value="정글">
+                        <img src="static/images/duo/position/정글.png">
+                        <p>정글</p>
+                    </li>
+                    <li class="position-options" value="미드">
+                        <img src="static/images/duo/position/미드.png">
+                        <p>미드</p>
+                    </li>
+                    <li class="position-options" value="원딜">
+                        <img src="static/images/duo/position/원딜.png">
+                        <p>원딜</p>
+                    </li>
+                    <li class="position-options" value="서포터">
+                        <img src="static/images/duo/position/서포터.png">
+                        <p>서포터</p>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div id="insert-btnWrap">
+                <button type="button" id="insert-btn">글 작성</button>
+            </div>
+
+            <div id="modalWrap">
+                <div id="modalBody">
+                    <span id="closeBtn">&times;</span>
+
+                    <div id="modalGameIdWrap">
+                       <div id="modalGameId">
+                        <input type="text" id="input-duoGameid" placeholder="소환사명#태그" value="">
+                       </div>
+                        <div id="modalGameIdCheck">
+                        <button t   ype="button" id="check-gameid-btn">아이디 확인</button>
+                        <input type="hidden" id="pass" value="X">
+                       </div>
+                        <div id="printGameIdCheck">
+                            <p id="modalGameIdCheckMessage"></p>
+                        </div>
+                    </div>
+                    <div id="modalDuoQue">
+
+                        <input type="radio" name="duoQue" value="솔로랭크" checked="checked"> 솔로랭크
+                        <input type="radio" name="duoQue" value="자유랭크"> 자유랭크<br>
+                        <input type="radio" name="duoQue" value="일반게임"> 일반게임
+                        <input type="radio" name="duoQue" value="칼바람나락"> 칼바람나락
+
+                    </div>
+                    <div id="modalDuoPositionLetter">내가 가는 포지션</div>
+                    <div id="modalDuoPosition">
+
+                        <br>
+                        <input type="radio" name="duoPosition" value="" checked="checked"> 상관없음
+                        <input type="radio" name="duoPosition" value="탑"> 탑
+                        <input type="radio" name="duoPosition" value="미드"> 미드
+                        <input type="radio" name="duoPosition" value="정글"> 정글
+                        <input type="radio" name="duoPosition" value="원딜"> 원딜
+                        <input type="radio" name="duoPosition" value="서포터"> 서포터
+
+                    </div>
+                    <div id="modalDuoContentLetter">내용</div>
+                    <div id="modalDuoContent">
+                       <textarea id="duoContentValue" placeholder="생략 가능/100글자 이내" maxlength="100" value=""></textarea>
+                  </div>
+
+                    <div id="modalDuoComplete">
+                        <button type="button" id="insert-success-btn">입력 완료</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="duo-table">
+
+
+        </div>
+        <div class="page-controller">
+
+        </div>
+
+    </div>
+</main>
+<footer>
+    <div class="footer-text">
+        <p >© 2024 GoodGame.gg is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing
+            League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.</p>
+    </div>
+</footer>
+
+</body>
+<script src="/static/js/principal/principal.js"></script>
+<script src="/static/js/header/header.js"></script>
+<script src="/static/js/duo/main.js"></script>
+
+</html>

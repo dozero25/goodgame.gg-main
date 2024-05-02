@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <title>로그인 페이지</title>
+</head>
+
+<body>
+    <head>
+        <div class="logo-box">
+            <a href="/main"><h1 style="font-size: 60px">GG.GG</h1></a>
+        </div>
+        
+    </head>
+    <main>
+        <div class="login-wrap">
+            <div class="login-html">
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">SignIn</label>
+                <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+                <div class="login-form">
+                    <div class="sign-in-htm">
+                        <form action="/login/process" id="login" method="post">
+                            <div class="group">
+                                <label for="user" class="label">Id</label>
+                                <input id="id" name="id" type="text" class="input" autocomplete="off">
+                            </div>
+                            <div class="group">
+                                <label for="pass" class="label">Password</label>
+                                <input id="pw" name="pw" type="password" class="input" data-type="password"
+                                    autocomplete="off" placeholder="8 ~ 20글자, 영문자, 숫자, 특수 문자 1개 이상">
+                            </div>
+                            <div class="group">
+                                <button type="submit" class="button">Sign In</button>
+                            </div>
+                        </form>
+                        <div class="hr"></div>
+    
+                        <div class="foot-lnk">
+                            <a href="">Forgot Password?</a>
+                        </div>
+                    </div>
+                    <div class="sign-up-htm">
+                        <div class="group">
+                            <label for="user" class="label">Id</label>
+                            <input type="text" name="input" id="input" class="id" autocomplete="off">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Password</label>
+                            <input type="password" name="input" id="input" class="pw" 
+                            autocomplete="off" placeholder="8 ~ 20글자, 영문자, 숫자, 특수 문자 1개 이상">
+                        </div>
+                        <div class="group">
+                            <label for="nick" class="label">Nick Name</label>
+                            <input type="text" name="input" id="input" class="nickName" autocomplete="off">
+                        </div>
+                        <div class="group">
+                            <label for="gender" class="label">Gender</label>
+                            <ul class="gender-box" >
+                                <li class="radio-btn">
+                                    <input type="radio" name="gender" id="male" class="gender-radio" value="m">
+                                    <label for="male" class="check-male" value="m">Male</label>
+                                    <div class="box"></div>
+                                    <input type="radio" name="gender" id="female" class="gender-radio" value="w">
+                                    <label for="female" class="check-female" value="w">Female</label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="group">
+                            <label for="email" class="label">Email Address</label>
+                            <input type="email" name="input" id="input" class="email" autocomplete="off">
+                        </div>
+                        <div class="group">
+                            <button type="button" class="register-button">Sign Up</button>
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <label for="tab-1">Already Member?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <!-- made by : https://inpa.tistory.com/entry/CSS-%F0%9F%92%8D-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-%ED%8E%98%EC%9D%B4%EC%A7%80-%EC%8A%A4%ED%83%80%EC%9D%BC-%F0%9F%96%8C%EF%B8%8F-%EB%AA%A8%EC%9D%8C -->
+    </footer>
+</body>
+<script src="/static/js/register/register.js"></script>
+</html>

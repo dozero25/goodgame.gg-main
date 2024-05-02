@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/reset.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/board/main.css">
+    <title>GoodGame.gg</title>
+</head>
+
+<body>
+
+    <header class="header-box">
+        
+    </header>
+    <div class="board-header">
+        <h1 id="letter">커뮤니티</h1>
+    </div>
+        <main class="container">
+            <div class="board-container">
+                <div class="write-box">
+                    <div class="left-items">
+                        
+                        <aside class="quickMenu">
+                            <button class="insert-button" type="button">게시글 작성</button>
+                            <button class="all-btn" id="all-btn" type="button" value="all">전체글 ▾</button>
+                            <button class="view-btn" id="view-btn" type="button" value="view">인기글 ▾</button>
+                            <button class="like-btn" id="like-btn" type="button" value="like">추천글 ▾</button>
+                        </aside>
+                    </div>
+                    <div class="right-items">
+                        <select id="searchKey" name="searchKey" class ="search-select">
+                            <option value="0">전체</option>
+                            <option value="1">제목</option>
+                            <option value="2">작성자</option>
+                            <option value="3">내용</option>
+                            <option value="4">제목+내용</option>
+                        </select>
+                        <input type="search" id="searchValue" class="search-input">
+                        <button type="button" id="searchBtn" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+
+                <table class="board-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 200px;">번호</th>
+                        <th style="width: 600px;">제목[댓글]</th>
+                        <th style="width: 200px;"></th>
+                        <th style="width: 200px;">작성자</th>
+                        <th style="width: 200px;">작성일</th>
+                        <th style="width: 200px;">조회</th>
+                        <th style="width: 200px;">추천</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+                <div class="page-controller">
+
+                </div>
+            </div>
+        </main>
+        <footer style="height: 200px;"></footer>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="/static/js/principal/principal.js"></script>
+<script src="/static/js/header/header.js"></script>
+<script src="/static/js/board/main.js"></script>
+</html>
+
+
+
