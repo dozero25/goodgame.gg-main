@@ -1,5 +1,6 @@
 package fourjo.idle.goodgame.gg.web.api;
 
+import fourjo.idle.goodgame.gg.entity.UserMst;
 import fourjo.idle.goodgame.gg.security.PrincipalDetails;
 import fourjo.idle.goodgame.gg.web.dto.CMRespDto;
 import fourjo.idle.goodgame.gg.web.dto.account.EmpDto;
@@ -27,8 +28,8 @@ public class AccountApi {
 
     @PostMapping("/register/user")
     @Operation(summary ="회원가입", description = "조건에 맞으면 회원가입이 진행됩니다." )
-    public ResponseEntity<CMRespDto<?>> registerUser (@RequestBody UserDto userDto, BindingResult bindingResult){
-        accountService.registerUser(userDto);
+    public ResponseEntity<CMRespDto<?>> registerUser (@RequestBody UserMst userMst, BindingResult bindingResult){
+        accountService.registerUser(userMst);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully registered", true));
     }

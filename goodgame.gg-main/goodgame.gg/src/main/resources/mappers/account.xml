@@ -29,7 +29,7 @@
         <result property="roleName" column="roleName"></result>
     </resultMap>
 
-    <insert id="registerUser" parameterType="fourjo.idle.goodgame.gg.web.dto.account.UserDto">
+    <insert id="registerUser" parameterType="fourjo.idle.goodgame.gg.entity.UserMst">
         insert into user_mst
         values(0, #{userId}, #{userPw}, #{userNick}, #{userGender}, now(), #{userEmail})
     </insert>

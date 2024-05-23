@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AccountRepository {
 
-    public int registerUser(UserDto userDto);
+    public int registerUser(UserMst userMst);
     public int saveUserRole(String userId);
 
     public int registerEmp(EmpDto empDto);

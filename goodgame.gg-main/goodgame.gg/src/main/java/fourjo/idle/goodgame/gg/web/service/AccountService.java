@@ -1,5 +1,6 @@
 package fourjo.idle.goodgame.gg.web.service;
 
+import fourjo.idle.goodgame.gg.entity.UserMst;
 import fourjo.idle.goodgame.gg.exception.CustomInputPasswordException;
 import fourjo.idle.goodgame.gg.exception.CustomInputUserGenderException;
 import fourjo.idle.goodgame.gg.exception.CustomSameNickNameException;
@@ -22,17 +23,17 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public UserDto registerUser(UserDto userDto) {
-        nullValueCheck(userDto);
-        duplicateUserId(userDto.getUserId());
-        checkPassword(userDto.getUserPw());
-        duplicateUserNick(userDto.getUserNick());
-        inputUserGender(userDto.getUserGender());
+    public UserMst registerUser(UserMst userMst) {
+        nullValueCheck(userMst);
+        duplicateUserId(userMst.getUserId());
+        checkPassword(userMst.getUserPw());
+        duplicateUserNick(userMst.getUserNick());
+        inputUserGender(userMst.getUserGender());
 
-        userDto.setUserPw(new BCryptPasswordEncoder().encode(userDto.getUserPw()));
-        accountRepository.registerUser(userDto);
-        accountRepository.saveUserRole(userDto.getUserId());
-        return userDto;
+        userMst.setUserPw(new BCryptPasswordEncoder().encode(userMst.getUserPw()));
+        accountRepository.registerUser(userMst);
+        accountRepository.saveUserRole(userMst.getUserId());
+        return userMst;
     }
 
     public EmpDto registerEmp(EmpDto empDto) {
@@ -46,11 +47,11 @@ public class AccountService {
         return empDto;
     }
 
-    public void nullValueCheck(UserDto userDto) {
-        String userId = userDto.getUserId().replaceAll(" ", "");
-        String userPw = userDto.getUserPw().replaceAll(" ", "");
-        String userNick = userDto.getUserNick().replaceAll(" ", "");
-        String userEmail = userDto.getUserEmail().replaceAll(" ", "");
+    public void nullValueCheck(UserMst userMst) {
+        String userId = userMst.getUserId().replaceAll(" ", "");
+        String userPw = userMst.getUserPw().replaceAll(" ", "");
+        String userNick = userMst.getUserNick().replaceAll(" ", "");
+        String userEmail = userMst.getUserEmail().replaceAll(" ", "");
 
         Map<String, String> errorMap = new HashMap<>();
         if(userId.equals("") || userPw.equals("") || userNick.equals("") || userEmail.equals("")){
