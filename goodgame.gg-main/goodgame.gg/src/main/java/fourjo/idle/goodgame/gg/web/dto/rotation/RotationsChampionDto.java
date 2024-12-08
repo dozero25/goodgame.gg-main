@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RotationsChampionDto {
-    private String maxNewPlayerLevel;
+    private int maxNewPlayerLevel;
     private List<Integer> freeChampionIdsForNewPlayers;
     private List<Integer> freeChampionIds;
 

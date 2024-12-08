@@ -121,7 +121,7 @@ public class ParticipantDto {
     private int totalTimeSpentDead;
     private int totalUnitsHealed;
     private int tripleKills;
-    private int trueDamageDealt	;
+    private int trueDamageDealt;
     private int trueDamageDealtToChampions;
     private int trueDamageTaken;
     private int turretKills;

@@ -1,5 +1,6 @@
 package fourjo.idle.goodgame.gg.web.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fourjo.idle.goodgame.gg.web.dto.riotKey.RiotApiKeyDto;
 import fourjo.idle.goodgame.gg.web.dto.rotation.ChampionEnum;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Service
 public class RotationsService {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     private final HttpClient client = HttpClientBuilder.create().build();
 
     private final RiotApiKeyDto riotApiKeyDto = new RiotApiKeyDto();
@@ -56,7 +57,7 @@ public class RotationsService {
         ChampionInfoDto championInfoDto = new ChampionInfoDto();
 
         try {
-            HttpGet request = new HttpGet("https://ddragon.leagueoflegends.com/cdn/14.8.1/data/ko_KR/champion/"+championEnum+".json");
+            HttpGet request = new HttpGet("https://ddragon.leagueoflegends.com/cdn/14.23.1/data/ko_KR/champion/"+championEnum+".json");
             HttpResponse response = client.execute(request);
 
             HttpEntity entity = response.getEntity();
