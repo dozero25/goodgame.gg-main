@@ -2,7 +2,253 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5df8fa8-fd11-4afb-8d6a-f93da2a50d82" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/ParticipantDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/ParticipantDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/goodgame.gg-main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/goodgame.gg-main/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/config/SwaggerConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/config/WebMvcConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/entity/EmpMst.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/entity/RoleMst.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/entity/UserMst.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomInputPasswordException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomInputUserGenderException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomNullReplyValueException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomNullValueException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomRiotResponseCodeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomSameNickNameException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/exception/CustomSameUserIdException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/repository/AccountRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/repository/BoardRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/repository/DuoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/repository/MyPageRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/repository/RankingRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/security/PrincipalDetails.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/security/PrincipalDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/advice/ExceptionAdvice.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/AccountApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/BoardApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/DuoApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/MyPageApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/RankingApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/RecordApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/api/RotationsApi.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/controller/MainController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/CMRespDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/account/EmpDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/account/RoleDtlDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/account/UserDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/board/BoardDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/board/BoardLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/board/BoardReplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/board/BoardSearchDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/duo/AccountDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/duo/ChampionMasteryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/duo/DuoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/duo/DuoSearchDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/duo/LeagueEntryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/duo/SummonerDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/mypage/BoardAndLikeDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/mypage/BoardForApiDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/mypage/BoardSearchDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/mypage/ReplyDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/mypage/ReplySearchDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/mypage/UserDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/ranking/AccountDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/ranking/LeagueEntryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/ranking/LeagueListDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/ranking/RankingDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/ranking/RankingSearchDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/ranking/SummonerDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/AccountDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/ChampionMasteryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/LeagueDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/SummonerDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/BanDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/InfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/MatchDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/MetadataDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/MiniSeriesDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/ObjectiveDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/ObjectivesDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/ParticipantDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/PerkStatsDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/PerkStyleDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/PerkStyleSelectionDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/PerksDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/record/matches/TeamDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/riotKey/RiotApiKeyDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/rotation/ChampionEnum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/rotation/ChampionInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/rotation/RotationsChampionDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/AccountService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/BoardService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/DuoService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/MyPageService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/RankingService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/RecordService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/service/RotationsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/mappers/account.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/mappers/board.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/mappers/duo.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/mappers/myPage.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/mappers/ranking.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/board/insert.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/board/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/board/selectOne.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/board/update.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/common.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/duo/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/header.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/login.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/lolbti/animation.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/lolbti/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/lolbti/qna.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/lolbti/result.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/mypage/delete.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/mypage/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/ranking/main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/record.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/reset.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/css/rotations/slide.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/MyPage-Profile.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/akali.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/irellia.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/jhin.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/leona.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/lolchams.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/vayne.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/yi.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/background/zed.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/bee.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/board/GG.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/board/사진.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/dozi.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/copy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/down.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/position/.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/position/미드.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/position/서포터.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/position/원딜.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/position/정글.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/position/탑.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/골드.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/그랜드마스터.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/다이아몬드.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/마스터.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/브론즈.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/실버.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/아이언.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/언랭크.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/에메랄드.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/챌린저.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/duo/tier/플래티넘.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/10.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/lol_bti.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/lolbti/main.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8000.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8005.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8008.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8010.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8021.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8100.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8112.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8124.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8200.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8214.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8229.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8230.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8300.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8351.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8360.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8369.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8400.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8437.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8439.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/8465.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/perks/9923.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/position/bottom.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/position/jungle.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/position/middle.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/position/top.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/position/utility.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/ranking/icon/icon-search-dark.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/ranking/tier/challenger.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/ranking/tier/grandmaster.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/ranking/tier/master.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/spell/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/bronze.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/challenger.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/diamond.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/emerald.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/gold.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/grandmaster.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/iron.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/master.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/platinum.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/sliver.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/images/tier/unranked.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/board/insert.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/board/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/board/selectOne.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/board/update.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/duo/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/header/header.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/lolbti/data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/lolbti/lolbti.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/lolbti/start.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/main/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/mypage/deleteAllData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/mypage/mypage.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/principal/principal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/ranking/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/record/record.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/register/register.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/static/js/rotations/slide.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/board/insert.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/board/main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/board/selectOne.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/board/update.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/duo/main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/login/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/login/loginError.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/lolbti/lolbti.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/main/main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/mypage/delete.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/mypage/main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/ranking/main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/main/resources/templates/record/record.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/goodgame.gg-main/goodgame.gg/src/test/java/fourjo/idle/goodgame/gg/ApplicationTests.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,13 +263,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/dozero/goodgame.gg-main/goodgame.gg-main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/dozero/goodgame.gg-main/goodgame.gg-main&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
