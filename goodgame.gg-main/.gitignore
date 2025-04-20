@@ -37,4 +37,4 @@ goodgame.gg/src/main/resources/application.yml
 application.yml
 
 # riotKey 파일 무시
-goodgame.gg-main/src/main/java/fourjo/idle/goodgame/gg/web/dto/riotKey/
+goodgame.gg-main/src/main/java/fourjo/idle/goodgame/gg/web/dto/riotKey/*
