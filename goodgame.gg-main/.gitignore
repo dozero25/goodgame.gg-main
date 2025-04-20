@@ -38,3 +38,4 @@ application.yml
 
 ### riot key
 goodgame.gg/src/main/java/fourjo/idle/goodgame/gg/web/dto/riotKey/*
+fourjo/idle/goodgame.gg/web/dto/riotKey/*
