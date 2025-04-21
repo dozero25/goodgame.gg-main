@@ -21,17 +21,23 @@ import java.util.Map;
 @Service
 public class RotationsService {
 
-    private ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
-    private final HttpClient client = HttpClientBuilder.create().build();
+    private ObjectMapper objectMapper;
+    private final RiotApiKeyDto riotApiKeyDto;
+    private final HttpClient httpClient;
 
-    private final RiotApiKeyDto riotApiKeyDto = new RiotApiKeyDto();
+    public RotationsService(RiotApiKeyDto riotApiKeyDto) {
+        this.riotApiKeyDto = riotApiKeyDto;
+        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        this.httpClient = HttpClientBuilder.create().build();
+    }
 
     public List<ChampionEnum> rotationsChampion() {
         RotationsChampionDto rotationsChampionDto = new RotationsChampionDto();
-
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/platform/v3/champion-rotations/?api_key=" + apiKey;
         try {
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/platform/v3/champion-rotations/?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = client.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             rotationsChampionDto = objectMapper.readValue(entity.getContent(), RotationsChampionDto.class);
@@ -53,12 +59,11 @@ public class RotationsService {
     }
 
     public Map<String, ChampionInfoDto.ChampionData> ChampionInfo(ChampionEnum championEnum) {
-
         ChampionInfoDto championInfoDto = new ChampionInfoDto();
 
         try {
             HttpGet request = new HttpGet("https://ddragon.leagueoflegends.com/cdn/14.23.1/data/ko_KR/champion/"+championEnum+".json");
-            HttpResponse response = client.execute(request);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             championInfoDto = objectMapper.readValue(entity.getContent(), ChampionInfoDto.class);

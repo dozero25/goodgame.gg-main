@@ -1,6 +1,8 @@
-package fourjo.idle.goodgame.gg.web.dto.record;
+package fourjo.idle.goodgame.gg.web.dto.record.champions;
 
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ChampionMasteryDto {
@@ -10,9 +12,12 @@ public class ChampionMasteryDto {
     private long championId;
     private long lastPlayTime;
     private int championLevel;
-    private String summonerId;
     private int championPoints;
     private long championPointsSinceLastLevel;
+    private int markRequiredForNextLevel;
+    private int championSeasonMilestone;
+    private NextSeasonMilestonesDto nextSeasonMilestone;
     private int tokensEarned;
+    private List<String> milestoneGrades;
 
 }

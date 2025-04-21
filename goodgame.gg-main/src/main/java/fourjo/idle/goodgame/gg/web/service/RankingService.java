@@ -1,6 +1,7 @@
 package fourjo.idle.goodgame.gg.web.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fourjo.idle.goodgame.gg.repository.RankingRepository;
 import fourjo.idle.goodgame.gg.web.dto.ranking.*;
@@ -24,10 +25,15 @@ public class RankingService {
     @Autowired
     RankingRepository rankingRepository;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private final HttpClient client = HttpClientBuilder.create().build();
+    private ObjectMapper objectMapper;
+    private final RiotApiKeyDto riotApiKeyDto;
+    private final HttpClient httpClient;
 
-    private final RiotApiKeyDto riotApiKeyDto = new RiotApiKeyDto();
+    public RankingService(RiotApiKeyDto riotApiKeyDto) {
+        this.riotApiKeyDto = riotApiKeyDto;
+        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        this.httpClient = HttpClientBuilder.create().build();
+    }
 
     private final String solo = "RANKED_SOLO_5x5";
     private final String flex = "RANKED_FLEX_SR";
@@ -41,9 +47,12 @@ public class RankingService {
             queue = flex;
         }
 
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/challengerleagues/by-queue/" + queue + "?api_key=" + apiKey;
+
         try {
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/league/v4/challengerleagues/by-queue/" + queue + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = client.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
 
             HttpEntity entity = response.getEntity();
@@ -57,26 +66,29 @@ public class RankingService {
     }
 
     public LeagueListDto grandmasterLeaguesByQueue(String queue){
-            LeagueListDto leagueListDto = new LeagueListDto();
+        LeagueListDto leagueListDto = new LeagueListDto();
 
-            if (queue.equals("solo")) {
-                queue = solo;
-            } else if (queue.equals("flex")) {
-                queue = flex;
-            }
+        if (queue.equals("solo")) {
+            queue = solo;
+        } else if (queue.equals("flex")) {
+            queue = flex;
+        }
 
-            try {
-                HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/league/v4/grandmasterleagues/by-queue/" + queue + "?api_key=" + riotApiKeyDto.getMykey());
-                HttpResponse response = client.execute(request);
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/grandmasterleagues/by-queue/" + queue + "?api_key=" + apiKey;
 
-                HttpEntity entity = response.getEntity();
-                leagueListDto = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
-                Collections.sort(leagueListDto.getEntries());
+        try {
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-            return leagueListDto;
+            HttpEntity entity = response.getEntity();
+            leagueListDto = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
+            Collections.sort(leagueListDto.getEntries());
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return leagueListDto;
     }
 
     public LeagueListDto masterLeaguesByQueue(String queue){
@@ -87,10 +99,12 @@ public class RankingService {
         } else if (queue.equals("flex")) {
             queue = flex;
         }
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/masterleagues/by-queue/" + queue + "?api_key=" + apiKey;
 
         try {
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/league/v4/masterleagues/by-queue/" + queue + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = client.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             leagueListDto = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
@@ -105,10 +119,12 @@ public class RankingService {
 
     public SummonerDto summonerV4BySummonerId(String summonerId) {
         SummonerDto summonerDto = new SummonerDto();
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/summoner/v4/summoners/" + summonerId + "?api_key=" + apiKey;
 
         try {
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/summoner/v4/summoners/" + summonerId + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = client.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             summonerDto = objectMapper.readValue(entity.getContent(), SummonerDto.class);
@@ -122,10 +138,12 @@ public class RankingService {
 
     public AccountDto accountV1ByPuuid(String puuid) {
         AccountDto accountDto = new AccountDto();
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getSeverUrlAsia() + "/riot/account/v1/accounts/by-puuid/" + puuid + "?api_key=" + apiKey;
 
         try {
-            HttpGet request = new HttpGet(riotApiKeyDto.getSeverUrlAsia() + "/riot/account/v1/accounts/by-puuid/" + puuid + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = client.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             accountDto = objectMapper.readValue(entity.getContent(), AccountDto.class);
@@ -140,15 +158,19 @@ public class RankingService {
     public List<LeagueEntryDto> entriesLeaguesBy4param(String tier, String division, String queue, int page){
         List<LeagueEntryDto> listLeagueEntryDto = new ArrayList<>();
 
+
         if (queue.equals("solo")) {
             queue = solo;
         } else if (queue.equals("flex")) {
             queue = flex;
         }
 
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/entries/" + queue +"/"+ tier +"/"+ division + "?page=" + page +"&api_key=" + apiKey;
+
         try {
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/league/v4/entries/" + queue +"/"+ tier +"/"+ division + "?page=" + page +"&api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = client.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
 //            riotResponseCodeError(response);
 
