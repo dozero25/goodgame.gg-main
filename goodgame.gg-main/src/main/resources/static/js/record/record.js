@@ -465,7 +465,8 @@ class RecordShowInfoService {
                 loseTeam.loseSur = loseTeam.loseIndex + 4;
             }
 
-            const html = createMatchBoxHtml(matchInfo[index],
+            const html = ComponentEvent.getInstance().createMatchBoxHtml(
+                matchInfo[index],
                 participantsInfo[participantObj.parIndex],
                 participantObj,
                 matchInfo[index].info.queueId,
@@ -556,70 +557,66 @@ class ComponentEvent {
             }
         });
     }
-}
 
-
-// 챔피언 이름 정리 함수, 피들스틱 챔프의 이름이 cdn으로 보내진 값과 달라서 사용
-function fixChampionName(name) {
-    return name === "FiddleSticks" ? "Fiddlesticks" : name;
-}
-
-// queueId -> 게임 모드 이름 매핑
-const queueNameMap = {
-    420: "솔로랭크",
-    490: "일반게임",
-    440: "자유랭크",
-    450: "무작위 총력전",
-    1700: "아레나"
-};
-
-// 승/패 텍스트 색상 처리 함수
-function getWinTextColorHTML(winStatus) {
-    const color = winStatus === "WIN" ? "#0004ff" : "#f4584e";
-    return `<font color=\"${color}\">${winStatus}</font>`;
-}
-
-function getTimeAgoString(startTimestamp) {
-    const now = new Date();
-    const gameStartTime = new Date(startTimestamp);
-    const diffMs = now - gameStartTime;
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-
-    if (diffDays >= 1) {
-        return `${diffDays}일 전`;
-    } else if (diffHours >= 1) {
-        return `${diffHours}시간 전`;
-    } else {
-        return "방금 전";
+    // 챔피언 이름 정리 함수, 피들스틱 챔프의 이름이 cdn으로 보내진 값과 달라서 사용
+    fixChampionName(name) {
+        return name === "FiddleSticks" ? "Fiddlesticks" : name;
     }
-}
 
+    // queueId -> 게임 모드 이름 매핑
+    queueNameMap = {
+        420: "솔로랭크",
+        490: "일반게임",
+        440: "자유랭크",
+        450: "무작위 총력전",
+        1700: "아레나"
+    };
 
-function createMatchBoxHtml(matchData, participant, participantObj, queueId, participantsInfo, bestplayers, winTeam, loseTeam) {
-    const queueName = queueNameMap[queueId] || "기타";
-    const timeAgo = getTimeAgoString(matchData.info.gameStartTimestamp);
-    const duration = new Date(matchData.info.gameDuration * 1000);
+    // 승/패 텍스트 색상 처리 함수
+    getWinTextColorHTML(winStatus) {
+        const color = winStatus === "WIN" ? "#0004ff" : "#f4584e";
+        return `<font color=\"${color}\">${winStatus}</font>`;
+    }
 
-    const matchResultClass = participantObj.win == "WIN" ? "match-box win-color" : "match-box lose-color";
+    getTimeAgoString(startTimestamp) {
+        const now = new Date();
+        const gameStartTime = new Date(startTimestamp);
+        const diffMs = now - gameStartTime;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-    const champName = fixChampionName(participant.championName);
-    const kda = participant.deaths === 0
-        ? (participant.kills + participant.assists)
-        : ((participant.kills + participant.assists) / participant.deaths).toFixed(2);
+        if (diffDays >= 1) {
+            return `${diffDays}일 전`;
+        } else if (diffHours >= 1) {
+            return `${diffHours}시간 전`;
+        } else {
+            return "방금 전";
+        }
+    }
+    createMatchBoxHtml(matchData, participant, participantObj, queueId, participantsInfo, bestplayers, winTeam, loseTeam) {
+        const queueName = this.queueNameMap[queueId] || "기타";
+        const timeAgo = this.getTimeAgoString(matchData.info.gameStartTimestamp);
+        const duration = new Date(matchData.info.gameDuration * 1000);
 
-    const rankGameQueues = ["일반게임", "솔로랭크", "자유랭크"];
-    const aramQueues = ["무작위 총력전"];
-    const arenaQueues = ["아레나"];
-    const errorQueues = ["기타"];
+        const matchResultClass = participantObj.win == "WIN" ? "match-box win-color" : "match-box lose-color";
 
-    if (rankGameQueues.includes(queueName)) {
-        return `
+        const champName = this.fixChampionName(participant.championName);
+        const kda = participant.deaths === 0
+            ? (participant.kills + participant.assists)
+            : ((participant.kills + participant.assists) / participant.deaths).toFixed(2);
+
+        const rankGameQueues = ["일반게임", "솔로랭크", "자유랭크"];
+        const aramQueues = ["무작위 총력전"];
+        const arenaQueues = ["아레나"];
+        const errorQueues = ["기타"];
+
+        if (rankGameQueues.includes(queueName)) {
+            return `
         <div class="${matchResultClass}">
         <div class="match-info-fir">
             <span class="info-text text-fir">${queueName}</span>
             <span class="info-text text-sec">${timeAgo}</span>
-            <span class="info-text text-thi">${getWinTextColorHTML(participantObj.win)}</span>
+            <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
             <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
         </div>
         <div class="match-info-sec">
@@ -1673,13 +1670,13 @@ function createMatchBoxHtml(matchData, participant, participantObj, queueId, par
                 </div>
             </div>
         </div>`;
-    } else if (aramQueues.includes(queueName)) {
-        return `
+        } else if (aramQueues.includes(queueName)) {
+            return `
                 <div class="${matchResultClass}">
                     <div class="match-info-fir">
                         <span class="info-text text-fir">${queueName}</span>
                         <span class="info-text text-sec">${timeAgo}</span>
-                        <span class="info-text text-thi">${getWinTextColorHTML(participantObj.win)}</span>
+                        <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
                         <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
                     </div>
                     <div class="match-info-sec">
@@ -2734,13 +2731,13 @@ function createMatchBoxHtml(matchData, participant, participantObj, queueId, par
                                 </div>
                             </div>
         `
-    } else if (arenaQueues.includes(queueName)) {
-        return `
+        } else if (arenaQueues.includes(queueName)) {
+            return `
         <div class="${matchResultClass}">
                     <div class="match-info-fir">
                         <span class="info-text text-fir">${queueName}</span>
                         <span class="info-text text-sec">${timeAgo}</span>
-                        <span class="info-text text-thi">${getWinTextColorHTML(participantObj.win)}</span>
+                        <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
                         <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
                     </div>
                     <div class="match-info-sec">
@@ -2884,10 +2881,15 @@ function createMatchBoxHtml(matchData, participant, participantObj, queueId, par
                 </div>
                 <div class="detail-view-info" style="display : none"></div>
         `
-    } else if(errorQueues.includes(queueName)){
-        return `
-            <div class="match-box">죄송합니다. 빠르게 조치하겠습니다.</div>
+        } else if (errorQueues.includes(queueName)) {
+            return `
+            <div class="match-box">불편을 끼쳐 드려 죄송합니다. 빠르게 조치하겠습니다.</div>
         `
+        }
     }
-
 }
+
+
+
+
+
