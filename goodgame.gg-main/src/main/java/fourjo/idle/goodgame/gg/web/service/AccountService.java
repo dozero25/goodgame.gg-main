@@ -114,83 +114,108 @@ public class AccountService {
     }
 
     public Map<String, Object> extractUserOfOauth2Info(Object principal) {
-        if (principal == null || principal.equals("anonymousUser")) {
+        if (principal == null || "anonymousUser".equals(principal)) {
             return null;
         }
 
-        Map<String, Object> responseData = new HashMap<>();
-
         if (principal instanceof PrincipalDetails principalDetails) {
-            responseData.put("type", "local");
-            responseData.put("userIndex", accountRepository.findUserByUserIndex(principalDetails.getUsername()));
-            responseData.put("username", principalDetails.getUsername());
-            responseData.put("roles", principalDetails.getAuthorities());
+            return extractLocalUserInfo(principalDetails);
         } else if (principal instanceof OAuth2User oauth2User) {
-
-            Map<String, Object> attributes = oauth2User.getAttributes();
-            String provider = "";
-
-            responseData.put("type", "oauth2");
-
-            if (attributes.containsKey("kakao_account")) {
-                provider = "kakao";
-                Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-                Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
-
-                responseData.put("nickname", profile.getOrDefault("nickname", "unknown"));
-                responseData.put("email", kakaoAccount.getOrDefault("email", "null"));
-            } else if (attributes.containsKey("response")) {
-                provider = "naver";
-                Map<String, Object> response = (Map<String, Object>) attributes.get("response");
-
-                responseData.put("nickname", response.getOrDefault("nickname", "unknown"));
-                responseData.put("email", response.getOrDefault("email", "null"));
-            } else {
-                responseData.put("nickname", oauth2User.getAttribute("nickname"));
-                responseData.put("email", oauth2User.getAttribute("email"));
-            }
-            responseData.put("provider", provider);
-
-            String oauth2Id = provider + "_" + responseData.get("email");
-            String nickname = (String) responseData.get("nickname");
-            String email = (String) responseData.get("email");
-
-            boolean isValid = true;
-
-            try {
-                String result = accountRepository.findUserByUserIdForError(oauth2Id);
-
-                Map<String, String> errorMap = new HashMap<>();
-                if(result != null){
-                    errorMap.put("registerError", "이미 존재하는 아이디입니다.");
-                    throw new CustomSameNickNameException(errorMap);
-                }
-
-            } catch (CustomSameUserIdException c) {
-                isValid = false;
-            } catch (Exception e) {
-                isValid = false;
-            }
-
-            if(isValid){
-                UserMst userMst = new UserMst();
-
-                userMst.setUserId(oauth2Id);
-                userMst.setUserPw(new BCryptPasswordEncoder().encode(oauth2Id));
-                userMst.setUserNick(nickname);
-                userMst.setUserGender("m");
-                userMst.setUserEmail(email);
-
-                accountRepository.registerUser(userMst);
-                accountRepository.saveUserRole(userMst.getUserId());
-            }
-            int userIndex = accountRepository.findUserByUserIndex(oauth2Id);
-            responseData.put("userIndex", userIndex);
-
+            return extractOAuth2UserInfo(oauth2User);
         }
 
+        return null;
+    }
+
+    private Map<String, Object> extractLocalUserInfo(PrincipalDetails principalDetails) {
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("type", "local");
+        responseData.put("userIndex", accountRepository.findUserByUserIndex(principalDetails.getUsername()));
+        responseData.put("username", principalDetails.getUsername());
+        responseData.put("roles", principalDetails.getAuthorities());
+        return responseData;
+    }
+
+    private Map<String, Object> extractOAuth2UserInfo(OAuth2User oauth2User) {
+        Map<String, Object> attributes = oauth2User.getAttributes();
+        String provider = detectProvider(attributes);
+
+        Map<String, Object> userInfo = extractOAuthAttributes(attributes, provider);
+        String nickname = (String) userInfo.get("nickname");
+        String email = (String) userInfo.get("email");
+        String oauth2Id = provider + "_" + email;
+
+        registerUserIfNotExists(oauth2Id, nickname, email);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("type", "oauth2");
+        responseData.put("provider", provider);
+        responseData.put("nickname", nickname);
+        responseData.put("email", email);
+        responseData.put("userIndex", accountRepository.findUserByUserIndex(oauth2Id));
 
         return responseData;
     }
+
+    private String detectProvider(Map<String, Object> attributes) {
+        if (attributes.containsKey("kakao_account")) {
+            return "kakao";
+        } else if (attributes.containsKey("response")) {
+            return "naver";
+        } else {
+            return "google";
+        }
+    }
+
+    private Map<String, Object> extractOAuthAttributes(Map<String, Object> attributes, String provider) {
+        Map<String, Object> userInfo = new HashMap<>();
+
+        switch (provider) {
+            case "kakao" -> {
+                Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+                Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+                userInfo.put("nickname", profile.getOrDefault("nickname", "unknown"));
+                userInfo.put("email", kakaoAccount.getOrDefault("email", "null"));
+            }
+            case "naver" -> {
+                Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+                userInfo.put("nickname", response.getOrDefault("nickname", "unknown"));
+                userInfo.put("email", response.getOrDefault("email", "null"));
+            }
+            default -> {
+                userInfo.put("nickname", attributes.getOrDefault("nickname", "unknown"));
+                userInfo.put("email", attributes.getOrDefault("email", "null"));
+            }
+        }
+
+        return userInfo;
+    }
+
+    private void registerUserIfNotExists(String oauth2Id, String nickname, String email) {
+        try {
+            String result = accountRepository.findUserByUserIdForError(oauth2Id);
+
+            if (result != null) {
+                Map<String, String> errorMap = new HashMap<>();
+                errorMap.put("registerError", "이미 존재하는 아이디입니다.");
+                throw new CustomSameNickNameException(errorMap);
+            }
+        } catch (CustomSameUserIdException ignored) {
+            return;
+        } catch (Exception e) {
+            return;
+        }
+
+        UserMst userMst = new UserMst();
+        userMst.setUserId(oauth2Id);
+        userMst.setUserPw(new BCryptPasswordEncoder().encode(oauth2Id));
+        userMst.setUserNick(nickname);
+        userMst.setUserGender("m");
+        userMst.setUserEmail(email);
+
+        accountRepository.registerUser(userMst);
+        accountRepository.saveUserRole(userMst.getUserId());
+    }
+
 
 }
