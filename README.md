@@ -1,31 +1,142 @@
 ![p1](https://github.com/user-attachments/assets/fa2b9cd6-01c0-42b3-b236-3d78986dc6e6)
-![p2](https://github.com/user-attachments/assets/07ae82df-2e7f-453a-81da-eca63a788bcf)
-![p3](https://github.com/user-attachments/assets/5364b22f-3982-418b-a25d-7864ad66a3db)
-![p4](https://github.com/user-attachments/assets/1a74b6a7-8565-4220-b670-f59fbd963331)
-![p5](https://github.com/user-attachments/assets/47caece1-ea05-46d1-a07e-382956f8a207)
-![p6](https://github.com/user-attachments/assets/60714cd0-6f95-4fcf-b09f-32464fa18687)
-![p7](https://github.com/user-attachments/assets/01b4cab6-9e8b-49f4-82b8-350ea7ed5eaa)
-![p8](https://github.com/user-attachments/assets/e79c5356-5227-4622-aef3-b0f3189cdd3f)
-![p9](https://github.com/user-attachments/assets/3571dd04-0bfd-4f0b-922a-c8eb9c805b9b)
-![p10](https://github.com/user-attachments/assets/7be170c2-290a-4099-a944-010b1ea7035e)
-![p11](https://github.com/user-attachments/assets/36211fc8-25d5-4a07-8b11-5e43a048c512)
-![p12](https://github.com/user-attachments/assets/efc14ca6-12f7-45e1-a992-29c96ce548d7)
-![p13](https://github.com/user-attachments/assets/6f8a9a32-e0b5-4ccb-b57e-3393f9e15755)
-![p14](https://github.com/user-attachments/assets/81ce5f73-981f-4cf8-a108-1499f3e786d5)
-![p15](https://github.com/user-attachments/assets/03563b49-7af5-4789-8ada-2e85de42a8f5)
-![p16](https://github.com/user-attachments/assets/e2c1b744-fe97-4f6a-a8d4-3800483a5dc0)
-![p17](https://github.com/user-attachments/assets/ec0e741c-5202-4f30-b52d-0a8fcc841ef8)
-![p18](https://github.com/user-attachments/assets/bcd1deff-53b0-4cb1-af02-9e2f3d71fdc6)
-![p19](https://github.com/user-attachments/assets/42c45e33-cef6-40d3-9646-57d0b18f0a44)
-![p20](https://github.com/user-attachments/assets/051a0f94-be98-4642-83ed-740629361694)
-![p21](https://github.com/user-attachments/assets/f8f32992-052c-4db3-baf1-4c1667c561ba)
-![p22](https://github.com/user-attachments/assets/58858d27-1ccb-444b-8b61-c5b46578bcb5)
-![p23](https://github.com/user-attachments/assets/d63ae78b-6e23-4a9c-adfd-f841f8967a03)
-![p24](https://github.com/user-attachments/assets/b41d4620-e5f9-4cc1-9424-32c4fe134146)
-![p25](https://github.com/user-attachments/assets/93a83d24-3a04-4a5f-8a4c-efdec0e9f43c)
+
+# 프로젝트 개요
+
+프로젝트 목적 
+- 프로젝트 종료 후 개인 학습 및 기능 추가
+- 코드 개선 및 SQL 쿼리 개선으로 리팩토링 학습
 
 
+# 프로젝트 코드 개선 및 기능 추가
 
+### 전적검색 JS 코드 기능 개선
+- 직접적으로 URL에 노출된 API_KEY는 보안의 위험성이 있기 때문에 YML에 추가 및 RiotApiKeyDto 변경
+``` YML
+  riot:
+    api:
+      key: {key}
+      server-url: {sever-url}
+      asia-url: {asia-url}
+```
+<br>
 
+- 기존 코드의 조건이 길어지고 가독성이 떨어짐, 반복해서 사용할 경우 같은 조건을 여러번 사용해야하므로 중복 코드가 발생
+- fixChampionName(), getWinTextColorHTML(), getTimeAgoString()로 분리하여 코드 재사용 가능 및 가독성 향상
+``` JS
+    // 챔피언 이름 정리 함수, 피들스틱 챔프의 이름이 cdn으로 보내진 값과 달라서 사용
+    fixChampionName(name) {
+          return name === "FiddleSticks" ? "Fiddlesticks" : name;
+    }
 
+    // 승/패 텍스트 색상 처리 함수
+    getWinTextColorHTML(winStatus) {
+          const color = winStatus === "WIN" ? "#0004ff" : "#f4584e";
+          return `<font color=\"${color}\">${winStatus}</font>`;
+    }
 
+    // 게임 시간 계산 함수
+    getTimeAgoString(startTimestamp) {
+          const now = new Date();
+          const gameStartTime = new Date(startTimestamp);
+          const diffMs = now - gameStartTime;
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+          if (diffDays >= 1) {
+              return `${diffDays}일 전`;
+          } else if (diffHours >= 1) {
+              return `${diffHours}시간 전`;
+          } else {
+              return "방금 전";
+          }
+    }
+```
+
+<br>
+
+- if(queueId == 420 || quqeId == 440 ...) 이런 코드는 길어지고, 나중에 모드가 추가되면 수정이 복잡해짐. 실제로 아레나가 추가되면서 더욱 복잡해졌음
+- 객체로 정리하면서 모드가 추가되면 객체에 값만 추가하면 되는 형식으로 변경
+``` JS
+    queueNameMap = {
+        420: "솔로랭크",
+        490: "일반게임",
+        440: "자유랭크",
+        450: "무작위 총력전",
+        1700: "아레나"
+    };
+```
+
+<br>
+
+- 함수 하나로 사용
+- 일반게임, 솔로랭크, 자유랭크는 UI를 공유하기 때문에 하나로 묶고 무작위 총력전, 아레나는 UI가 다르기 때문에 다른 UI로 출력
+```JS
+    createMatchBoxHtml(matchData, participant, participantObj, queueId, participantsInfo, bestplayers, winTeam, loseTeam) {
+        const queueName = this.queueNameMap[queueId] || "기타";
+        const timeAgo = this.getTimeAgoString(matchData.info.gameStartTimestamp);
+        const duration = new Date(matchData.info.gameDuration * 1000);
+
+        const matchResultClass = participantObj.win == "WIN" ? "match-box win-color" : "match-box lose-color";
+
+        const champName = this.fixChampionName(participant.championName);
+        const kda = participant.deaths === 0
+            ? (participant.kills + participant.assists)
+            : ((participant.kills + participant.assists) / participant.deaths).toFixed(2);
+
+        const rankGameQueues = ["일반게임", "솔로랭크", "자유랭크"];
+        const aramQueues = ["무작위 총력전"];
+        const arenaQueues = ["아레나"];
+        const errorQueues = ["기타"];
+
+        if (rankGameQueues.includes(queueName)) {
+            return `
+        <div class="${matchResultClass}">
+        <div class="match-info-fir">
+            <span class="info-text text-fir">${queueName}</span>
+            <span class="info-text text-sec">${timeAgo}</span>
+            <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
+            <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
+        </div>
+        ...
+        } else if (aramQueues.includes(queueName)) {
+            return `
+                <div class="${matchResultClass}">
+                    <div class="match-info-fir">
+                        <span class="info-text text-fir">${queueName}</span>
+                        <span class="info-text text-sec">${timeAgo}</span>
+                        <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
+                        <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
+                    </div>
+        ...
+       } else if (errorQueues.includes(queueName)) {
+            return `
+            <div class="match-box">불편을 끼쳐 드려 죄송합니다. 빠르게 조치하겠습니다.</div>
+        `
+        }
+```
+
+### Oauth2 추가
+- yml에 naver, kakao 추가
+``` xml
+  security:
+    oauth2:
+      client:
+        registration:
+          naver:
+            clientId: {clientId}
+            clientSecret: {clientSecret}
+            ...
+            redirectUri: {redirectUri}
+          kakao:
+            clientId: {clientId}
+            ...
+            redirectUri: {redirectUri}
+
+```
+
+<br>
+
+- Spring Security 기반 인증 구조에 OAuth2 소셜 로그인(Kakao, Naver) 기능을 통합
+``` JAVA
+
+```
