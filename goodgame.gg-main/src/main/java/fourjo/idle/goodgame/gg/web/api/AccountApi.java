@@ -13,9 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,18 +59,18 @@ public class AccountApi {
 
     @GetMapping("/principal")
     @Operation(summary ="권한 확인", description = "로그인할때 권환을 확인합니다." )
-    public ResponseEntity<CMRespDto<?>> getPrincipalDetails (@AuthenticationPrincipal PrincipalDetails principalDetails){
+    public ResponseEntity<CMRespDto<?>> getPrincipalDetails (@AuthenticationPrincipal Object principal){
 
-        if(principalDetails != null){
-            principalDetails.getAuthorities().forEach(role -> {
-            });
-        } else {
+        Map<String, Object> userInfo = accountService.extractUserOfOauth2Info(principal);
+
+        if(userInfo == null){
             return ResponseEntity
                     .badRequest()
                     .body(new CMRespDto<>(HttpStatus.BAD_REQUEST.value(), "failed login", null));
-        }
 
-        return ResponseEntity.ok()
-                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully registered", principalDetails));
+        }
+        return ResponseEntity
+                .ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully data", userInfo));
     }
 }

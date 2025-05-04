@@ -30,20 +30,17 @@ public class RotationsApi {
     @GetMapping("/rotationsChampion")
     @Operation(summary ="로테이션 챔프 출력", description = "현재 무료 챔프 로페티션을 가져옵니다.")
     public ResponseEntity<CMRespDto<?>> rotationsChampion() {
-
         List<ChampionEnum> championEnumList = rotationsService.rotationsChampion();
 
         List<Map<String, ChampionInfoDto.ChampionData>> championDataList = new ArrayList<>();
 
         for (int i=0; i<championEnumList.size(); i++) {
-            championDataList.add(rotationsService.ChampionInfo(championEnumList.get(i))); //Olaf
+            championDataList.add(rotationsService.ChampionInfo(championEnumList.get(i)));
         }
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully registered", championDataList));
     }
-
-
 
     @GetMapping("/ChampionInfo")
     @Operation(summary ="챔피언 정보 출력", description = "챔피언의 스킬 정보를 가져옵니다.")

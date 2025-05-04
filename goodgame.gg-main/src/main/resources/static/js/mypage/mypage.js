@@ -84,7 +84,7 @@ class MyPageApi {
         $.ajax({
             async: false,
             type: "patch",
-            url: `http://localhost:8000/api/mypage/update/${PrincipalApi.getInstance().getPrincipal().user.userIndex}`,
+            url: `http://localhost:8000/api/mypage/update/${PrincipalApi.getInstance().getPrincipal().userIndex}`,
             contentType: "application/json",
             data: JSON.stringify(MyPageObj),
             dataType: "json",
@@ -105,7 +105,7 @@ class MyPageApi {
         $.ajax({
             async: false,
             type: "GET",
-            url: `http://localhost:8000/api/mypage/selectOne/${PrincipalApi.getInstance().getPrincipal().user.userIndex}`,
+            url: `http://localhost:8000/api/mypage/selectOne/${PrincipalApi.getInstance().getPrincipal().userIndex}`,
 
             dataType: "json",
             success: response => {
@@ -122,7 +122,7 @@ class MyPageApi {
     printBoardList() {
         let returnData = null;
 
-        searchObjByBoard.userIndex = `${PrincipalApi.getInstance().getPrincipal().user.userIndex}`;
+        searchObjByBoard.userIndex = `${PrincipalApi.getInstance().getPrincipal().userIndex}`;
         $.ajax({
             async: false,
             type: "get",
@@ -143,7 +143,7 @@ class MyPageApi {
 
         let returnData = null;
 
-        BoardObj.userIndex = `${PrincipalApi.getInstance().getPrincipal().user.userIndex}`;
+        BoardObj.userIndex = `${PrincipalApi.getInstance().getPrincipal().userIndex}`;
 
         $.ajax({
             async: false,
@@ -163,7 +163,7 @@ class MyPageApi {
 
     printReplyList() {
         let returnData = null;
-        searchObjByReply.userIndex = `${PrincipalApi.getInstance().getPrincipal().user.userIndex}`;
+        searchObjByReply.userIndex = `${PrincipalApi.getInstance().getPrincipal().userIndex}`;
         $.ajax({
             async: false,
             type: "get",
@@ -185,7 +185,7 @@ class MyPageApi {
 
         let returnData = null;
 
-        ReplyObj.userIndex = `${PrincipalApi.getInstance().getPrincipal().user.userIndex}`;
+        ReplyObj.userIndex = `${PrincipalApi.getInstance().getPrincipal().userIndex}`;
 
         $.ajax({
             async: false,
@@ -497,10 +497,12 @@ class ComponentEvent {
     addClickEventModificationButton() {
         const modificationButton = document.querySelector(".modification-button");
 
-        /*modificationButton.addEventListener("click", function() {*/
         modificationButton.onclick = () => {
             const modificationInputs = document.querySelectorAll('.modification-input');
             const modificationOKButton = document.querySelector('.modificationOK-button');
+
+            document.querySelector(".modification-button").style.display = "none";
+            document.querySelector(".modificationOK-button").style.display = "inline";
 
             modificationInputs.forEach(input => {
                 input.disabled = false;
@@ -524,6 +526,10 @@ class ComponentEvent {
                     });
                     modificationButton.disabled = false;
                     modificationOKButton.disabled = true;
+
+                    document.querySelector(".modification-button").style.display = "inline";
+                    document.querySelector(".modificationOK-button").style.display = "none";
+
                     MyPageService.getInstance().printMyPage();
                 } else {
                     alert("수정에 실패했습니다. 다시 시도해주세요.");
@@ -539,7 +545,7 @@ class ComponentEvent {
         deleteBtn.forEach((btn, index) => {
             btn.onclick = () => {
                 deletebox.boardIndex = btn.value;
-                deletebox.userIndex = PrincipalApi.getInstance().getPrincipal().user.userIndex;
+                deletebox.userIndex = PrincipalApi.getInstance().getPrincipal().userIndex;
 
                 const successFlag = new MyPageApi().deleteBoardInMypage(deletebox);
                 
@@ -563,7 +569,7 @@ class ComponentEvent {
                 deleteReplyBox.boardIndex = btn.value;
                 deleteReplyBox.replyGroup = groupVal[index].value;
                 deleteReplyBox.replySequence = seqVal[index].value;
-                deleteReplyBox.userIndex = PrincipalApi.getInstance().getPrincipal().user.userIndex;
+                deleteReplyBox.userIndex = PrincipalApi.getInstance().getPrincipal().userIndex;
 
                 const successFlag = new MyPageApi().deleteReplyInMypage(deleteReplyBox);
                 

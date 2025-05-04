@@ -369,7 +369,7 @@ class BoardSelectOneService {
         boardObj.boardIndex = URLSearch.get("boardIndex");
         boardLikeObj.boardIndex = URLSearch.get("boardIndex");
 
-        boardLikeObj.userIndex = principal == null ? null : principal.user.userIndex;
+        boardLikeObj.userIndex = principal == null ? null : principal.userIndex;
 
         replyObj.boardIndex = URLSearch.get("boardIndex");
     }
@@ -392,7 +392,7 @@ class BoardSelectOneService {
             <a href="/board">
                  <button type="button" class="returnBoard">목록으로</button>
             </a>
-             ${boardLikeObj.userIndex != null && principal.user.userIndex == responseData.userIndex ?
+             ${boardLikeObj.userIndex != null && principal.userIndex == responseData.userIndex ?
                 `
                 <button type="button" class="update-btn" value="${responseData.boardIndex}">글수정</button>
                 <button type="button" class="delete-btn" value="${responseData.boardIndex}">글삭제</button>
@@ -494,7 +494,7 @@ class BoardSelectOneService {
                         
                             <td>
                                 <button type="button" id="reply-group-insert" class="reply-group-insert"  data-value1="${data.replyIndex}"  data-value2="${data.boardIndex}" class="replyGroupUpdateBtn">답글</button>                           
-                            ${boardLikeObj.userIndex != null && principal.user.userIndex == data.userIndex ? `  
+                            ${boardLikeObj.userIndex != null && principal.userIndex == data.userIndex ? `  
                                 <button type="button" id="reply-group-update"  data-value1="${data.replyIndex}"  data-value2="${data.boardIndex}" class="replyGroupUpdateBtn">수정</button>                           
                                 <button type="button" id="reply-group-delete" class="replyGroupDeleteBtn" data-value1="${data.replyIndex}"  data-value2="${data.boardIndex}" >삭제</button>
                             </td>
@@ -525,7 +525,7 @@ class BoardSelectOneService {
                             <td class = "SquenceContent">${data.replyContent}</td>
                         </tbody>
                     <tfoot>      
-                        ${boardLikeObj.userIndex != null && principal.user.userIndex == data.userIndex ?
+                        ${boardLikeObj.userIndex != null && principal.userIndex == data.userIndex ?
                         `
                             <tr>
                                 <td>
@@ -565,7 +565,7 @@ class BoardSelectOneService {
         const principal = PrincipalApi.getInstance().getPrincipal();
 
         replyObj.boardIndex = boardObj.boardIndex;
-        replyObj.userIndex = principal.user.userIndex;
+        replyObj.userIndex = principal.userIndex;
         replyObj.replyContent = replyInsert.value;
     }
 
@@ -720,7 +720,7 @@ class ComponentEvent {
                 if (principal == null) {
                     location.href = "/login";
                 } else {
-                    replyObj.userIndex = principal.user.userIndex;
+                    replyObj.userIndex = principal.userIndex;
                     const replyGroup = btn.value;
                     const replyGroupInput = replyGroupInputs[index];
 

@@ -96,7 +96,7 @@ class BoardInsertService {
 
         } else {
             if (uploadFile == null) {
-                boardObj.userIndex = principal.user.userIndex;
+                boardObj.userIndex = principal.userIndex;
                 boardObj.boardSubject = document.getElementById("subject").value;
                 boardObj.boardContent = document.getElementById("content").value;
                 BoardInsertApi.getInstance().insertBoard() == true ? insertOK = 0 : insertOK = 3;
@@ -109,7 +109,7 @@ class BoardInsertService {
                     insertOK = 2;
                 } else {
                     formData.append('file', uploadFile);
-                    formData.append('userIndex', principal.user.userIndex);
+                    formData.append('userIndex', principal.userIndex);
                     formData.append('boardSubject', document.getElementById("subject").value);
                     formData.append('boardContent', document.getElementById("content").value);
 

@@ -35,6 +35,7 @@ public class RotationsService {
         RotationsChampionDto rotationsChampionDto = new RotationsChampionDto();
         String apiKey = riotApiKeyDto.getMyKey();
         String url = riotApiKeyDto.getServerUrl() + "/lol/platform/v3/champion-rotations/?api_key=" + apiKey;
+
         try {
             HttpGet request = new HttpGet(url);
             HttpResponse response = httpClient.execute(request);
@@ -45,7 +46,6 @@ public class RotationsService {
 
         } catch (IOException e) {
             e.printStackTrace();
-
         }
 
         List<Integer> freeChampionInt = rotationsChampionDto.getFreeChampionIds();

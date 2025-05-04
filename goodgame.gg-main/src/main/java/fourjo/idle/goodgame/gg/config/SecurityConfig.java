@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @Configuration
@@ -21,10 +20,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() throws Exception{
+    public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
         return (web) -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
@@ -36,10 +37,12 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/main","/login", "/","/board","/ranking", "/duo", "/record", "/record/**", "/lolbti", "/board/selectOne").permitAll()
-                        .requestMatchers("/board/insert/**", "/board/update/**","/board/delete/**","/mypage" ,"/mypage/**").hasAuthority("USER")
+                        .requestMatchers("/static/css/**", "/static/js/**", "/static/images/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/main", "/login", "/", "/board", "/ranking", "/duo", "/record", "/record/**", "/lolbti", "/board/selectOne").permitAll()
+                        .requestMatchers("/board/insert/**", "/board/update/**", "/board/delete/**", "/mypage", "/mypage/**").authenticated()
                         .requestMatchers("/admin/**").hasAnyRole("EMP1")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -50,11 +53,17 @@ public class SecurityConfig {
                         .passwordParameter("pw")
                         .permitAll()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/main", true)
+                )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/main")
                         .invalidateHttpSession(true)
-                        .permitAll());
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
         return http.build();
     }
 
