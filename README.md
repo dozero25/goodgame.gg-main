@@ -1,13 +1,21 @@
 ![p1](https://github.com/user-attachments/assets/fa2b9cd6-01c0-42b3-b236-3d78986dc6e6)
 
-# 프로젝트 개요
+# goodgame.gg
 
-프로젝트 목적 
+롤 게임 전적 사이트
+
+## 프로젝트 개요
+
 - 프로젝트 종료 후 개인 학습 및 기능 추가
 - 코드 개선 및 SQL 쿼리 개선으로 리팩토링 학습
 
+## 기술 스택
+- **Frontend** : JavaScript, HTML, CSS
+- **Backend** : Java, Spring Boot
+- **Authentication** : Spring Security, OAuth2 (Kakao, Naver 연동)
+- **Database** : MySQL
 
-# 프로젝트 코드 개선 및 기능 추가
+## 프로젝트 코드 개선 및 기능 추가
 
 ### 전적검색 JS 코드 기능 개선
 - 직접적으로 URL에 노출된 API_KEY는 보안의 위험성이 있기 때문에 YML에 추가 및 RiotApiKeyDto 변경
