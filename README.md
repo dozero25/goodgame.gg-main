@@ -137,6 +137,189 @@
 <br>
 
 - Spring Security 기반 인증 구조에 OAuth2 소셜 로그인(Kakao, Naver) 기능을 통합
+- 하드 코딩된 전체 메서드를 역할별로 나누고 중복 제거 -> 가독성 및 재사용성 상승
 ``` JAVA
+public Map<String, Object> extractUserOfOauth2Info(Object principal) {
+    if (principal == null || "anonymousUser".equals(principal)) {
+        return null;
+    }
 
+    if (principal instanceof PrincipalDetails principalDetails) {
+        return extractLocalUserInfo(principalDetails);
+    } else if (principal instanceof OAuth2User oauth2User) {
+        return extractOAuth2UserInfo(oauth2User);
+    }
+
+    return null;
+}
+
+private Map<String, Object> extractLocalUserInfo(PrincipalDetails principalDetails) {
+    Map<String, Object> responseData = new HashMap<>();
+    responseData.put("type", "local");
+    responseData.put("userIndex", accountRepository.findUserByUserIndex(principalDetails.getUsername()));
+    responseData.put("username", principalDetails.getUsername());
+    responseData.put("roles", principalDetails.getAuthorities());
+    return responseData;
+}
+
+private Map<String, Object> extractOAuth2UserInfo(OAuth2User oauth2User) {
+    Map<String, Object> attributes = oauth2User.getAttributes();
+    String provider = detectProvider(attributes);
+
+    Map<String, Object> userInfo = extractOAuthAttributes(attributes, provider);
+    String nickname = (String) userInfo.get("nickname");
+    String email = (String) userInfo.get("email");
+    String oauth2Id = provider + "_" + email;
+
+    registerUserIfNotExists(oauth2Id, nickname, email);
+
+    Map<String, Object> responseData = new HashMap<>();
+    responseData.put("type", "oauth2");
+    responseData.put("provider", provider);
+    responseData.put("nickname", nickname);
+    responseData.put("email", email);
+    responseData.put("userIndex", accountRepository.findUserByUserIndex(oauth2Id));
+
+    return responseData;
+}
+
+private String detectProvider(Map<String, Object> attributes) {
+    if (attributes.containsKey("kakao_account")) {
+        return "kakao";
+    } else if (attributes.containsKey("response")) {
+        return "naver";
+    } else {
+        return "google"; // fallback or others
+    }
+}
+
+private Map<String, Object> extractOAuthAttributes(Map<String, Object> attributes, String provider) {
+    Map<String, Object> userInfo = new HashMap<>();
+
+    switch (provider) {
+        case "kakao" -> {
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+            userInfo.put("nickname", profile.getOrDefault("nickname", "unknown"));
+            userInfo.put("email", kakaoAccount.getOrDefault("email", "null"));
+        }
+        case "naver" -> {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            userInfo.put("nickname", response.getOrDefault("nickname", "unknown"));
+            userInfo.put("email", response.getOrDefault("email", "null"));
+        }
+        default -> {
+            userInfo.put("nickname", attributes.getOrDefault("nickname", "unknown"));
+            userInfo.put("email", attributes.getOrDefault("email", "null"));
+        }
+    }
+
+    return userInfo;
+}
+
+private void registerUserIfNotExists(String oauth2Id, String nickname, String email) {
+    try {
+        String result = accountRepository.findUserByUserIdForError(oauth2Id);
+
+        if (result != null) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("registerError", "이미 존재하는 아이디입니다.");
+            throw new CustomSameNickNameException(errorMap);
+        }
+    } catch (CustomSameUserIdException ignored) {
+       퇴
+    oauth2DeleteSection() {
+        const userType = PrincipalApi.getInstance().getPrincipal().type;
+
+        if (userType === "oauth2") {
+            document.getElementById('check-user-pw-button').style.display = "none";
+            document.getElementById('delete-button').disabled = false;
+
+            document.getElementById('delete-button').onclick = () => {
+                const width = 400;
+                const height = 250;
+        
+                const screenX = window.screen.availWidth;
+                const screenY = window.screen.availHeight;
+        
+                const left = (screenX - width) / 2;
+                const top = (screenY - height) / 2;
+
+                const confirmWindow = window.open('', '_blank', `width=${width},height=${height},left=${left},top=${top}`);
+
+                const confirmContent = `
+                        <html>
+                            <head>
+                                <style>
+                                    body {
+                                        font-family: 'Arial', sans-serif;
+                                        text-align: center;
+                                        background-color: #f8f9fa;
+                                        padding: 30px;
+                                    }
+
+                                    h2 {
+                                        color: #dc3545;
+                                    }
+
+                                    p {
+                                        margin-top: 10px;
+                                        color: #333;
+                                    }
+
+                                    #confirm-delete-btn {
+                                        margin-top: 20px;
+                                        padding: 10px 20px;
+                                        background-color: #dc3545;
+                                        color: white;
+                                        border: none;
+                                        border-radius: 5px;
+                                        cursor: pointer;
+                                    }
+
+                                    #confirm-delete-btn:hover {
+                                        background-color: #c82333;
+                                    }
+                                </style>
+                                <title>회원 탈퇴 확인</title>
+                            </head>
+                            <body>
+                                <h2>정말로 회원 탈퇴하시겠습니까?</h2>
+                                <p>탈퇴를 원하지 않으면 이 창을 닫아주세요.</p>
+                                <button id="confirm-delete-btn">탈퇴하기</button>
+
+                                <script>
+                                    window.onload = function() {
+                                        document.getElementById('confirm-delete-btn').onclick = function() {
+                                            window.opener.postMessage({ action: "confirmDelete" }, "*");
+                                            window.close();
+                                        };
+                                    };
+                                </script>
+                            </body>
+                        </html>
+                `;
+
+                confirmWindow.document.open();
+                confirmWindow.document.write(confirmContent);
+                confirmWindow.document.close();
+            };
+
+            window.addEventListener("message", (event) => {
+                if (event.data.action === "confirmDelete") {
+                    const successFlag = MyPageService.getInstance().deleteAll();
+                    if (successFlag) {
+                        alert("회원탈퇴 완료되었습니다.");
+                        window.location.href = "/logout";
+                    } else {
+                        alert("회원탈퇴 실패하였습니다.");
+                        location.reload();
+                    }
+                }
+            });
+        } else {
+            ComponentEvent.getInstance().ClickEventPopupForCheckUserPw();
+            ComponentEvent.getInstance().ClickEventDeleteButton();
+        }
+    }
 ```
