@@ -1,6 +1,7 @@
 package fourjo.idle.goodgame.gg.web.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fourjo.idle.goodgame.gg.repository.DuoRepository;
 import fourjo.idle.goodgame.gg.web.dto.duo.*;
@@ -24,18 +25,27 @@ public class DuoService {
     @Autowired
     DuoRepository duoRepository;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private final RiotApiKeyDto riotApiKeyDto = new RiotApiKeyDto();
+    private ObjectMapper objectMapper;
+    private final RiotApiKeyDto riotApiKeyDto;
+    private final HttpClient httpClient;
 
-    public AccountDto searchPuuidBySummonerNameAndTagLine(String summonerName, String tagLine) {
+    public DuoService(RiotApiKeyDto riotApiKeyDto) {
+        this.riotApiKeyDto = riotApiKeyDto;
+        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        this.httpClient = HttpClientBuilder.create().build();
+    }
 
+    public AccountDto searchPuuidBySummonerNameAndTagLine(String gameName, String tagLine) {
         AccountDto accountDto = new AccountDto();
-        try {
 
-            summonerName = summonerName.replaceAll(" ", "%20");
-            HttpClient c = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(riotApiKeyDto.getSeverUrlAsia() + "/riot/account/v1/accounts/by-riot-id/" + summonerName + "/" + tagLine + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = c.execute(request);
+        gameName = gameName.replaceAll(" ", "%20");
+
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getSeverUrlAsia() + "/riot/account/v1/accounts/by-riot-id/" + gameName+"/"+tagLine+ "?api_key=" + apiKey;
+
+        try {
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             accountDto = objectMapper.readValue(entity.getContent(), AccountDto.class);
@@ -50,12 +60,13 @@ public class DuoService {
     public String searchMostThreeChampionsByPuuid(String puuid) {
         String threeChampionName = "";
         List<ChampionMasteryDto> championMasteryDto = new ArrayList<>();
+
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid + "?api_key=" + apiKey;
+
         try {
-
-            HttpClient c = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid + "?api_key=" + riotApiKeyDto.getMykey());
-
-            HttpResponse response = c.execute(request);
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             championMasteryDto = objectMapper.readValue(entity.getContent(), new TypeReference<>() {
@@ -74,7 +85,6 @@ public class DuoService {
             }
             threeChampionName += "-";
 
-
         }
 
         return threeChampionName;
@@ -83,11 +93,12 @@ public class DuoService {
     public SummonerDto searchEncryptedIdByPuuid(String puuid) {
 
         SummonerDto summonerDto = new SummonerDto();
-        try {
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/summoner/v4/summoners/by-puuid/" + puuid + "?api_key=" + apiKey;
 
-            HttpClient c = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/summoner/v4/summoners/by-puuid/" + puuid + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = c.execute(request);
+        try {
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             summonerDto = objectMapper.readValue(entity.getContent(), SummonerDto.class);
@@ -102,13 +113,12 @@ public class DuoService {
     public List<LeagueEntryDto> searchTierByEncryptedId(String encryptedId) {
 
         List<LeagueEntryDto> leagueEntryDto = new ArrayList<>();
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/entries/by-summoner/" + encryptedId + "?api_key=" + apiKey;
 
         try {
-
-            HttpClient c = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(riotApiKeyDto.getServerUrl() + "/lol/league/v4/entries/by-summoner/" + encryptedId + "?api_key=" + riotApiKeyDto.getMykey());
-            HttpResponse response = c.execute(request);
-
+            HttpGet request = new HttpGet(url);
+            HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();
             leagueEntryDto = objectMapper.readValue(entity.getContent(), new TypeReference<>() {

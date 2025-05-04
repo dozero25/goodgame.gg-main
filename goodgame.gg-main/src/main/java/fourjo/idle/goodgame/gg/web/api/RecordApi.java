@@ -2,7 +2,7 @@ package fourjo.idle.goodgame.gg.web.api;
 
 import fourjo.idle.goodgame.gg.web.dto.CMRespDto;
 import fourjo.idle.goodgame.gg.web.dto.record.AccountDto;
-import fourjo.idle.goodgame.gg.web.dto.record.ChampionMasteryDto;
+import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
 import fourjo.idle.goodgame.gg.web.dto.record.LeagueDto;
 import fourjo.idle.goodgame.gg.web.dto.record.matches.MatchDto;
 import fourjo.idle.goodgame.gg.web.dto.record.SummonerDto;
@@ -111,6 +111,8 @@ public class RecordApi {
     public ResponseEntity<CMRespDto<?>> searchChampionMasteryByPuuid(){
 
         List<ChampionMasteryDto> championMasteryList = recordService.searchChampionMasteryByPuuid(summonerDto.getPuuid());
+
+        System.out.println(championMasteryList);
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", championMasteryList));

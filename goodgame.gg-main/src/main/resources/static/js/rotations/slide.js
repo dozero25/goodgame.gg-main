@@ -80,16 +80,15 @@ class RotationsApi {
             success : response => {
                 returnData = response.data;
             },
-            error: error => {
-                console.log(error);
+            error: function(xhr, status, error) {
+                console.log(xhr.status, error);
             }
+            // error: error => {
+            //     console.log(error);
+            // }
         });
         return returnData;
     }
-
-
-
-
 }
 
 class RotationsService {

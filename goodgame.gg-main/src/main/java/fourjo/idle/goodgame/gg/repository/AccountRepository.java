@@ -15,6 +15,8 @@ public interface AccountRepository {
     public int registerEmp(EmpDto empDto);
     public int saveEmpRole(String empId);
 
+    public int findUserByUserIndex(String userId);
+
     public String findUserByUserIdForError(String userId);
     public String findNickNameByNickNameForError(String userNick);
     public String findEmpByEmpIdForError(String empId);

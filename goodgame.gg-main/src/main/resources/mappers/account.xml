@@ -49,6 +49,11 @@
         values(0, #{empId}, null, 2)
     </insert>
 
+    <select id="findUserByUserIndex" parameterType="string" resultType="Integer">
+        select
+        userIndex
+        from user_mst where userId = #{userId}
+    </select>
 
     <select id="findUserByUserIdForError" parameterType="string" resultType="string">
         select

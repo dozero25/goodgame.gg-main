@@ -80,11 +80,11 @@
 .modify-btn-box {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .modification-button{
   color: #ffffff;
-  margin-right: 10px;
   background-color: #0AC8B9;
   border: 1px solid #0AC8B9;
   border-radius: 3px;
