@@ -62,7 +62,8 @@ class ComponentEvent {
         const seachButton = document.querySelector(".search-button");
 
         seachButton.onclick = () => {
-            gameNameAndTagLine = searchInput.value;
+            // gameNameAndTagLine = searchInput.value;
+            gameNameAndTagLine = "hide on bush#kr1";
             gameNameAndTagLine = gameNameAndTagLine.replace("#", "-");
             let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
             

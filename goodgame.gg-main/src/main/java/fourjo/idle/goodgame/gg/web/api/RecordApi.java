@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -108,11 +109,33 @@ public class RecordApi {
 
     @GetMapping("/get/championMastery")
     @Operation(summary ="championMastery List 가져오기", description = "puuid로 championMastery 리스트를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchChampionMasteryByPuuid(){
+    public ResponseEntity<CMRespDto<?>> searchChampionMasteryByPuuid(@RequestParam(required = false) String sortBy, @RequestParam(required = false) String order, @RequestParam(required = false) String search){
 
-        List<ChampionMasteryDto> championMasteryList = recordService.searchChampionMasteryByPuuid(summonerDto.getPuuid());
+        List<ChampionMasteryDto> championMasteryList = recordService.searchChampionMasteryByPuuid(summonerDto.getPuuid(), sortBy, order, search);
 
-        System.out.println(championMasteryList);
+        if (search != null && !search.isEmpty()) {
+            championMasteryList = recordService.filterChampionMasteryBySearchTerm(championMasteryList, search);
+        }
+
+        if(sortBy != null){
+            Comparator<ChampionMasteryDto> comparator = null;
+
+            switch (sortBy) {
+                case "level":
+                    comparator = Comparator.comparing(ChampionMasteryDto::getChampionLevel);
+                    break;
+                case "points":
+                    comparator = Comparator.comparing(ChampionMasteryDto::getChampionPoints);
+                    break;
+            }
+
+            if(comparator != null){
+                if(order.equals("desc")){
+                    comparator = comparator.reversed();
+                }
+                championMasteryList.sort(comparator);
+            }
+        }
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", championMasteryList));

@@ -1,0 +1,154 @@
+body {
+    color: #ffffff;
+    font: 600 16px/18px 'Open Sans', sans-serif;
+    width: 100%;
+    height: 100%;
+
+    -ms-overflow-style: none;
+}
+
+.disflex{
+    display: flex;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.main-box {
+    width: 100%;
+    height: auto;
+}
+
+.back-img-box{
+    display: block;
+    min-width: 900px;
+    height: 275px;
+    background-image: url("/static/images/background/akali.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+.profil-box {
+    width: 100%;
+    height: 200px;
+}
+
+.head-info {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.profil-info {
+    height: 200px;
+
+    display: flex;
+    align-items: center;
+
+}
+
+.profil-left {
+    float: left;
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.profil-right {
+    float: right;
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.profil-img img {
+    max-width: 100px;
+    max-height: 100px;
+
+    border-radius: 25px;
+}
+
+.profil-summoner {
+    margin-left: 25px;
+}
+
+.profil-box:nth-child(2) {
+    height: 75px;
+    
+}
+
+.head-check {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.check-box {
+    display: flex;
+    height: 100%;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.rank-box{
+    display: flex;
+}
+
+.rank-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+}
+
+.img-box {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-box img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.rank-info {
+    width: 500px;
+}
+
+.rank-score {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.rank-score div {
+    margin-left: 15px;
+}
+
+.btn-check {
+    height: 100%;
+}
+
+.select-btn {
+    display: flex;
+}
+
+.champion-info {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+

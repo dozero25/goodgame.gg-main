@@ -1,6 +1,9 @@
 window.onload = () => {
     HeaderService.getInstance().loadHeader();
-    RecordShowInfoService.getInstance().summonerShowInfo();
+    SummonerService.getInstance().summonerShowInfo();
+    CheckboxService.getInstance().ShowCheckbox();
+
+    RecordShowInfoService.getInstance().recodeMatchesShowInfo();
 
     ComponentEvent.getInstance().addClickEventShowGameDetailInfo();
     ComponentEvent.getInstance().addClickATag();
@@ -136,25 +139,6 @@ class RecordApi {
 
         return returnData;
     }
-
-    searchChampionMasteryByPuuid() {
-        let returnData = null;
-
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/championMastery",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
-    }
 }
 
 class RecordShowInfoService {
@@ -165,58 +149,14 @@ class RecordShowInfoService {
         }
         return this.#instance;
     }
-    // const show6 = RecordApi.getInstance().searchChampionMasteryByPuuid();
-
-    summonerShowInfo() {
-        const accountData = RecordApi.getInstance().searchAccountInfoPuuid();
+    
+    recodeMatchesShowInfo() {
         const summonerData = RecordApi.getInstance().searchSummonerInfoByEncryptedPUUID();
-        const leagueData = RecordApi.getInstance().searchLeagueBySummonerName();
+        
         RecordApi.getInstance().searchMatchsByMatchId();
-
-        const profilLeft = document.querySelector(".profil-left");
-        const profilRight = document.querySelector(".profil-right");
-        const daedkkeInfo = document.querySelector(".daedkke-info");
-
-        const winning = leagueData.length != 0 ? ((leagueData[0].wins / (leagueData[0].wins + leagueData[0].losses)) * 100).toFixed(1) : "";
-
-        profilLeft.innerHTML = `
-            <div class="profil-img">
-                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/profileicon/${summonerData.profileIconId}.png" alt="">
-            </div>
-             <div class="profil-summoner">
-                <h2>${accountData.gameName} #${accountData.tagLine}</h2>
-                <h4>소환사 레벨 : ${summonerData.summonerLevel}</h1>
-            </div>
-        `;
-
-        profilRight.innerHTML = `
-            <div class="rank-box">
-                <div class="rank-img" style="margin-left: 10px;">
-                    <div class="img-box">
-                        <img src="/static/images/tier/${leagueData.length != 0 ? leagueData[0].tier : "unranked"}.png" onerror="this.style.display='none'" alt="">
-                    </div>
-                </div>
-                <div class="rank-info">
-                    <div class="rank-score" >
-                        <div>
-                            <h2 style="font-size : 20px">${leagueData.length != 0 ? leagueData[0].tier : "Unranked"}</h2>
-                        </div>
-                        <div>
-                            <h4 style="font-size : 15px">${leagueData.length != 0 ? leagueData[0].leaguePoints : 0}LP</h4>
-                        </div>
-                        <div>
-                            <h2 style="font-size : 20px">${leagueData.length != 0 ? leagueData[0].wins : ""}승 ${leagueData.length != 0 ? leagueData[0].losses : ""}패</h2>
-                        </div>
-                        <div>
-                            <h4 style="font-size : 15px">승률 ${winning}%</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
         const matchInfo = RecordApi.getInstance().searchMatchInfoByMatchId();
-
+        const daedkkeInfo = document.querySelector(".daedkke-info");
+        
         matchInfo.forEach((data, index) => {
             const participantsInfo = matchInfo[index].info.participants;
 
@@ -623,7 +563,7 @@ class ComponentEvent {
             <div class="cop-one">
                 <div class="cop-two">
                     <div class="cop-four">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${champName}.png" alt="">
                     </div>
                     <span class="cop-five">${participant.champLevel}</span>
                 </div>
@@ -674,14 +614,14 @@ class ComponentEvent {
             <li class="summoner-list">
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[0].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[0].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[0].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[0].championName}.png" alt="">
                     </div>
                     <a target="_target" href="#" class="href-summoner">${participantsInfo[0].riotIdGameName + "#" + participantsInfo[0].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[0].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[0].riotIdTagline}>
                 </div>
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[5].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[5].championName}.png" alt="">5
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[5].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[5].championName}.png" alt="">5
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[5].riotIdGameName + "#" + participantsInfo[5].riotIdTagline}</a>
                     <input type="hidden" value = ${(participantsInfo[5].riotIdGameName).replaceAll(" ", "~") + "-" + participantsInfo[5].riotIdTagline}>
@@ -690,14 +630,14 @@ class ComponentEvent {
             <li class="summoner-list">
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[1].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[1].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[1].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[1].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[1].riotIdGameName + "#" + participantsInfo[1].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[1].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[1].riotIdTagline}>
                 </div>
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[6].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[6].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[6].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[6].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[6].riotIdGameName + "#" + participantsInfo[6].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[6].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[6].riotIdTagline}>
@@ -706,14 +646,14 @@ class ComponentEvent {
             <li class="summoner-list">
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[2].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[2].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[2].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[2].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[2].riotIdGameName + "#" + participantsInfo[2].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[2].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[2].riotIdTagline}>
                 </div>
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[7].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[7].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[7].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[7].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[7].riotIdGameName + "#" + participantsInfo[7].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[7].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[7].riotIdTagline}>
@@ -722,14 +662,14 @@ class ComponentEvent {
             <li class="summoner-list">
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[3].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[3].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[3].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[3].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[3].riotIdGameName + "#" + participantsInfo[3].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[3].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[3].riotIdTagline}>
                 </div>
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[8].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[8].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[8].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[8].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[8].riotIdGameName + "#" + participantsInfo[8].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[8].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[8].riotIdTagline}>
@@ -738,14 +678,14 @@ class ComponentEvent {
             <li class="summoner-list">
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[4].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[4].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[4].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[4].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[4].riotIdGameName + "#" + participantsInfo[4].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[4].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[4].riotIdTagline}>
                 </div>
                 <div class="sulist-fcc">
                     <div class="sulist-fcc-img">
-                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[9].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[9].championName}.png" alt="">
+                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[9].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[9].championName}.png" alt="">
                     </div>
                     <a target="_blank" href="#" class="href-summoner">${participantsInfo[9].riotIdGameName + "#" + participantsInfo[9].riotIdTagline}</a>
                     <input type="hidden" value = ${participantsInfo[9].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[9].riotIdTagline}>
@@ -773,7 +713,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestDamgeChamp}.png" style="margin-right: 5px;" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestDamgeChamp}.png" style="margin-right: 5px;" alt="">
                                     <a target="_blank" href="#" class="mom-box-a">${bestplayers.bestDamgeSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value=${bestplayers.bestDamgeSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -788,7 +728,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestKillChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestKillChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestKillSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestKillSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -803,7 +743,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestDeathChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestDeathChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestDeathSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestDeathSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -818,7 +758,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestAssistChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestAssistChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestAssistSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestAssistSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -835,7 +775,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestDamgeReceiveChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestDamgeReceiveChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestDamgeReceiveSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestDamgeReceiveSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -850,7 +790,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestgoldSummonerChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestgoldSummonerChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestgoldSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestgoldSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -865,7 +805,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestKDAChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestKDAChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestKDASummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestKDASummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -880,7 +820,7 @@ class ComponentEvent {
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                 <div class="mom-box-user-box">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestCsChamp}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${bestplayers.bestCsChamp}.png" alt="">
                                     <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestCsSummoner}</a>
                                     <input type="hidden" class="mom-box-input" value = ${bestplayers.bestCsSummoner.replaceAll(" ", "~")}>
                                 </div>
@@ -937,22 +877,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -973,7 +913,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf"> 
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winTop].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winTop].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[winTeam.winTop].champLevel}</span>
                                         </div>
@@ -1013,7 +953,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseTop].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseTop].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseTop].champLevel}</span>
                                         </div>
@@ -1056,22 +996,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1084,22 +1024,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1120,7 +1060,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winJun].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winJun].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[winTeam.winJun].champLevel}</span>
                                         </div>
@@ -1160,7 +1100,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseJun].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseJun].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseJun].champLevel}</span>
                                         </div>
@@ -1203,22 +1143,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1231,22 +1171,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1267,7 +1207,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winMid].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winMid].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[winTeam.winMid].champLevel}</span>
                                         </div>
@@ -1307,7 +1247,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseMid].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseMid].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseMid].champLevel}</span>
                                         </div>
@@ -1350,22 +1290,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1378,22 +1318,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                         <div style="display: flex;">
-                                            <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item0}.png" onerror="this.style.display='none'" alt="">
+                                            <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item0}.png" onerror="this.style.display='none'" alt="">
                                         </div>
                                         <div style="display: flex;">
-                                            <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item1}.png" onerror="this.style.display='none'" alt="">
+                                            <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item1}.png" onerror="this.style.display='none'" alt="">
                                         </div>
                                         <div style="display: flex;">
-                                            <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item2}.png" onerror="this.style.display='none'" alt="">
+                                            <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item2}.png" onerror="this.style.display='none'" alt="">
                                         </div>
                                         <div style="display: flex;">
-                                            <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item3}.png" onerror="this.style.display='none'" alt="">
+                                            <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item3}.png" onerror="this.style.display='none'" alt="">
                                         </div>
                                         <div style="display: flex;">
-                                            <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item4}.png" onerror="this.style.display='none'" alt="">
+                                            <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item4}.png" onerror="this.style.display='none'" alt="">
                                         </div>
                                         <div style="display: flex;">
-                                            <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item5}.png" onerror="this.style.display='none'" alt="">
+                                            <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item5}.png" onerror="this.style.display='none'" alt="">
                                                 </div>
                                         </div>
                                     </div>
@@ -1414,7 +1354,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winBot].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winBot].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[winTeam.winBot].champLevel}</span>
                                         </div>
@@ -1454,7 +1394,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseBot].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseBot].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseBot].champLevel}</span>
                                         </div>
@@ -1497,22 +1437,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1525,22 +1465,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1561,7 +1501,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winSur].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winSur].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[winTeam.winSur].champLevel}</span>
                                         </div>
@@ -1601,7 +1541,7 @@ class ComponentEvent {
                                     <div class="aenclek">
                                         <div class="frvizneed">
                                             <div class="ebmaf">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseSur].championName}.png" alt="" class="gpvoyimg">
+                                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseSur].championName}.png" alt="" class="gpvoyimg">
                                             </div>
                                             <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseSur].champLevel}</span>
                                         </div>
@@ -1644,22 +1584,22 @@ class ComponentEvent {
                                     <div>
                                         <div class="win-game-img-box">
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item0}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item0}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item1}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item1}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item2}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item2}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item3}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item3}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item4}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item4}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                             <div style="display: flex;">
-                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item5}.png" onerror="this.style.display='none'" alt="">
+                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item5}.png" onerror="this.style.display='none'" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -1683,7 +1623,7 @@ class ComponentEvent {
                         <div class="cop-one">
                             <div class="cop-two">
                                 <div class="cop-four">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champName}.png"
+                                    <img src="${window.BASE_URL}/img/champion/${champName}.png"
                                         alt="" class="">
                                 </div>
                                 <span class="cop-five">${participant.champLevel}</span>
@@ -1734,14 +1674,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[0].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[0].championName}.png" alt="">
                                 </div>
                                 <a target="_target" href="#" class="href-summoner">${participantsInfo[0].riotIdGameName + "#" + participantsInfo[0].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[0].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[0].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[5].championName}.png" alt="">5
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[5].championName}.png" alt="">5
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[5].riotIdGameName + "#" + participantsInfo[5].riotIdTagline}</a>
                                 <input type="hidden" value = ${(participantsInfo[5].riotIdGameName).replaceAll(" ", "~") + "-" + participantsInfo[5].riotIdTagline}>
@@ -1750,14 +1690,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[1].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[1].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[1].riotIdGameName + "#" + participantsInfo[1].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[1].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[1].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[6].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[6].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[6].riotIdGameName + "#" + participantsInfo[6].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[6].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[6].riotIdTagline}>
@@ -1766,14 +1706,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[2].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[2].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[2].riotIdGameName + "#" + participantsInfo[2].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[2].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[2].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[7].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[7].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[7].riotIdGameName + "#" + participantsInfo[7].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[7].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[7].riotIdTagline}>
@@ -1782,14 +1722,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[3].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[3].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[3].riotIdGameName + "#" + participantsInfo[3].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[3].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[3].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[8].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[8].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[8].riotIdGameName + "#" + participantsInfo[8].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[8].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[8].riotIdTagline}>
@@ -1798,14 +1738,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[4].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[4].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[4].riotIdGameName + "#" + participantsInfo[4].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[4].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[4].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[9].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[9].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[9].riotIdGameName + "#" + participantsInfo[9].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[9].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[9].riotIdTagline}>
@@ -1833,7 +1773,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestDamgeChamp}.png" style="margin-right: 5px;" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestDamgeChamp}.png" style="margin-right: 5px;" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a">${bestplayers.bestDamgeSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value=${bestplayers.bestDamgeSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1848,7 +1788,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestKillChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestKillChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestKillSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestKillSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1863,7 +1803,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestDeathChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestDeathChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestDeathSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestDeathSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1878,7 +1818,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestAssistChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestAssistChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestAssistSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestAssistSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1895,7 +1835,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestDamgeReceiveChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestDamgeReceiveChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestDamgeReceiveSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestDamgeReceiveSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1910,7 +1850,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestgoldSummonerChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestgoldSummonerChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestgoldSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestgoldSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1925,7 +1865,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestKDAChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestKDAChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestKDASummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestKDASummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1940,7 +1880,7 @@ class ComponentEvent {
                                                 <div
                                                     style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                                                     <div class="mom-box-user-box">
-                                                        <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${bestplayers.bestCsChamp}.png" alt="">
+                                                        <img src="${window.BASE_URL}/img/champion/${bestplayers.bestCsChamp}.png" alt="">
                                                         <a target="_blank" href="#" class="mom-box-a" style="margin-left: 5px;">${bestplayers.bestCsSummoner}</a>
                                                         <input type="hidden" class="mom-box-input" value = ${bestplayers.bestCsSummoner.replaceAll(" ", "~")}>
                                                     </div>
@@ -1997,22 +1937,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winTop].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winTop].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2033,7 +1973,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winTop].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winTop].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[winTeam.winTop].champLevel}</span>
                                                             </div>
@@ -2073,7 +2013,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseTop].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseTop].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseTop].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseTop].champLevel}</span>
                                                             </div>
@@ -2116,22 +2056,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseTop].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseTop].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2144,22 +2084,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winJun].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winJun].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2180,7 +2120,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winJun].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winJun].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[winTeam.winJun].champLevel}</span>
                                                             </div>
@@ -2220,7 +2160,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseJun].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseJun].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseJun].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseJun].champLevel}</span>
                                                             </div>
@@ -2263,22 +2203,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseJun].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseJun].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2291,22 +2231,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winMid].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winMid].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2327,7 +2267,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winMid].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winMid].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[winTeam.winMid].champLevel}</span>
                                                             </div>
@@ -2367,7 +2307,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseMid].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseMid].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseMid].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseMid].champLevel}</span>
                                                             </div>
@@ -2410,22 +2350,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseMid].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseMid].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2438,22 +2378,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                             <div style="display: flex;">
-                                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item0}.png" onerror="this.style.display='none'" alt="">
                                                             </div>
                                                             <div style="display: flex;">
-                                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item1}.png" onerror="this.style.display='none'" alt="">
                                                             </div>
                                                             <div style="display: flex;">
-                                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item2}.png" onerror="this.style.display='none'" alt="">
                                                             </div>
                                                             <div style="display: flex;">
-                                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item3}.png" onerror="this.style.display='none'" alt="">
                                                             </div>
                                                             <div style="display: flex;">
-                                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item4}.png" onerror="this.style.display='none'" alt="">
                                                             </div>
                                                             <div style="display: flex;">
-                                                                <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winBot].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winBot].item5}.png" onerror="this.style.display='none'" alt="">
                                                                     </div>
                                                             </div>
                                                         </div>
@@ -2474,7 +2414,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winBot].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winBot].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[winTeam.winBot].champLevel}</span>
                                                             </div>
@@ -2514,7 +2454,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseBot].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseBot].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseBot].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseBot].champLevel}</span>
                                                             </div>
@@ -2557,22 +2497,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseBot].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseBot].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2585,22 +2525,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[winTeam.winSur].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[winTeam.winSur].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2621,7 +2561,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[winTeam.winSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winSur].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[winTeam.winSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[winTeam.winSur].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[winTeam.winSur].champLevel}</span>
                                                             </div>
@@ -2661,7 +2601,7 @@ class ComponentEvent {
                                                         <div class="aenclek">
                                                             <div class="frvizneed">
                                                                 <div class="ebmaf">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[loseTeam.loseSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseSur].championName}.png" alt="" class="gpvoyimg">
+                                                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[loseTeam.loseSur].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[loseTeam.loseSur].championName}.png" alt="" class="gpvoyimg">
                                                                 </div>
                                                                 <span class="jurxazcpgcmw">${participantsInfo[loseTeam.loseSur].champLevel}</span>
                                                             </div>
@@ -2704,22 +2644,22 @@ class ComponentEvent {
                                                         <div>
                                                             <div class="win-game-img-box">
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item0}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item0}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item1}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item1}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item2}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item2}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item3}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item3}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item4}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item4}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                                 <div style="display: flex;">
-                                                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/${participantsInfo[loseTeam.loseSur].item5}.png" onerror="this.style.display='none'" alt="">
+                                                                    <img src="${window.BASE_URL}/img/item/${participantsInfo[loseTeam.loseSur].item5}.png" onerror="this.style.display='none'" alt="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2744,7 +2684,7 @@ class ComponentEvent {
                         <div class="cop-one">
                             <div class="cop-two">
                                 <div class="cop-four">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champName}.png"
+                                    <img src="${window.BASE_URL}/img/champion/${champName}.png"
                                         alt="" class="">
                                 </div>
                                 <span class="cop-five">${participant.champLevel}</span>
@@ -2795,14 +2735,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[0].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[0].championName}.png" alt="">
                                 </div>
                                 <a target="_target" href="#" class="href-summoner">${participantsInfo[0].riotIdGameName + "#" + participantsInfo[0].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[0].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[0].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[5].championName}.png" alt="">5
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[5].championName}.png" alt="">5
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[5].riotIdGameName + "#" + participantsInfo[5].riotIdTagline}</a>
                                 <input type="hidden" value = ${(participantsInfo[5].riotIdGameName).replaceAll(" ", "~") + "-" + participantsInfo[5].riotIdTagline}>
@@ -2811,14 +2751,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[1].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[1].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[1].riotIdGameName + "#" + participantsInfo[1].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[1].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[1].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[6].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[6].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[6].riotIdGameName + "#" + participantsInfo[6].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[6].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[6].riotIdTagline}>
@@ -2827,14 +2767,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[2].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[2].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[2].riotIdGameName + "#" + participantsInfo[2].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[2].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[2].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[7].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[7].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[7].riotIdGameName + "#" + participantsInfo[7].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[7].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[7].riotIdTagline}>
@@ -2843,14 +2783,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[3].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[3].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[3].riotIdGameName + "#" + participantsInfo[3].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[3].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[3].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[8].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[8].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[8].riotIdGameName + "#" + participantsInfo[8].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[8].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[8].riotIdTagline}>
@@ -2859,14 +2799,14 @@ class ComponentEvent {
                         <li class="summoner-list">
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[4].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[4].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[4].riotIdGameName + "#" + participantsInfo[4].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[4].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[4].riotIdTagline}>
                             </div>
                             <div class="sulist-fcc">
                                 <div class="sulist-fcc-img">
-                                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${participantsInfo[9].championName}.png" alt="">
+                                    <img src="${window.BASE_URL}/img/champion/${participantsInfo[9].championName}.png" alt="">
                                 </div>
                                 <a target="_blank" href="#" class="href-summoner">${participantsInfo[9].riotIdGameName + "#" + participantsInfo[9].riotIdTagline}</a>
                                 <input type="hidden" value = ${participantsInfo[9].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[9].riotIdTagline}>

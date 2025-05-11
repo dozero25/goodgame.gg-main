@@ -135,7 +135,7 @@ class RotationsService {
                                 <span class="champion-title">${championInfo.title}</span>
                             </div>
                             <div class="grid-row">
-                                <img class="spells" src="${ddragonUrl}/14.8.1/img/passive/${championInfo.passive.image.full}">
+                                <img class="spells" src="${window.BASE_URL}/img/passive/${championInfo.passive.image.full}">
                                 ${championInfo.passive.name}
                                 <div class="description-container">
                                     <div class="d-name">${championInfo.passive.name}</div>
@@ -144,7 +144,7 @@ class RotationsService {
                                 </div>
                             </div>
                             <div class="grid-row">
-                                <img class="spells" src="${ddragonUrl}/14.8.1/img/spell/${championInfo.spells[0].image.full}">
+                                <img class="spells" src="${window.BASE_URL}/img/spell/${championInfo.spells[0].image.full}">
                                 ${championInfo.spells[0].name}
                                 <div class="description-container">
                                     <div class="d-name">${championInfo.spells[0].name}</div>
@@ -161,7 +161,7 @@ class RotationsService {
                                 </div>
                             </div>
                             <div class="grid-row">
-                                <img class="spells" src="${ddragonUrl}/14.8.1/img/spell/${championInfo.spells[1].image.full}">
+                                <img class="spells" src="${window.BASE_URL}/img/spell/${championInfo.spells[1].image.full}">
                                 ${championInfo.spells[1].name}
                                 <div class="description-container">
                                     <div class="d-name">${championInfo.spells[1].name}</div>
@@ -177,7 +177,7 @@ class RotationsService {
                                 </div>
                             </div>
                             <div class="grid-row">
-                                <img class="spells" src="${ddragonUrl}/14.8.1/img/spell/${championInfo.spells[2].image.full}">${championInfo.spells[2].name}
+                                <img class="spells" src="${window.BASE_URL}/img/spell/${championInfo.spells[2].image.full}">${championInfo.spells[2].name}
                                 <div class="description-container">
                                     <div class="d-name">${championInfo.spells[2].name}</div>
                                     <div class="d-info">재사용 대기시간(초) : ${championInfo.spells[2].cooldownBurn}</div>
@@ -192,7 +192,7 @@ class RotationsService {
                                 </div>
                             </div>
                             <div class="grid-row">
-                                <img class="spells" src="${ddragonUrl}/14.8.1/img/spell/${championInfo.spells[3].image.full}">
+                                <img class="spells" src="${window.BASE_URL}/img/spell/${championInfo.spells[3].image.full}">
                                 ${championInfo.spells[3].name}
                                 <div class="description-container">
                                     <div class="d-name">${championInfo.spells[3].name}</div>

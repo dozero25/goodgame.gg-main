@@ -1,0 +1,367 @@
+body {
+    color: #ffffff;
+    font: 600 16px/18px 'Open Sans', sans-serif;
+    width: 100%;
+    height: 100%;
+
+    -ms-overflow-style: none;
+}
+
+.disflex {
+    display: flex;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.main-box {
+    width: 100%;
+    height: auto;
+}
+
+.back-img-box {
+    display: block;
+    min-width: 900px;
+    height: 275px;
+    background-image: url("/static/images/background/akali.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+.profil-box {
+    width: 100%;
+    height: 200px;
+}
+
+.head-info {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.profil-info {
+    height: 200px;
+
+    display: flex;
+    align-items: center;
+
+}
+
+.profil-left {
+    float: left;
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.profil-right {
+    float: right;
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.profil-img img {
+    max-width: 100px;
+    max-height: 100px;
+
+    border-radius: 25px;
+}
+
+.profil-summoner {
+    margin-left: 25px;
+}
+
+.profil-box:nth-child(2) {
+    height: 75px;
+
+}
+
+.head-check {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.check-box {
+    display: flex;
+    height: 100%;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.rank-box {
+    display: flex;
+}
+
+.rank-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+}
+
+.img-box {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-box img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.rank-info {
+    width: 500px;
+}
+
+.rank-score {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.rank-score div {
+    margin-left: 15px;
+}
+
+.btn-check {
+    height: 100%;
+}
+
+.select-btn {
+    display: flex;
+}
+.mastery-info {
+    width: 1200px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.search-box {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+
+    background-color: #1c1c1f;
+    border-radius: 8px;
+    
+}
+
+.sort-select {
+    background-color: #2e2e34;
+    color: #fff;
+    border: 2px solid #444;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 250px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sort-select:hover {
+    background-color: #3a3a42;
+    border-color: #888;
+}
+
+.search-by-input {
+    display: flex;
+}
+
+.search-by-right {
+    margin-right: 2px;
+}
+
+.search-input {
+    background-color: #2e2e34;
+    color: #fff;
+    border: 2px solid #444;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 150px;
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.search-input:hover {
+    background-color: #3a3a42;
+    border-color: #5c9cd3;
+}
+
+.autocomplete-list {
+    border-top: none;
+    max-height: 208px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    width: 180px;
+    z-index: 1000;
+    color: black;
+    background-color: white;
+    border: 1px solid #1c1c1f;
+}
+
+.autocomplete-list div {
+    display: flex;                /* 가로 정렬 */
+    align-items: center;   
+    padding: 8px 12px;
+    box-sizing: border-box;
+    color: black;
+    cursor: pointer;
+}
+.champion-img-ul{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.champion-name-ul {
+    color : black;
+}
+
+
+.autocomplete-list div:hover {
+    text-decoration: underline;
+}
+
+.search-input-btn{
+    background-color: #5c9cd3;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-input-btn:hover {
+    background-color: #3e7ca7;
+}
+
+.search-input-btn:active {
+    background-color: #2d5f84; 
+}
+
+
+
+.champion-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+
+    background-color: #1c1c1f;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.champion-card {
+    width: calc(20% - 16px);
+    padding: 12px;
+    color: white;
+    box-sizing: border-box;
+}
+
+.champion-card:hover {
+    background-color: #3c3c42;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.champion-show-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-top: 10px;
+
+}
+.champion-icon {
+    text-align: center;
+}
+
+.champion-icon img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #3c3c3c;
+    
+}
+
+.champion-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #ffffff;
+}
+
+.champion-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e0e0e0;
+    text-align: center;
+}
+
+.champion-proficiency {
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.champion-level {
+    font-size: 14px;
+    color: #aaaaaa;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.champion-points {
+    font-size: 14px;
+    color: #888888;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.load-more-btn {
+    background-color: transparent;
+    color: #999999;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 2px solid #999999 ;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    width: 100%;
+}
+
+.load-more-btn:hover {
+    background-color: #999999 ;
+    color: black;
+}
+
+.load-more-btn:active {
+    background-color: #999999 ;
+    color: black;
+}

@@ -48,6 +48,11 @@ public class MainController {
         return "record/record";
     }
 
+    @GetMapping("/record/{gameNameAndTagLine}/mastery")
+    public String mastery(){
+        return "record/mastery";
+    }
+
     @GetMapping("/ranking")
     public String ranking () {return "ranking/main";}
 
