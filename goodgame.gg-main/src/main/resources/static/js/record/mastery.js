@@ -145,12 +145,12 @@ class MasteryService {
         if (currentIndex >= championMasteryData.length) {
             loadMoreBtn.style.display = "none";
         } else {
-            loadMoreBtn.style.display = "block"; // 데이터가 있으면 보이게 설정
+            loadMoreBtn.style.display = "block";
         }
     }
 
     async getChampionNameById(championId) {
-        const response = await fetch("https://ddragon.leagueoflegends.com/cdn/15.9.1/data/ko_KR/champion.json");
+        const response = await fetch(`${window.BASE_URL}/data/ko_KR/champion.json`);
         const data = await response.json();
         const champions = data.data;
 
@@ -164,7 +164,7 @@ class MasteryService {
     }
 
     async getChampionIdByName(champName) {
-        const response = await fetch("https://ddragon.leagueoflegends.com/cdn/15.9.1/data/ko_KR/champion.json");
+        const response = await fetch(`${window.BASE_URL}/data/ko_KR/champion.json`);
         const data = await response.json();
         const champions = data.data;
 
@@ -196,26 +196,11 @@ class MasteryService {
         };
     }
     async searchChampionsByName(searchTerm) {
-        const response = await fetch("https://ddragon.leagueoflegends.com/cdn/15.9.1/data/ko_KR/champion.json");
+        const response = await fetch(`${window.BASE_URL}/data/ko_KR/champion.json`);
         const data = await response.json();
         const champions = Object.values(data.data);
         return champions.filter(champ => champ.name.includes(searchTerm));
     }
-
-
-    async getChampionIdByName(name) {
-        const response = await fetch("https://ddragon.leagueoflegends.com/cdn/15.9.1/data/ko_KR/champion.json");
-        const data = await response.json();
-        const champions = data.data;
-
-        for (const key in champions) {
-            if (champions[key].name === name) {
-                return champions[key].key;
-            }
-        }
-        return null;
-    }
-
 }
 
 class ComponentEvent {
@@ -265,8 +250,6 @@ class ComponentEvent {
 
             const matchedChampions = await MasteryService.getInstance().searchChampionsByName(searchTerm);
             autocompleteList.innerHTML = "";
-
-            
 
             matchedChampions.forEach(champ => {
                 const item = document.createElement("div");

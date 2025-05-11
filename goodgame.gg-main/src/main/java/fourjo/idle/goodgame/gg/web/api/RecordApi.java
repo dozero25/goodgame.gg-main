@@ -136,11 +136,7 @@ public class RecordApi {
                 championMasteryList.sort(comparator);
             }
         }
-
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", championMasteryList));
     }
-
-
-
 }
