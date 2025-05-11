@@ -331,3 +331,6 @@ private void registerUserIfNotExists(String oauth2Id, String nickname, String em
         }
     }
 ```
+
+### 챔피언 숙련도 추가
+
