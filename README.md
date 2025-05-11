@@ -332,5 +332,188 @@ private void registerUserIfNotExists(String oauth2Id, String nickname, String em
     }
 ```
 
-### 챔피언 숙련도 추가
+### 리그 오브 레전드 챔피언 숙련도 검색 기능
+
+- **목표**: 사용자가 원하는 LoL 챔피언의 숙련도 정보를 검색할 수 있는 기능 구현
+
+- **기술 스택**:  
+  - **Java** – 백엔드 연동 및 데이터 처리  
+  - **JavaScript** – 객체지향 방식으로 프론트엔드 로직 구현  
+  - **API 연동** – 외부 API를 통한 챔피언 숙련도 검색  
+  - **HTML/CSS** – UI 구성  
+  - **Git** – 버전 관리  
+
+- **프로젝트 개요**:  
+  LoL API를 활용해 챔피언 숙련도 데이터를 실시간으로 받아와, 사용자가 입력한 검색어에 따라 자동완성 및 조회 기능을 제공. 사용자는 원하는 챔피언 정보를 빠르게 확인할 수 있음.
+
+- **기여 내용**:  
+  - **자동완성 구현**: 챔피언 이름 입력 시 관련 챔피언 추천  
+  - **UI 개선**: 검색 시작 시 리스트 자동 표시 및 클릭 선택 가능  
+  - **API 연동**: 챔피언 숙련도 JSON 데이터를 받아와 파싱 및 표시  
+  - **디버깅/최적화**: 비동기 처리 및 이벤트 충돌 해결, API 호출 최소화
+
+- **기술적 도전 및 해결**:  
+  - **무작위 출력 문제 해결**: JavaScript의 `then()` 처리로 출력 순서가 꼬이는 문제 발생 → `Promise.all()`을 사용해 모든 데이터를 수집 후 출력  
+  - **API 최적화**: 중복 호출 방지 및 캐싱 적용으로 응답 속도 개선
+
+- **결과**:  
+  - 실시간 자동완성 검색과 숙련도 조회 기능을 제공  
+  - 직관적인 UI/UX로 사용자 편의성 향상
+ 
+
+#### 주요 구현 코드 예시 - 챔피언 무작위 출력 문제 해결
+``` javascript
+    async renderNextChampions() {
+        const container = document.querySelector(".champion-container");
+        const loadMoreBtn = document.getElementById("load-more-btn");
+
+        // 다음에 랜더링할 챔피언 숙련도 데이터 슬라이싱
+        const nextData = championMasteryData.slice(currentIndex, currentIndex + itemsPerPage);
+
+        // 각 챔피언 ID에 해당하는 정보(이름, 아이콘 등)를 비동기로 조회
+        const championInfos = await Promise.all(
+            nextData.map(async (data) => {
+                const champ = await this.getChampionNameById(data.championId);
+                return { champ, data };
+            })
+        );
+
+        // 가져온 챔피언 정보 HTML에 추가
+        championInfos.forEach(({ champ, data }) => {
+            container.innerHTML += `
+            <div class="champion-card">
+                <div class="champion-show-info">
+                    <div class="champion-icon">
+                        <img src="${window.BASE_URL}/img/champion/${champ.id}.png" alt="${champ.name}">
+                    </div>
+                    <div class="champion-info">
+                        <div class="champion-name">${champ.name}</div>
+                        <div class="champion-level">레벨 ${data.championLevel}</div>
+                        <div class="champion-points">점수: ${data.championPoints.toLocaleString()}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        });
+
+        // 현재 인덱스 갱신
+        currentIndex += itemsPerPage;
+
+        // 모든 데이터를 다 불러온 경우 '더 보기' 버튼 숨기기
+        if (currentIndex >= championMasteryData.length) {
+            loadMoreBtn.style.display = "none";
+        } else {
+            loadMoreBtn.style.display = "block";
+        }
+    }
+```
+- **비동기 처리**
+  - `async/await` : 비동기 코드를 동기처럼 작성할 수 있게 해줌. 가독성과 유지보수가 쉬움
+  - `Promise.all()` : 여러 비동기 작업을 동시에 실행하고, 모두 끝난 후 결과를 한 번에 받아옴 -> 반복적인 API 호출 시 성능 향상에 효과적
+ 
+
+#### 주요 구현 코드 예시 - 챔피언 정렬 및 검색
+``` java
+     public List<ChampionMasteryDto> filterChampionMasteryBySearchTerm(List<ChampionMasteryDto> masteryList, String searchTerm) {
+        // 검색이 없으면 return 실행
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return masteryList;
+        }
+
+        try {
+            // 검색이 들어오면 searchTerm을 int로 변환 후 stream을으로 같은 champId 출력
+            int searchId = Integer.parseInt(searchTerm);
+            return masteryList.stream()
+                    .filter(mastery -> mastery.getChampionId() == searchId)
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            return masteryList;
+        }
+    }
+
+```
+
+``` java
+    public ResponseEntity<CMRespDto<?>> searchChampionMasteryByPuuid(@RequestParam(required = false) String sortBy, @RequestParam(required = false) String order, @RequestParam(required = false) String search){
+        List<ChampionMasteryDto> championMasteryList = recordService.searchChampionMasteryByPuuid(summonerDto.getPuuid(), sortBy, order, search);
+
+        // 검색이 존재하면 해당 filterChampionMasteryBySearchTerm() 실행
+        if (search != null && !search.isEmpty()) {
+            championMasteryList = recordService.filterChampionMasteryBySearchTerm(championMasteryList, search);
+        }
+
+        if(sortBy != null){
+            // Comparator 사용해 정렬 실행
+            Comparator<ChampionMasteryDto> comparator = null;
+
+            // level과 points에 맞춰서 실행
+            switch (sortBy) {
+                case "level":
+                    comparator = Comparator.comparing(ChampionMasteryDto::getChampionLevel);
+                    break;
+                case "points":
+                    comparator = Comparator.comparing(ChampionMasteryDto::getChampionPoints);
+                    break;
+            }
+
+            // order의 값이 desc, asc인지 확인 후 맞게 정렬
+            if(comparator != null){
+                if(order.equals("desc")){
+                    comparator = comparator.reversed();
+                }
+                championMasteryList.sort(comparator);
+            }
+        }
+        return ResponseEntity.ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", championMasteryList));
+    }
+```
+- **챔피언 이름으로 하지 않은 이유**
+  - 챔피언 정보에서 챔피언의 이름을 저장하지 않고 ChampId로 저장, 이름은 JSON 형태로 CDN에 있음
+  - JS에서 CDN의 값 중 검색한 이름의 챔피언을 찾아 해당 ChampId를 java로 전송
+
+
+#### 주요 구현 코드 예시 - CDN에서 챔피언 정보 가져오기
+``` javascript
+        // ChampName으로 챔피언 ID 검색
+        async getChampionIdByName(champName) {
+            const response = await fetch(`${window.BASE_URL}/data/ko_KR/champion.json`);
+            const data = await response.json();
+            const champions = data.data;
+    
+            for (const champKey in champions) {
+                if (champions[champKey].name.toLowerCase() === champName.toLowerCase()) {
+                    return champions[champKey].key; // 챔피언 이름에 맞는 ID 저장
+                }
+            }
+
+        return null; // 챔피언 이름이 일치하지 않으면 null 반환
+    }
+
+        // ChampId로 챔피언 정보 가져오기
+        async getChampionNameById(championId) {
+            const response = await fetch(`${window.BASE_URL}/data/ko_KR/champion.json`);
+            const data = await response.json();
+            const champions = data.data;
+    
+            for (const champName in champions) {
+                if (champions[champName].key === String(championId)) {
+                    return champions[champName]; // 챔피언 정보 반
+                }
+            }
+
+        return null; // 챔피언 id 일치하지 않으면 null 반환
+    }
+```
+
+#### 챔피언 숙련도 검색 및 UI 동작 시연
+
+**챔피언 정렬**
+https://github.com/user-attachments/assets/dc859b60-f5f8-46b0-bba0-271e77f7841a
+
+**챔피언 검색**
+https://github.com/user-attachments/assets/a74c4126-7e6d-4200-bf89-8ba6150b818c
+
+
+
 
