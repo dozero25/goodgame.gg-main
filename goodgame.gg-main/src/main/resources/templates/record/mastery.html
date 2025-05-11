@@ -10,7 +10,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/static/css/common.css">
     <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/recode/record.css">
+    <link rel="stylesheet" href="/static/css/recode/mastery.css">
     <link rel="stylesheet" href="/static/css/recode/checkbox.css">
     <link rel="stylesheet" href="/static/css/header.css">
     <title>전적 페이지</title>
@@ -24,40 +24,48 @@
                 <div class="head-info">
                     <div class="profil-info">
                         <div class="profil-left">
-                            
+
                         </div>
                         <div class="profil-right">
-                            
+
                         </div>
                     </div>
                 </div>
             </div>
-            
+
         </div>
         <div class="profil-box">
             <div class="head-check">
                 <div class="check-box">
-                    
+
                 </div>
             </div>
         </div>
-        <div class="match-info">
-            <div class="match-left">
-                <div class="daedkke-info">
-                    
+        <div class="mastery-info">
+            <div class="search-box">
+                <div class="search-by-select">
+                    <select name="" id="sort-select" class="sort-select">
+                        <option value="default" id="basic" class="basic-sort">기본</option>
+                        <option value="level-asc" id="sort-level-asc" class="sort-level-asc">레벨 오름차순</option>
+                        <option value="level-desc" id="sort-level-desc" class="sort-level-desc">레벨 내림차순</option>
+                        <option value="points-asc" id="sort-points-asc" class="sort-points-asc">포인트 오름차순</option>
+                        <option value="points-desc" id="sort-points-desc" class="sort-points-desc">포인트 내림차순</option>
+                    </select>
                 </div>
-            </div>
-
-
-            <div class="match-right">
-                <div class="right-img-box">
-                    <div class="img-one-box">
-                        <a href="/lolbti"><img src="/static/images/lolbti/lol_bti.png" alt="" style="width: 80%;"></a>
+                <div class="search-by-input">
+                    <div class="search-by-right">
+                        <input type="text" id="search-input" class="search-input" placeholder="챔피언 이름 검색" autocomplete="off">
+                        <ul class="autocomplete-list">
+                        </ul>
+                    </div>
+                    <div>
+                        <button class="search-input-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                 </div>
             </div>
+            <div id="champion-container" class="champion-container"></div>
+            <button id="load-more-btn" class="load-more-btn">더 보기</button>
         </div>
-
     </main>
 
     <footer style="height: 200px;"></footer>
@@ -66,6 +74,7 @@
 <script src="/static/js/header/header.js"></script>
 <script src="/static/js/record/summonerShowInfo.js"></script>
 <script src="/static/js/record/checkbox.js"></script>
-<script src="/static/js/record/record.js"></script>
+<script src="/static/js/record/mastery.js"></script>
 <script src="/static/js/config.js"></script>
+
 </html>

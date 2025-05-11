@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RecordService {
@@ -160,7 +161,7 @@ public class RecordService {
         return leagueList;
     }
 
-    public List<ChampionMasteryDto> searchChampionMasteryByPuuid(String puuid){
+    public List<ChampionMasteryDto> searchChampionMasteryByPuuid(String puuid, String sortBy, String order, String search){
         List<ChampionMasteryDto> championMasteryList = new ArrayList<>();
         String apiKey = riotApiKeyDto.getMyKey();
         String url = riotApiKeyDto.getServerUrl() + "/lol/champion-mastery/v4/champion-masteries/by-puuid/" + puuid + "?api_key=" + apiKey;
@@ -173,13 +174,26 @@ public class RecordService {
 
             HttpEntity entity = response.getEntity();
             championMasteryList = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
-
-
         } catch (IOException e){
             e.printStackTrace();
             return null;
         }
         return championMasteryList;
+    }
+
+    public List<ChampionMasteryDto> filterChampionMasteryBySearchTerm(List<ChampionMasteryDto> masteryList, String searchTerm) {
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return masteryList;
+        }
+
+        try {
+            int searchId = Integer.parseInt(searchTerm);
+            return masteryList.stream()
+                    .filter(mastery -> mastery.getChampionId() == searchId)
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            return masteryList;
+        }
     }
 
     public void riotResponseCodeError(HttpResponse response){

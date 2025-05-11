@@ -230,7 +230,7 @@ class RankingMainService {
                 <td class="td-name"> 
                     <a target="_target" class="summoner-link" href="#" style="text-decoration: none; color: inherit;">
                     <input type="hidden" class="td-name-link-value" value = ${data.gameName.replaceAll(" ", "~")+"-"+data.tagLine}>  
-                    <img style="border-radius: 50%" src="${ddragonUrl}/14.8.1/img/profileicon/${data.profileIconId}.png" width="32px" height="32px">
+                    <img style="border-radius: 50%" src="${window.BASE_URL}/img/profileicon/${data.profileIconId}.png" width="32px" height="32px">
                     <div>
                         <span class="td-name-span">${data.gameName}</span> 
                         <span>#${data.tagLine}</span>

@@ -10,7 +10,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/static/css/common.css">
     <link rel="stylesheet" href="/static/css/reset.css">
-    <link rel="stylesheet" href="/static/css/recode/record.css">
+    <link rel="stylesheet" href="/static/css/recode/champion.css">
     <link rel="stylesheet" href="/static/css/recode/checkbox.css">
     <link rel="stylesheet" href="/static/css/header.css">
     <title>전적 페이지</title>
@@ -37,27 +37,59 @@
         <div class="profil-box">
             <div class="head-check">
                 <div class="check-box">
-                    
+                
                 </div>
             </div>
         </div>
-        <div class="match-info">
-            <div class="match-left">
-                <div class="daedkke-info">
-                    
+        <div class="champion-info">
+            <div class="search-box">
+                <div class="select-box">
+                    <select name="" id="" class="game-option-value">
+                        <option value="">기본</option>
+                        <option value="">랭크</option>
+                    </select>
+                </div>
+                <div class="select-box">
+                    <select name="" id="" class="game-option-value">
+                        <option value="">시즌</option>
+                        <option value="">시즌1</option>
+                    </select>
+                </div>
+
+                <div class="search-champ">
+                    <form action="">
+                        <input type="text">
+                        <button><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
                 </div>
             </div>
 
+            <div class="champion-info-box">
+                <table class="champion-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>챔피언</th>
+                            <th>게임</th>
+                            <th>평점</th>
+                            <th>와드</th>
+                            <th>골드</th>
+                            <th>더블킬</th>
+                            <th>트리플킬</th>
+                            <th>쿼드라킬</th>
+                            <th>펜타킬</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-            <div class="match-right">
-                <div class="right-img-box">
-                    <div class="img-one-box">
-                        <a href="/lolbti"><img src="/static/images/lolbti/lol_bti.png" alt="" style="width: 80%;"></a>
-                    </div>
-                </div>
+                    </tbody>
+                </table>
+
+
             </div>
+
+
         </div>
-
     </main>
 
     <footer style="height: 200px;"></footer>
@@ -66,6 +98,5 @@
 <script src="/static/js/header/header.js"></script>
 <script src="/static/js/record/summonerShowInfo.js"></script>
 <script src="/static/js/record/checkbox.js"></script>
-<script src="/static/js/record/record.js"></script>
-<script src="/static/js/config.js"></script>
+<script src="/static/js/record/champion.js"></script>
 </html>

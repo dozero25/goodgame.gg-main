@@ -271,9 +271,9 @@ class DuoMainService {
              </div>
              <div id="miniBoardE" >
                 <img src="static/images/duo/tier/${data.duoTier}.png" class="miniBoardEImg"><br>
-                 <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champion[0]}.png" class="miniBoardEImg"><br>
-                  <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champion[1]}.png" class="miniBoardEImg"><br>
-                    <img src="https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champion[2]}.png" class="miniBoardEImg"><br>
+                 <img src="${window.BASE_URL}/img/champion/${champion[0]}.png" class="miniBoardEImg"><br>
+                  <img src="${window.BASE_URL}/img/champion/${champion[1]}.png" class="miniBoardEImg"><br>
+                    <img src="${window.BASE_URL}/img/champion/${champion[2]}.png" class="miniBoardEImg"><br>
                        <button type="button" class="copy-button" value="${data.duoGameId}">아이디 복사</button>
              </div>
                 
