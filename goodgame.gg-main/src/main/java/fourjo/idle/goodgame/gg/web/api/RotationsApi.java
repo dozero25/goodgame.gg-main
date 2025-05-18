@@ -8,7 +8,6 @@ import fourjo.idle.goodgame.gg.web.service.RotationsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,7 @@ import java.util.Map;
 @Tag(name ="Rotation Api", description = "로테이션 관련 Api 입니다.")
 public class RotationsApi {
 
-    @Autowired RotationsService rotationsService;
+    private final RotationsService rotationsService;
 
     @GetMapping("/rotationsChampion")
     @Operation(summary ="로테이션 챔프 출력", description = "현재 무료 챔프 로페티션을 가져옵니다.")

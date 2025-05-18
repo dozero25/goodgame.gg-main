@@ -1,26 +1,20 @@
 package fourjo.idle.goodgame.gg.web.api;
 
 import fourjo.idle.goodgame.gg.entity.UserMst;
-import fourjo.idle.goodgame.gg.security.PrincipalDetails;
 import fourjo.idle.goodgame.gg.web.dto.CMRespDto;
 import fourjo.idle.goodgame.gg.web.dto.account.EmpDto;
-import fourjo.idle.goodgame.gg.web.dto.account.UserDto;
 import fourjo.idle.goodgame.gg.web.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,8 +22,8 @@ import java.util.Objects;
 @Tag(name ="Account Api", description = "Account Api 입니다. 계정 관리에 관한 api가 있습니다.")
 public class AccountApi {
 
-    @Autowired
-    private AccountService accountService;
+
+    private final AccountService accountService;
 
     @PostMapping("/register/user")
     @Operation(summary ="회원가입", description = "조건에 맞으면 회원가입이 진행됩니다." )

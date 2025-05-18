@@ -10,7 +10,6 @@ import fourjo.idle.goodgame.gg.web.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +24,8 @@ import java.util.List;
 @Tag(name = "Record Api", description = "Record Api 입니다. 전적을 검색하면 해당 소환사의 정보가 나옵니다.")
 public class RecordApi {
 
-    @Autowired
-    private RecordService recordService;
+
+    private final RecordService recordService;
 
     private AccountDto accountDto = new AccountDto();
     private SummonerDto summonerDto = new SummonerDto();

@@ -2,16 +2,16 @@ package fourjo.idle.goodgame.gg.web.service;
 
 import fourjo.idle.goodgame.gg.repository.MyPageRepository;
 import fourjo.idle.goodgame.gg.web.dto.mypage.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MyPageService {
 
-    @Autowired
-    private MyPageRepository myPageRepository;
+    private final MyPageRepository myPageRepository;
 
 
     public int insertUserData(UserDTO userDTO) {

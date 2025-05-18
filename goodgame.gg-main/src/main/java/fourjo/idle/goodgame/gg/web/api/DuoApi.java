@@ -7,7 +7,6 @@ import fourjo.idle.goodgame.gg.web.service.DuoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,22 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/duo")
 @Tag(name = "DuoApi", description = "듀오찾기 관리 및 출력하는 Api 입니다.")
 public class DuoApi {
 
-    @Autowired
-    private DuoService duoService;
+    private final DuoService duoService;
 
     @PostMapping("/insert")
     @Operation(summary="듀오 입력",description="듀오 입력에 필요한 데이터를 입력받아 insert합니다")
     public ResponseEntity<CMRespDto<?>> duoInsert(DuoDto duoDto) {
-
-
         duoService.duoInsert(duoDto);
-
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully registered", true));
     }
@@ -40,6 +37,7 @@ public class DuoApi {
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully registered", duoService.duoSearchByQueAndTierAndPosition(duoSearchDto)));
     }
+
     @GetMapping("/totalCount")
     @Operation(summary="모든 페이지 수 가져오기",description="페이징에 필요한 전체 페이지 수를 가져옵니다")
     public ResponseEntity<CMRespDto<?>> getDuoTotalCount(DuoSearchDto duoSearchDto) {

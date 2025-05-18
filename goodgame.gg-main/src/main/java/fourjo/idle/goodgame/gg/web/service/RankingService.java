@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fourjo.idle.goodgame.gg.repository.RankingRepository;
 import fourjo.idle.goodgame.gg.web.dto.ranking.*;
 import fourjo.idle.goodgame.gg.web.dto.riotKey.RiotApiKeyDto;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,20 +20,14 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RankingService {
 
-    @Autowired
-    RankingRepository rankingRepository;
-
-    private ObjectMapper objectMapper;
+    private final RankingRepository rankingRepository;
     private final RiotApiKeyDto riotApiKeyDto;
-    private final HttpClient httpClient;
 
-    public RankingService(RiotApiKeyDto riotApiKeyDto) {
-        this.riotApiKeyDto = riotApiKeyDto;
-        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
-        this.httpClient = HttpClientBuilder.create().build();
-    }
+    private ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);;
+    private HttpClient httpClient = HttpClientBuilder.create().build();
 
     private final String solo = "RANKED_SOLO_5x5";
     private final String flex = "RANKED_FLEX_SR";

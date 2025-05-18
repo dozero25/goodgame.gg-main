@@ -25,8 +25,7 @@ import java.util.List;
 @Tag(name ="Ranking Api", description = "랭킹 관련 Api 입니다.")
 public class RankingApi {
 
-    @Autowired
-    private RankingService rankingService;
+    private final RankingService rankingService;
 
     @GetMapping("/accountV1ByPuuid")
     @Operation(summary ="accountInfo 가져오기", description = "puuid로 account의 정보를 가져옵니다.")

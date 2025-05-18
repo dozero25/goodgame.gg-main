@@ -8,25 +8,21 @@ import fourjo.idle.goodgame.gg.exception.CustomSameUserIdException;
 import fourjo.idle.goodgame.gg.repository.AccountRepository;
 import fourjo.idle.goodgame.gg.security.PrincipalDetails;
 import fourjo.idle.goodgame.gg.web.dto.account.EmpDto;
-import fourjo.idle.goodgame.gg.web.dto.account.UserDto;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     public UserMst registerUser(UserMst userMst) {
         nullValueCheck(userMst);

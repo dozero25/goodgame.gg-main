@@ -5,7 +5,7 @@ import fourjo.idle.goodgame.gg.web.dto.board.BoardDTO;
 
 import fourjo.idle.goodgame.gg.web.dto.board.BoardReplyDTO;
 import fourjo.idle.goodgame.gg.web.dto.board.BoardSearchDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,10 @@ import java.util.UUID;
 
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    @Autowired
-    private BoardRepository boardRepository;
+    private final BoardRepository boardRepository;
 
     @Value("${file.path}")
     private String filePath;

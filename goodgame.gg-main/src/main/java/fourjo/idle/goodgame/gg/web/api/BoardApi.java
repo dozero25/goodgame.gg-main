@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name ="Board Api", description = "Board Api 입니다. Board에 관한 api가 있습니다.")
 public class BoardApi {
 
-    @Autowired
-    private BoardService boardService;
+    private final BoardService boardService;
 
     @Operation(summary = "게시글 등록", description = "조건에 맞으면 게시글 등록됩니다.")
     @PostMapping("/insert")

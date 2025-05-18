@@ -9,8 +9,6 @@
         values(0, #{duoGameId}, #{duoQue}, #{duoPosition}, #{duoContent}, date_add(now(),interval 15 minute), #{duoTier},#{duoThreeChampions})
     </insert>
 
-
-
     <select id="duoSearchByQueAndTierAndPosition" parameterType="fourjo.idle.goodgame.gg.web.dto.duo.DuoSearchDto" resultType="fourjo.idle.goodgame.gg.web.dto.duo.DuoDto">
         select  * from duo_mst
         <if test= 'searchKey=="Que" and searchTierValue=="" and searchPositionValue=="" and searchQueValue != null and searchQueValue !=""'>

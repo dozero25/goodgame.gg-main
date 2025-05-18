@@ -7,33 +7,27 @@ import fourjo.idle.goodgame.gg.repository.DuoRepository;
 import fourjo.idle.goodgame.gg.web.dto.duo.*;
 import fourjo.idle.goodgame.gg.web.dto.riotKey.RiotApiKeyDto;
 import fourjo.idle.goodgame.gg.web.dto.rotation.ChampionEnum;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class DuoService {
 
-    @Autowired
-    DuoRepository duoRepository;
-
-    private ObjectMapper objectMapper;
+    private final DuoRepository duoRepository;
     private final RiotApiKeyDto riotApiKeyDto;
-    private final HttpClient httpClient;
 
-    public DuoService(RiotApiKeyDto riotApiKeyDto) {
-        this.riotApiKeyDto = riotApiKeyDto;
-        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
-        this.httpClient = HttpClientBuilder.create().build();
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    private HttpClient httpClient = HttpClientBuilder.create().build();
 
     public AccountDto searchPuuidBySummonerNameAndTagLine(String gameName, String tagLine) {
         AccountDto accountDto = new AccountDto();
@@ -132,8 +126,6 @@ public class DuoService {
     }
 
     public int duoInsert(DuoDto duoDto) {
-
-
         String[] idAndTag = duoDto.getDuoGameId().split("#");
 
         AccountDto accountDto = searchPuuidBySummonerNameAndTagLine(idAndTag[0], idAndTag[1]);
@@ -175,20 +167,27 @@ public class DuoService {
     public List<DuoDto> duoSearchByQueAndTierAndPosition(DuoSearchDto duoSearchDto) {
         //듀오 검색할 때 게임정보와 티어, 포지션을 각각 받아오는데 비어있는값 ""이 오지 않는 데이터들만 검색할 수 있는 Key를 설정하였습니다.
 
-        if (duoSearchDto.getSearchQueValue() != "" && duoSearchDto.getSearchTierValue() == "" && duoSearchDto.getSearchPositionValue() == "") {
+        boolean hasQue = duoSearchDto.getSearchQueValue() != null && !duoSearchDto.getSearchQueValue().isEmpty();
+        boolean hasTier = duoSearchDto.getSearchTierValue() != null && !duoSearchDto.getSearchTierValue().isEmpty();
+        boolean hasPosition = duoSearchDto.getSearchPositionValue() != null && !duoSearchDto.getSearchPositionValue().isEmpty();
+
+        if (hasQue && !hasTier && !hasPosition) {
             duoSearchDto.setSearchKey("Que");
-        } else if (duoSearchDto.getSearchQueValue() == "" && duoSearchDto.getSearchTierValue() != "" && duoSearchDto.getSearchPositionValue() == "") {
+        } else if (!hasQue && hasTier && !hasPosition) {
             duoSearchDto.setSearchKey("Tier");
-        } else if (duoSearchDto.getSearchQueValue() == "" && duoSearchDto.getSearchTierValue() == "" && duoSearchDto.getSearchPositionValue() != "") {
+        } else if (!hasQue && !hasTier && hasPosition) {
             duoSearchDto.setSearchKey("Position");
-        } else if (duoSearchDto.getSearchQueValue() != "" && duoSearchDto.getSearchTierValue() != "" && duoSearchDto.getSearchPositionValue() == "") {
+        } else if (hasQue && hasTier && !hasPosition) {
             duoSearchDto.setSearchKey("QueAndTier");
-        } else if (duoSearchDto.getSearchQueValue() != "" && duoSearchDto.getSearchTierValue() == "" && duoSearchDto.getSearchPositionValue() != "") {
+        } else if (hasQue && !hasTier && hasPosition) {
             duoSearchDto.setSearchKey("QueAndPosition");
-        } else if (duoSearchDto.getSearchQueValue() == "" && duoSearchDto.getSearchTierValue() != "" && duoSearchDto.getSearchPositionValue() != "") {
+        } else if (!hasQue && hasTier && hasPosition) {
             duoSearchDto.setSearchKey("TierAndPosition");
-        } else if (duoSearchDto.getSearchQueValue() != "" && duoSearchDto.getSearchTierValue() != "" && duoSearchDto.getSearchPositionValue() != "") {
+        } else if (hasQue && hasTier && hasPosition) {
             duoSearchDto.setSearchKey("QueAndTierAndPosition");
+        } else {
+            // 모든 값이 비었을 경우, 기본값 혹은 빈 문자열 설정
+            duoSearchDto.setSearchKey("");
         }
 
         duoSearchDto.setIndex();
