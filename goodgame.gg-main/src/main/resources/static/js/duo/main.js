@@ -252,9 +252,7 @@ class DuoMainService {
             const uploadTime = Math.floor((now.getTime() - (new Date(data.duoWdate).getTime() - 900000)) / 60000);
 
             console.log(data);
-            var champion = data.duoThreeChampions && data.duoThreeChampions.trim() !== "" 
-  ? data.duoThreeChampions.split("-") 
-  : ["defaultChampion1", "defaultChampion2", "defaultChampion3"];
+            var champion = data.duoThreeChampions && data.duoThreeChampions.trim() !== "" ? data.duoThreeChampions.split("-") : ["defaultChampion1", "defaultChampion2", "defaultChampion3"];
 
             // console.log(champion);
 

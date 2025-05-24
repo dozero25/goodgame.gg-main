@@ -123,7 +123,6 @@ class MasteryService {
         );
 
         championInfos.forEach(({ champ, data }) => {
-            console.log(champ.id);
             container.innerHTML += `
             <div class="champion-card">
                 <div class="champion-show-info">
