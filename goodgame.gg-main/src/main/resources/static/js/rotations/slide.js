@@ -21,7 +21,7 @@ const mySwiper = new Swiper('.swiper-container', {
 
     pagination: {
         el: '.swiper-pagination-pointer',
-        clickable:true,
+        clickable: true,
         type: 'bullets',
 
 
@@ -69,25 +69,20 @@ class RotationsApi {
         return this.#instance;
     }
 
-    getRotationsChampion() {
-        let returnData = null;
+    async getRotationsChampion() {
+        try {
+            const response = await $.ajax({
+                type: "get",
+                url: `http://localhost:8000/api/rotations/rotationsChampion`,
+                dataType: "json"
+            });
 
-        $.ajax({
-            async : false,
-            type: "get",
-            url: `http://localhost:8000/api/rotations/rotationsChampion`,
-            dataType: "json",
-            success : response => {
-                returnData = response.data;
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr.status, error);
-            }
-            // error: error => {
-            //     console.log(error);
-            // }
-        });
-        return returnData;
+            return response.data;
+
+        } catch (error) {
+            console.log("에러 발생:", error);
+            return null;
+        }
     }
 }
 
@@ -102,8 +97,14 @@ class RotationsService {
     }
 
 
-    loadRotationsChampion() {
-        const responseData = RotationsApi.getInstance().getRotationsChampion();
+    async loadRotationsChampion() {
+        const responseData = await RotationsApi.getInstance().getRotationsChampion();
+
+        if (!responseData || responseData.length === 0) {
+            console.warn("챔피언 회전 정보가 비어있습니다.");
+            return;
+        }
+
         const swiperSlide = document.querySelectorAll('.swiper-slide')
 
 
@@ -111,7 +112,7 @@ class RotationsService {
             let championInfoList = responseData[i];
             let championKey = Object.keys(championInfoList)[0]; //리스트 i번째 맵에 0번 키 (리스트 개당 오브젝트하나)
             let championInfo = championInfoList[championKey];
-             championInfo.spells.forEach((spell, j) => {
+            championInfo.spells.forEach((spell, j) => {
                 //툴팁 정리
                 spell.tooltip = spell.tooltip.replace(/{{.*?}}/g, '[?]');
                 let tooltip = spell.tooltip;
@@ -124,7 +125,7 @@ class RotationsService {
                 spell.tooltip = tooltip;
                 championInfo.spells[j].tooltip = spell.tooltip;
             });
-                slide.innerHTML = `
+            slide.innerHTML = `
                         <div class="image-column">
                             <img src="${ddragonUrl}/img/champion/loading/${championKey}_0.jpg">
                             <h3 class="mini-Name">${championInfo.name}</h3>
@@ -211,46 +212,19 @@ class RotationsService {
                 
                 `;
 
-            });
+        });
 
-        document.querySelectorAll('.spells').forEach(function(img) {
-            img.addEventListener('mouseover', function() {
+        document.querySelectorAll('.spells').forEach(function (img) {
+            img.addEventListener('mouseover', function () {
                 if (this.nextElementSibling.style.display !== 'flex') {
                     this.nextElementSibling.style.display = 'flex';
                 }
             });
-            img.parentNode.addEventListener('mouseleave', function() {
+            img.parentNode.addEventListener('mouseleave', function () {
                 this.querySelector('.description-container').style.display = 'none';
             });
         });
 
     }
-
-}
-
-class Css {
-
-    addClickEventsCssButton(){
-
-
-
-
-
-
-
-
-
-        // const description =
-
-
-        // selectButton.addEventListener('click', function() {
-        //     selectButton.classList.toggle('selectButton-clicked');
-        //     selectDiv.style.display = selectDiv.style.display === 'none' ? 'flex' : 'none';
-        //     // 화살표 방향 변경
-        //     this.querySelector('.arrow').textContent = selectDiv.style.display === 'none' ? '▼' : '▲';
-        // });
-
-    }
-
 
 }

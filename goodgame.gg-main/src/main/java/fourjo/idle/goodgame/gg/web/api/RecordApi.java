@@ -75,9 +75,8 @@ public class RecordApi {
 
     @GetMapping("/get/matches")
     @Operation(summary ="Matches List 가져오기", description = "puuid로 Matches 리스트를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(){
-
-        matchesList = recordService.searchMatchesByPuuid(summonerDto.getPuuid(),0);
+    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(@RequestParam int start){
+        matchesList = recordService.searchMatchesByPuuid(summonerDto.getPuuid(), start);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchesList));
     }
