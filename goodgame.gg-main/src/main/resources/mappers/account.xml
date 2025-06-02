@@ -4,12 +4,11 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="fourjo.idle.goodgame.gg.repository.AccountRepository">
 
-    <resultMap id="uesrDto" type="fourjo.idle.goodgame.gg.entity.UserMst">
+    <resultMap id="userDto" type="fourjo.idle.goodgame.gg.entity.UserMst">
         <result property="userIndex" column="userIndex"></result>
         <result property="userId" column="userId"></result>
         <result property="userPw" column="userPw"></result>
         <result property="userNick" column="userNick"></result>
-        <result property="userGender" column="userGender"></result>
         <result property="userGender" column="userGender"></result>
         <result property="userRegDate" column="userRegDate"></result>
         <result property="userEmail" column="userEmail"></result>
@@ -49,7 +48,7 @@
         values(0, #{empId}, null, 2)
     </insert>
 
-    <select id="findUserByUserIndex" parameterType="string" resultType="Integer">
+    <select id="findUserByUserIndex" parameterType="String" resultType="Integer">
         select
         userIndex
         from user_mst where userId = #{userId}
