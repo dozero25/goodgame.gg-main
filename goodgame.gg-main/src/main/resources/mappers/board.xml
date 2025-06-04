@@ -143,33 +143,67 @@
 
 
     <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ좋아요 추천ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ  -->
-    <select id = "likeByBoardIndexAndUserIndex" parameterType="integer" resultType="integer">
-        select count(userIndex) from board_like_mst
-        where boardIndex = #{boardIndex} and userIndex = #{userIndex};
+    <select id="likeByBoardIndexAndUserIndex" parameterType="integer" resultType="integer">
+        SELECT COUNT(userIndex)
+        FROM board_like_mst
+        WHERE boardIndex = #{boardIndex} AND userIndex = #{userIndex}
     </select>
 
-    <select id = "likeCountByBoardIndex" parameterType="integer" resultType="integer">
-        select count(boardIndex) from board_like_mst
-        where boardIndex = #{boardIndex};
+    <select id="likeCountByBoardIndex" parameterType="integer" resultType="integer">
+        SELECT COUNT(boardIndex)
+        FROM board_like_mst
+        WHERE boardIndex = #{boardIndex}
     </select>
 
-    <update id ="likeUpdate" parameterType="integer">
-        update board_mst set boardLikeCount = (select count(boardIndex) from board_like_mst
-        where boardIndex = #{boardIndex}) where boardIndex = #{boardIndex}
+    <update id="likeUpdate" parameterType="integer">
+        UPDATE board_mst
+        SET boardLikeCount = (
+        SELECT COUNT(boardIndex)
+        FROM board_like_mst
+        WHERE boardIndex = #{boardIndex}
+        )
+        WHERE boardIndex = #{boardIndex}
     </update>
 
-    <insert id ="likeAdd" parameterType="integer">
-       insert into board_like_mst (boardLikeId, boardIndex, userIndex, boardLike, boardBad)
-        select 0,  #{boardIndex}, #{userIndex}, 1, 0
-        from dual
-        where NOT EXISTS(
-        select 1 from board_like_mst where boardIndex = #{boardIndex} and userIndex = #{userIndex}
-        )
+    <insert id="likeAdd" parameterType="integer">
+        INSERT IGNORE INTO board_like_mst (boardLikeId, boardIndex, userIndex, boardLike, boardBad)
+        VALUES (0, #{boardIndex}, #{userIndex}, 1, 0)
     </insert>
 
-    <delete id ="likeCancel" parameterType="integer">
-        delete from board_like_mst where userIndex = #{userIndex} and boardIndex = #{boardIndex}
+    <!-- 좋아요 취소 -->
+    <delete id="likeCancel" parameterType="integer">
+        DELETE FROM board_like_mst
+        WHERE userIndex = #{userIndex} AND boardIndex = #{boardIndex}
     </delete>
+
+
+<!--    <select id = "likeByBoardIndexAndUserIndex" parameterType="integer" resultType="integer">-->
+<!--        select count(userIndex) from board_like_mst-->
+<!--        where boardIndex = #{boardIndex} and userIndex = #{userIndex};-->
+<!--    </select>-->
+
+<!--    <select id = "likeCountByBoardIndex" parameterType="integer" resultType="integer">-->
+<!--        select count(boardIndex) from board_like_mst-->
+<!--        where boardIndex = #{boardIndex};-->
+<!--    </select>-->
+
+<!--    <update id ="likeUpdate" parameterType="integer">-->
+<!--        update board_mst set boardLikeCount = (select count(boardIndex) from board_like_mst-->
+<!--        where boardIndex = #{boardIndex}) where boardIndex = #{boardIndex}-->
+<!--    </update>-->
+
+<!--    <insert id ="likeAdd" parameterType="integer">-->
+<!--       insert into board_like_mst (boardLikeId, boardIndex, userIndex, boardLike, boardBad)-->
+<!--        select 0,  #{boardIndex}, #{userIndex}, 1, 0-->
+<!--        from dual-->
+<!--        where NOT EXISTS(-->
+<!--        select 1 from board_like_mst where boardIndex = #{boardIndex} and userIndex = #{userIndex}-->
+<!--        )-->
+<!--    </insert>-->
+
+<!--    <delete id ="likeCancel" parameterType="integer">-->
+<!--        delete from board_like_mst where userIndex = #{userIndex} and boardIndex = #{boardIndex}-->
+<!--    </delete>-->
 
 
     <!--ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ조회수ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ-->

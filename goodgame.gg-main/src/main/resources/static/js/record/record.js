@@ -1,19 +1,21 @@
-window.onload = () => {
+window.onload = async () => {
     HeaderService.getInstance().loadHeader();
     SummonerService.getInstance().summonerShowInfo();
     CheckboxService.getInstance().ShowCheckbox();
 
-    RecordShowInfoService.getInstance().recodeMatchesShowInfo();
+    await RecordShowInfoService.getInstance().recodeMatchesShowInfo();
 
     ComponentEvent.getInstance().addClickEventShowGameDetailInfo();
     ComponentEvent.getInstance().addClickATag();
     ComponentEvent.getInstance().addClickATagTwice();
     ComponentEvent.getInstance().addClickATagThird();
+    ComponentEvent.getInstance().addClickShowMoreButton();
 }
 
 let gameNameAndTagLine = "";
 
 let count = 0;
+let start = 0;
 
 class RecordApi {
     static #instance = null;
@@ -24,120 +26,81 @@ class RecordApi {
         return this.#instance;
     }
 
-    searchSummonerInfoByGameNameAndTagLine() {
-        let returnData = null;
+    async searchSummonerInfoByGameNameAndTagLine(gameNameAndTagLine) {
 
-        $.ajax({
-            async: false,
-            type: "post",
-            url: `http://localhost:8000/api/record/search/summoner/${gameNameAndTagLine}`,
-            contentType: "application/json",
-            data: JSON.stringify(gameNameAndTagLine),
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/search/summoner/${gameNameAndTagLine}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(gameNameAndTagLine),
+            });
+            const result = await responese.json();
+            return result.data;
 
-            }
-        });
-
-        return returnData;
+        } catch (error) {
+            console.error("searchSummonerInfoByGameNameAndTagLine", error);
+            return error;
+        }
     }
 
-    searchAccountInfoPuuid() {
-        let returnData = null;
+    async searchAccountInfoPuuid() {
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/get/account/info`);
+            const result = await responese.json();
 
-        $.ajax({
-            async: false,
-            type: "get",
-            url: `http://localhost:8000/api/record/get/account/info`,
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
+            return result.data;
+        } catch (error) {
+            console.error("searchAccountInfoPuuid : ", error);
+            return error;
+        }
     }
 
-    searchSummonerInfoByEncryptedPUUID() {
-        let returnData = null;
+    async searchSummonerInfoByEncryptedPUUID() {
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/get/summoner/info`);
+            const result = await responese.json();
 
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/summoner/info",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
+            return result.data;
+        } catch (error) {
+            console.error("searchSummonerInfoByEncryptedPUUID : ", error);
+            return error;
+        }
     }
 
-    searchMatchsByMatchId() {
-        let returnData = null;
+    async searchMatchsByMatchId(start) {
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/get/matches?start=${start}`);
+            const result = await responese.json();
 
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/matches",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
+            return result.data;
+        } catch (error) {
+            console.error("searchMatchsByMatchId : ", error);
+            return error;
+        }
     }
 
-    searchMatchInfoByMatchId() {
-        let returnData = null;
+    async searchMatchInfoByMatchId() {
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/get/matches/info`);
+            const result = await responese.json();
 
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/matches/info",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
+            return result.data;
+        } catch (error) {
+            console.error("searchMatchInfoByMatchId : ", error);
+            return error;
+        }
     }
 
-    searchLeagueBySummonerName() {
-        let returnData = null;
+    async searchLeagueBySummonerName() {
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/get/league`);
+            const result = await responese.json();
 
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/league",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
+            return result.data;
+        } catch (error) {
+            console.error("searchLeagueBySummonerName : ", error);
+            return error;
+        }
     }
 }
 
@@ -149,249 +112,159 @@ class RecordShowInfoService {
         }
         return this.#instance;
     }
-    
-    recodeMatchesShowInfo() {
-        const summonerData = RecordApi.getInstance().searchSummonerInfoByEncryptedPUUID();
-        
-        RecordApi.getInstance().searchMatchsByMatchId();
-        const matchInfo = RecordApi.getInstance().searchMatchInfoByMatchId();
+
+    async recodeMatchesShowInfo() {
+        const summonerData = await RecordApi.getInstance().searchSummonerInfoByEncryptedPUUID();
+        await RecordApi.getInstance().searchMatchsByMatchId(start);
+        const matchInfo = await RecordApi.getInstance().searchMatchInfoByMatchId();
+
         const daedkkeInfo = document.querySelector(".daedkke-info");
-        
-        matchInfo.forEach((data, index) => {
-            const participantsInfo = matchInfo[index].info.participants;
+
+        const formatChampionName = (name) => name === "FiddleSticks" ? "Fiddlesticks" : name;
+
+        const calculateKDA = (kills, assists, deaths) => {
+            return deaths === 0 ? (kills + assists) : ((kills + assists) / deaths).toFixed(2);
+        };
+
+        const fragment = document.createDocumentFragment();
+
+        for (let index = 0; index < matchInfo.length; index++) {
+            const match = matchInfo[index];
+            const participants = match.info.participants;
+            const isAram = match.info.queueId === 450;
 
             const participantObj = {
                 parIndex: 0,
                 win: "",
                 maxContinuityKill: "",
                 sumAllKill: 0
-            }
+            };
 
             const bestplayers = {
-                bestDamge: 0,
-                bestDamgeSummoner: "",
-                bestDamgeChamp: "",
-                bestDamgePosition: "",
+                bestDamge: 0, bestDamgeSummoner: "", bestDamgeChamp: "", bestDamgePosition: "",
+                bestKill: 0, bestKillSummoner: "", bestKillChamp: "", bestKillPosition: "",
+                bestDeath: 0, bestDeathSummoner: "", bestDeathChamp: "", bestDeathPosition: "",
+                bestAssist: 0, bestAssistSummoner: "", bestAssistChamp: "", bestAssistPosition: "",
+                bestDamgeReceive: 0, bestDamgeReceiveSummoner: "", bestDamgeReceiveChamp: "", bestDamgeReceivePosition: "",
+                bestgold: 0, bestgoldSummoner: "", bestgoldSummonerChamp: "", bestgoldPosition: "",
+                bestKDA: 0, bestKDASummoner: "", bestKDAChamp: "", bestKDAPosition: "",
+                bestCs: 0, bestCsSummoner: "", bestCsChamp: "", bestCsPosition: ""
+            };
 
-                bestKill: 0,
-                bestKillSummoner: "",
-                bestKillChamp: "",
-                bestKillPosition: "",
+            const winTeam = { winIndex: 0, teamName: "", maxGold: 0, maxKill: 0, winTop: 0, winJun: 0, winMid: 0, winBot: 0, winSur: 0 };
+            const loseTeam = { loseIndex: 0, teamName: "", maxGold: 0, maxKill: 0, loseTop: 0, loseJun: 0, loseMid: 0, loseBot: 0, loseSur: 0 };
 
-                bestDeath: 0,
-                bestDeathSummoner: "",
-                bestDeathChamp: "",
-                bestDeathPosition: "",
+            // 참가자 정보 순회
+            participants.forEach((p, i) => {
+                const champName = formatChampionName(p.championName);
+                const position = p.individualPosition?.toLowerCase();
+                const kda = calculateKDA(p.kills, p.assists, p.deaths);
 
-                bestAssist: 0,
-                bestAssistSummoner: "",
-                bestAssistChamp: "",
-                bestAssistPosition: "",
+                // 본인 확인 및 최대 연속 킬
+                if (p.puuid === summonerData.puuid) {
+                    participantObj.parIndex = i;
+                    participantObj.win = p.win === "true" ? "WIN" : "LOSE";
 
-                bestDamgeReceive: 0,
-                bestDamgeReceiveSummoner: "",
-                bestDamgeReceiveChamp: "",
-                bestDamgeReceivePosition: "",
-
-                bestgold: 0,
-                bestgoldSummoner: "",
-                bestgoldSummonerChamp: "",
-                bestgoldPosition: "",
-
-                bestKDA: 0,
-                bestKDASummoner: "",
-                bestKDAChamp: "",
-                bestKDAPosition: "",
-
-                bestCs: 0,
-                bestCsSummoner: "",
-                bestCsChamp: "",
-                bestCsPosition: ""
-
-            }
-            const winTeam = {
-                winIndex: 0,
-                teamId: 0,
-                teamName: "",
-                maxGold: 0,
-                maxKill: 0,
-                winTop: 0,
-                winJun: 0,
-                winMid: 0,
-                winBot: 0,
-                winSur: 0
-            }
-
-            const loseTeam = {
-                loseIndex: 0,
-                teamName: "",
-                maxGold: 0,
-                maxKill: 0,
-                loseTop: 0,
-                loseJun: 0,
-                loseMid: 0,
-                loseBot: 0,
-                loseSur: 0
-            }
-
-            participantsInfo.forEach((data, index1) => {
-                if (participantsInfo[index1].puuid == summonerData.puuid) {
-                    participantObj.parIndex = index1;
-                    participantObj.win = participantsInfo[index1].win == "true" ? "WIN" : "LOSE";
-
-                    if (participantsInfo[index1].doubleKills >= 1) {
-                        participantObj.maxContinuityKill = "더블킬";
-                    }
-                    if (participantsInfo[index1].tripleKills >= 1) {
-                        participantObj.maxContinuityKill = "트리플킬";
-                    }
-                    if (participantsInfo[index1].quadraKills >= 1) {
-                        participantObj.maxContinuityKill = "쿼드라킬";
-                    }
-                    if (participantsInfo[index1].pentaKills >= 1) {
-                        participantObj.maxContinuityKill = "펜타킬";
-                    }
+                    if (p.pentaKills >= 1) participantObj.maxContinuityKill = "펜타킬";
+                    else if (p.quadraKills >= 1) participantObj.maxContinuityKill = "쿼드라킬";
+                    else if (p.tripleKills >= 1) participantObj.maxContinuityKill = "트리플킬";
+                    else if (p.doubleKills >= 1) participantObj.maxContinuityKill = "더블킬";
                 }
 
-                if (participantsInfo[index1].win == "true") {
-                    participantObj.sumAllKill += participantsInfo[index1].kills;
+                if (p.win === "true") participantObj.sumAllKill += p.kills;
 
+                // 베스트 플레이어 통계 갱신
+                if (p.magicDamageDealtToChampions + p.physicalDamageDealtToChampions > bestplayers.bestDamge) {
+                    Object.assign(bestplayers, {
+                        bestDamge: p.magicDamageDealtToChampions + p.physicalDamageDealtToChampions,
+                        bestDamgeSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestDamgeChamp: champName,
+                        bestDamgePosition: position
+                    });
                 }
-            });
 
-            participantsInfo.forEach((data, index2) => {
-                if (participantsInfo[index2].magicDamageDealtToChampions + participantsInfo[index2].physicalDamageDealtToChampions > bestplayers.bestDamge) {
-                    bestplayers.bestDamge = participantsInfo[index2].magicDamageDealtToChampions + participantsInfo[index2].physicalDamageDealtToChampions;
-                    bestplayers.bestDamgeSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestDamgeChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestDamgePosition = participantsInfo[index2].individualPosition.toLowerCase();
+                if (p.kills > bestplayers.bestKill) {
+                    Object.assign(bestplayers, {
+                        bestKill: p.kills,
+                        bestKillSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestKillChamp: champName,
+                        bestKillPosition: position
+                    });
                 }
-                if (participantsInfo[index2].kills > bestplayers.bestKill) {
-                    bestplayers.bestKill = participantsInfo[index2].kills;
-                    bestplayers.bestKillSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestKillChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestKillPosition = participantsInfo[index2].individualPosition.toLowerCase();
+
+                if (p.deaths > bestplayers.bestDeath) {
+                    Object.assign(bestplayers, {
+                        bestDeath: p.deaths,
+                        bestDeathSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestDeathChamp: champName,
+                        bestDeathPosition: position
+                    });
                 }
-                if (participantsInfo[index2].deaths > bestplayers.bestDeath) {
-                    bestplayers.bestDeath = participantsInfo[index2].deaths;
-                    bestplayers.bestDeathSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestDeathChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestDeathPosition = participantsInfo[index2].individualPosition.toLowerCase();
+
+                if (p.assists > bestplayers.bestAssist) {
+                    Object.assign(bestplayers, {
+                        bestAssist: p.assists,
+                        bestAssistSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestAssistChamp: champName,
+                        bestAssistPosition: position
+                    });
                 }
-                if (participantsInfo[index2].assists > bestplayers.bestAssist) {
-                    bestplayers.bestAssist = participantsInfo[index2].assists;
-                    bestplayers.bestAssistSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestAssistChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestAssistPosition = participantsInfo[index2].individualPosition.toLowerCase();
+
+                if (p.totalDamageTaken > bestplayers.bestDamgeReceive) {
+                    Object.assign(bestplayers, {
+                        bestDamgeReceive: p.totalDamageTaken,
+                        bestDamgeReceiveSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestDamgeReceiveChamp: champName,
+                        bestDamgeReceivePosition: position
+                    });
                 }
-                if (participantsInfo[index2].totalDamageTaken > bestplayers.bestDamgeReceive) {
-                    bestplayers.bestDamgeReceive = participantsInfo[index2].totalDamageTaken;
-                    bestplayers.bestDamgeReceiveSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestDamgeReceiveChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestDamgeReceivePosition = participantsInfo[index2].individualPosition.toLowerCase();
+
+                if (p.goldEarned > bestplayers.bestgold) {
+                    Object.assign(bestplayers, {
+                        bestgold: p.goldEarned,
+                        bestgoldSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestgoldSummonerChamp: champName,
+                        bestgoldPosition: position
+                    });
                 }
-                if (participantsInfo[index2].goldEarned > bestplayers.bestgold) {
-                    bestplayers.bestgold = participantsInfo[index2].goldEarned;
-                    bestplayers.bestgoldSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestgoldSummonerChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestgoldPosition = participantsInfo[index2].individualPosition.toLowerCase();
+
+                if (kda > bestplayers.bestKDA) {
+                    Object.assign(bestplayers, {
+                        bestKDA: kda,
+                        bestKDASummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestKDAChamp: champName,
+                        bestKDAPosition: position
+                    });
                 }
-                if ((participantsInfo[index2].deaths == 0 ? (participantsInfo[index2].kills + participantsInfo[index2].assists) : (participantsInfo[index2].kills + participantsInfo[index2].assists) / participantsInfo[index2].deaths).toFixed(2) > bestplayers.bestKDA) {
-                    bestplayers.bestKDA = (participantsInfo[index2].deaths == 0 ? (participantsInfo[index2].kills + participantsInfo[index2].assists) : (participantsInfo[index2].kills + participantsInfo[index2].assists) / participantsInfo[index2].deaths).toFixed(2);
-                    bestplayers.bestKDASummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestKDAChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestKDAPosition = participantsInfo[index2].individualPosition.toLowerCase();
-                }
-                if (participantsInfo[index2].totalMinionsKilled > bestplayers.bestCs) {
-                    bestplayers.bestCs = participantsInfo[index2].totalMinionsKilled;
-                    bestplayers.bestCsSummoner = participantsInfo[index2].riotIdGameName + "#" + participantsInfo[index2].riotIdTagline;
-                    bestplayers.bestCsChamp = participantsInfo[index2].championName == "FiddleSticks" ? "Fiddlesticks" : participantsInfo[index2].championName;
-                    bestplayers.bestCsPosition = participantsInfo[index2].individualPosition.toLowerCase();
+
+                if (p.totalMinionsKilled > bestplayers.bestCs) {
+                    Object.assign(bestplayers, {
+                        bestCs: p.totalMinionsKilled,
+                        bestCsSummoner: `${p.riotIdGameName}#${p.riotIdTagline}`,
+                        bestCsChamp: champName,
+                        bestCsPosition: position
+                    });
                 }
             });
 
-            participantsInfo.forEach((data, index3) => {
+            // 팀 데이터 세팅
+            if (isAram) {
+                participants.forEach((p, i) => {
+                    const teamName = p.teamId === 100 ? "블루팀" : "레드팀";
 
-                if (participantsInfo[index3].win == "true" && matchInfo[index].info.queueId != 450) {
-                    winTeam.teamName = participantsInfo[index3].teamId == 100 ? "블루팀" : "레드팀"
-                    winTeam.maxGold += participantsInfo[index3].goldEarned;
-                    winTeam.maxKill += participantsInfo[index3].kills;
-
-                    if (participantsInfo[index3].individualPosition == "TOP") {
-                        winTeam.winTop = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "JUNGLE") {
-                        winTeam.winJun = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "MIDDLE") {
-                        winTeam.winMid = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "BOTTOM") {
-                        winTeam.winBot = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "UTILITY") {
-                        winTeam.winSur = index3;
-                    }
-                }
-                if (participantsInfo[index3].win == "false" && matchInfo[index].info.queueId != 450) {
-                    loseTeam.teamName = participantsInfo[index3].teamId == 100 ? "블루팀" : "레드팀"
-                    loseTeam.maxGold += participantsInfo[index3].goldEarned;
-                    loseTeam.maxKill += participantsInfo[index3].kills;
-
-                    if (participantsInfo[index3].individualPosition == "TOP") {
-                        loseTeam.loseTop = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "JUNGLE") {
-                        loseTeam.loseJun = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "MIDDLE") {
-                        loseTeam.loseMid = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "BOTTOM") {
-                        loseTeam.loseBot = index3;
-                    }
-                    if (participantsInfo[index3].individualPosition == "UTILITY") {
-                        loseTeam.loseSur = index3;
-                    }
-
-                }
-
-
-            });
-
-            if (matchInfo[index].info.queueId == 450) {
-                participantsInfo.forEach((data, index4) => {
-
-                    if (participantsInfo[index4].win == "true") {
-                        winTeam.teamName = participantsInfo[index4].teamId == 100 ? "블루팀" : "레드팀"
-                        winTeam.maxGold += participantsInfo[index4].goldEarned;
-                        winTeam.maxKill += participantsInfo[index4].kills;
-
-                        if (participantsInfo[index4].lane == "TOP") {
-                            winTeam.winTop = index4;
-                            winTeam.winJun = index4;
-                            winTeam.winMid = index4;
-                            winTeam.winBot = index4;
-                            winTeam.winSur = index4;
-
-                        }
-                    }
-
-                    if (participantsInfo[index4].win == "false") {
-                        loseTeam.teamName = participantsInfo[index4].teamId == 100 ? "블루팀" : "레드팀"
-                        loseTeam.maxGold += participantsInfo[index4].goldEarned;
-                        loseTeam.maxKill += participantsInfo[index4].kills;
-                    }
-                    if (index4 == 0 || index4 == 5 && participantsInfo[index4].win == "true") {
-                        winTeam.winIndex = index4;
-                    }
-                    if (index4 == 0 || index4 == 5 && participantsInfo[index4].win == "false") {
-                        loseTeam.loseIndex = index4;
+                    if (p.win === "true") {
+                        winTeam.teamName = teamName;
+                        winTeam.maxGold += p.goldEarned;
+                        winTeam.maxKill += p.kills;
+                        if (i === 0 || i === 5) winTeam.winIndex = i;
+                    } else {
+                        loseTeam.teamName = teamName;
+                        loseTeam.maxGold += p.goldEarned;
+                        loseTeam.maxKill += p.kills;
+                        if (i === 0 || i === 5) loseTeam.loseIndex = i;
                     }
                 });
-            }
 
-            if (matchInfo[index].info.queueId == 450) {
                 winTeam.winTop = winTeam.winIndex;
                 winTeam.winJun = winTeam.winIndex + 1;
                 winTeam.winMid = winTeam.winIndex + 2;
@@ -403,23 +276,53 @@ class RecordShowInfoService {
                 loseTeam.loseMid = loseTeam.loseIndex + 2;
                 loseTeam.loseBot = loseTeam.loseIndex + 3;
                 loseTeam.loseSur = loseTeam.loseIndex + 4;
+
+            } else {
+                participants.forEach((p, i) => {
+                    const teamName = p.teamId === 100 ? "블루팀" : "레드팀";
+                    if (p.win === "true") {
+                        winTeam.teamName = teamName;
+                        winTeam.maxGold += p.goldEarned;
+                        winTeam.maxKill += p.kills;
+                        if (p.individualPosition === "TOP") winTeam.winTop = i;
+                        if (p.individualPosition === "JUNGLE") winTeam.winJun = i;
+                        if (p.individualPosition === "MIDDLE") winTeam.winMid = i;
+                        if (p.individualPosition === "BOTTOM") winTeam.winBot = i;
+                        if (p.individualPosition === "UTILITY") winTeam.winSur = i;
+                    } else {
+                        loseTeam.teamName = teamName;
+                        loseTeam.maxGold += p.goldEarned;
+                        loseTeam.maxKill += p.kills;
+                        if (p.individualPosition === "TOP") loseTeam.loseTop = i;
+                        if (p.individualPosition === "JUNGLE") loseTeam.loseJun = i;
+                        if (p.individualPosition === "MIDDLE") loseTeam.loseMid = i;
+                        if (p.individualPosition === "BOTTOM") loseTeam.loseBot = i;
+                        if (p.individualPosition === "UTILITY") loseTeam.loseSur = i;
+                    }
+                });
             }
 
             const html = ComponentEvent.getInstance().createMatchBoxHtml(
-                matchInfo[index],
-                participantsInfo[participantObj.parIndex],
+                match,
+                participants[participantObj.parIndex],
                 participantObj,
-                matchInfo[index].info.queueId,
-                participantsInfo,
+                match.info.queueId,
+                participants,
                 bestplayers,
                 winTeam,
-                loseTeam
+                loseTeam,
+                index + 1
             );
+            // daedkkeInfo.innerHTML += html;
+            const tempDiv = document.createElement('div');
 
-            daedkkeInfo.innerHTML += html;
+            tempDiv.innerHTML = html;
+            while (tempDiv.firstChild) {
+                fragment.appendChild(tempDiv.firstChild);
+            }
         }
-        )
-    };
+        daedkkeInfo.appendChild(fragment);
+    }
 }
 
 class ComponentEvent {
@@ -429,6 +332,15 @@ class ComponentEvent {
             this.#instance = new ComponentEvent();
         }
         return this.#instance;
+    }
+
+    addClickShowMoreButton() {
+        const button = document.querySelector(".showMoreBtn");
+
+        button.addEventListener("click", async () => {
+            this.start += 10;
+            await RecordShowInfoService.getInstance().recodeMatchesShowInfo();
+        })
     }
 
     addClickEventShowGameDetailInfo() {
@@ -454,9 +366,9 @@ class ComponentEvent {
         const inputValue = document.querySelectorAll(".sulist-fcc input");
 
         aTag.forEach((tag, index) => {
-            tag.onclick = () => {
+            tag.onclick = async () => {
                 gameNameAndTagLine = inputValue[index].defaultValue.replaceAll("~", " ");
-                let successFlag = RecordApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
+                let successFlag = await RecordApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
 
                 if (successFlag) {
                     location.href = `/record/${gameNameAndTagLine}`;
@@ -471,10 +383,10 @@ class ComponentEvent {
 
         bestBoxaTag.forEach((tag, index) => {
 
-            tag.onclick = () => {
+            tag.onclick = async () => {
                 gameNameAndTagLine = inputValueTwice[index].defaultValue.replaceAll("~", " ");
                 gameNameAndTagLine = gameNameAndTagLine.replaceAll("#", "-");
-                let successFlag = RecordApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
+                let successFlag = await RecordApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
                 if (successFlag) {
                     location.href = `/record/${gameNameAndTagLine}`;
                 }
@@ -487,9 +399,9 @@ class ComponentEvent {
         const inputValueThird = document.querySelectorAll(".win-game-text input");
 
         winGameTextaTag.forEach((tag, index2) => {
-            tag.onclick = () => {
+            tag.onclick = async () => {
                 gameNameAndTagLine = inputValueThird[index2].defaultValue.replaceAll("~", " ");
-                let successFlag = RecordApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
+                let successFlag = await RecordApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
 
                 if (successFlag) {
                     location.href = `/record/${gameNameAndTagLine}`;
@@ -533,6 +445,7 @@ class ComponentEvent {
             return "방금 전";
         }
     }
+
     createMatchBoxHtml(matchData, participant, participantObj, queueId, participantsInfo, bestplayers, winTeam, loseTeam) {
         const queueName = this.queueNameMap[queueId] || "기타";
         const timeAgo = this.getTimeAgoString(matchData.info.gameStartTimestamp);
@@ -2828,8 +2741,3 @@ class ComponentEvent {
         }
     }
 }
-
-
-
-
-

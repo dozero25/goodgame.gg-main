@@ -1,5 +1,6 @@
 package fourjo.idle.goodgame.gg.web.api;
 
+import fourjo.idle.goodgame.gg.entity.UserInfo;
 import fourjo.idle.goodgame.gg.web.dto.CMRespDto;
 import fourjo.idle.goodgame.gg.web.dto.record.AccountDto;
 import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,24 +33,32 @@ public class RecordApi {
     private SummonerDto summonerDto = new SummonerDto();
     private List<String> matchesList = new ArrayList<>();
 
+    @GetMapping("/auto/users")
+    public ResponseEntity<CMRespDto<List<UserInfo>>> autocomplete(@RequestParam String input){
+        return ResponseEntity.ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", recordService.getAutoCompleteResults(input)));
+    }
+
+    @PostMapping("/user/store")
+    @Operation(summary ="MongoDB 저장", description = "MongoDB에 직접 입력해서 저장할 수 있습니다.")
+    public ResponseEntity<CMRespDto<?>> storeUser(@RequestParam String gameName, @RequestParam String tagLine){
+        recordService.saveOrUpdateAutoCompleteUser(gameName, tagLine);
+        return ResponseEntity.ok()
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", null));
+    }
+
     @PostMapping("/search/summoner/{gameNameAndTagLine}")
     @Operation(summary ="Summoner 검색", description = "gameName(String)과 tagLine(String)으로 검색합니다.")
     public ResponseEntity<CMRespDto<?>> searchSummonerInfoByGameNameAndTagLine(@PathVariable("gameNameAndTagLine") String gameNameAndTagLine){
-
-        String[] strArr = gameNameAndTagLine.split("-");
-
+        String[] strArr = gameNameAndTagLine.split("~");
         String gameName = strArr[0];
-        String tagLine = "";
-
-        if(strArr.length != 1){
-            tagLine = strArr[1];
-        }
+        String tagLine = (strArr.length > 1) ? strArr[1] : "";
 
         gameName = gameName.replaceAll(" ", "%20");
         tagLine = tagLine.replaceAll(" ", "%20");
 
         accountDto = recordService.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
-
+        recordService.saveOrUpdateAutoCompleteUser(gameName, tagLine);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", accountDto));
     }
@@ -75,9 +85,8 @@ public class RecordApi {
 
     @GetMapping("/get/matches")
     @Operation(summary ="Matches List 가져오기", description = "puuid로 Matches 리스트를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(){
-
-        matchesList = recordService.searchMatchesByPuuid(summonerDto.getPuuid(),0);
+    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(@RequestParam int start){
+        matchesList = recordService.searchMatchesByPuuid(summonerDto.getPuuid(), start);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchesList));
     }

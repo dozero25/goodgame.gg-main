@@ -7,7 +7,7 @@ body {
     -ms-overflow-style: none;
 }
 
-.disflex{
+.disflex {
     display: flex;
 }
 
@@ -20,7 +20,7 @@ body {
     height: auto;
 }
 
-.back-img-box{
+.back-img-box {
     display: block;
     min-width: 900px;
     height: 275px;
@@ -82,7 +82,7 @@ body {
 
 .profil-box:nth-child(2) {
     height: 75px;
-    
+
 }
 
 .head-check {
@@ -98,7 +98,7 @@ body {
     margin-top: 10px;
 }
 
-.rank-box{
+.rank-box {
     display: flex;
 }
 
@@ -151,13 +151,13 @@ body {
     margin: 0 auto;
 }
 
-.match-left{
+.match-left {
     float: left;
     width: 65%;
     height: 100%;
 }
 
-.match-right{
+.match-right {
     float: right;
     width: 35%;
     height: 100%;
@@ -169,6 +169,56 @@ body {
     margin-top: 10px;
     margin-bottom: 50px;
 }
+.showMoreButonBox{
+    width: 100%;
+    min-height: 108px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+
+.showMoreBtn {
+    width: 100%;
+    max-width: none;
+    display: block;
+    padding: 1em 2em;
+    border: 2px solid #fff;
+    background-color: #010A13;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+    transition: border-color 0.4s, color 0.4s;
+}
+
+.showMoreBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #999999;
+    z-index: -1;
+    opacity: 0;
+    transform: scale3d(0.7, 1, 1);
+    transition: transform 0.4s, opacity 0.4s;
+    transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
+    border-radius: 4px;
+}
+
+.showMoreBtn:hover {
+    color: #010A13;
+    border-color: #fff;
+}
+
+.showMoreBtn:hover::before {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+}
 
 .match-box {
     position: relative;
@@ -178,11 +228,13 @@ body {
     cursor: pointer;
     margin-top: 10px;
 }
+
 .win-color {
-    background: rgba(49, 142, 239, 0.1) ;
+    background: rgba(49, 142, 239, 0.1);
 }
+
 .lose-color {
-    background : rgba(244, 88, 78, 0.1)
+    background: rgba(244, 88, 78, 0.1)
 }
 
 .match-info-fir {
@@ -209,23 +261,25 @@ body {
 
     margin-bottom: 7px;
 }
+
 .text-thi {
     margin-bottom: 2px;
 }
+
 .text-four {
     color: rgb(153, 153, 153);
     font-weight: 500;
     font-size: 13px;
 }
 
-.match-info-sec{
+.match-info-sec {
     display: flex;
     flex-direction: column;
     width: 20%;
     padding-top: 20px;
 }
 
-.cop-one{
+.cop-one {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
@@ -239,7 +293,7 @@ body {
     overflow: hidden;
 }
 
-.cop-three{
+.cop-three {
     display: flex;
     flex-direction: column;
     margin-left: 4px;
@@ -254,7 +308,7 @@ body {
     height: 100%;
 }
 
-.cop-four img{
+.cop-four img {
     max-width: 100%;
 
     width: 100%;
@@ -275,7 +329,7 @@ body {
     font-size: 11px;
 }
 
-.diflmar{
+.diflmar {
     display: flex;
     flex-direction: row;
 }
@@ -287,7 +341,7 @@ body {
     background: rgb(0, 0, 0);
 }
 
-.match-info-thi{
+.match-info-thi {
     display: flex;
     flex-direction: column;
     -webkit-box-align: center;
@@ -316,7 +370,7 @@ body {
     font-size: 12px;
 }
 
-.kda-info{
+.kda-info {
     display: flex;
     flex-direction: column;
     -webkit-box-align: center;
@@ -325,7 +379,8 @@ body {
     width: 20%;
     padding-top: 10px;
 }
-.kda-info-center{
+
+.kda-info-center {
     margin: 0 auto;
 }
 
@@ -335,13 +390,13 @@ body {
     align-items: center;
 }
 
-.sulist-fcc{
+.sulist-fcc {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
 }
 
-.sulist-fcc-img{
+.sulist-fcc-img {
     width: 16px;
     height: 16px;
     margin-right: 6px;
@@ -351,25 +406,26 @@ body {
     transform: translateZ(0px);
 }
 
-.href-summoner{
+.href-summoner {
     width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     opacity: 0.7;
     text-overflow: ellipsis;
-    white-space : nowrap; 
-    overflow : hidden; 
+    white-space: nowrap;
+    overflow: hidden;
 
     color: rgb(255, 255, 255);
     font-weight: 600;
     font-size: 11px;
 }
 
-.href-summoner:hover{
+.href-summoner:hover {
     text-decoration: underline;
 }
-.show-match-summoner{
+
+.show-match-summoner {
     width: 40%;
     margin-right: 5px;
 }
@@ -419,10 +475,10 @@ body {
     display: flex;
     -webkit-box-pack: center;
     justify-content: center;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
 }
 
-.sel-gasang-btn{
+.sel-gasang-btn {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
@@ -448,18 +504,18 @@ body {
 }
 
 .ingmae-info-box {
-    align-self: stretch; 
+    align-self: stretch;
     display: block;
 }
 
-.max-or-min{
+.max-or-min {
     display: flex;
     -webkit-box-pack: justify;
     justify-content: space-between;
     margin-bottom: 40px;
 }
 
-.mom-box{
+.mom-box {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -470,28 +526,28 @@ body {
     background: rgb(57, 58, 60);
 }
 
-.mom-box-sub{
+.mom-box-sub {
     color: rgb(249, 249, 249);
     font-weight: 700;
     font-size: 12px;
     margin-bottom: 3px;
 }
 
-.mom-box-exp{
+.mom-box-exp {
     color: rgb(249, 249, 249);
     margin-bottom: 15px;
     font-weight: 700;
     font-size: 24px;
 }
 
-.mom-box-user-box{
+.mom-box-user-box {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
-    
+
 }
 
-.mom-box img{
+.mom-box img {
     width: 20px;
     height: 20px;
 
@@ -499,7 +555,7 @@ body {
     vertical-align: middle;
 }
 
-.mom-box-user-box a{
+.mom-box-user-box a {
     color: rgb(249, 249, 249);
     font-weight: 500;
     font-size: 12px;
@@ -510,7 +566,7 @@ body {
     white-space: nowrap;
 }
 
-.game-info{
+.game-info {
     width: 60%;
     display: flex;
     margin: 0 auto;
@@ -534,32 +590,34 @@ body {
     order: 0;
     color: rgb(86, 78, 244);
 }
-.wol-info-fir{
+
+.wol-info-fir {
     margin: 0px 8px;
     color: inherit;
     font-weight: 700;
     font-size: 16px;
 }
 
-.wol-info-text{
+.wol-info-text {
     color: rgb(249, 249, 249);
     font-weight: 500;
     font-size: 13px;
     margin: 0px 5px;
 }
 
-.wol-info-fir-right{
+.wol-info-fir-right {
     margin-left: 5px;
 }
 
-.wol-info-two{
+.wol-info-two {
     display: flex;
     flex-direction: inherit;
     -webkit-box-align: center;
     align-items: center;
     margin: 0 3px;
 }
-.score-info{
+
+.score-info {
     margin: 0px 0px 0px 10px;
     color: rgb(249, 249, 249);
     font-weight: 700;
@@ -567,7 +625,7 @@ body {
     margin-right: 12px;
 }
 
-.wol-info-right{
+.wol-info-right {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
@@ -577,7 +635,7 @@ body {
     color: rgb(244, 88, 78);
 }
 
-.score-info-right{
+.score-info-right {
 
     margin: 0px 10px 0px 10px;
     color: rgb(249, 249, 249);
@@ -585,7 +643,7 @@ body {
     font-size: 20px;
 }
 
-.game-info-sang{
+.game-info-sang {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
@@ -593,13 +651,13 @@ body {
     margin-bottom: 10px;
 }
 
-.game-info-sang-zeae{
+.game-info-sang-zeae {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
 }
 
-.game-info-sang-line{
+.game-info-sang-line {
     color: rgb(153, 153, 153);
     font-weight: 500;
     font-size: 11px;
@@ -607,31 +665,34 @@ body {
     width: 50px;
     margin: 0px 19px;
 }
-.game-info-sang-text{
+
+.game-info-sang-text {
     text-align: center;
     color: rgb(153, 153, 153);
     font-weight: 500;
     font-size: 11px;
 }
 
-.game-info-user{
+.game-info-user {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
     height: 83px;
     padding: 0px 10px;
     border-radius: 4px;
-    background: linear-gradient(90deg, rgba(49, 142, 239, 0.1) 45.71%,  rgba(244, 88, 78, 0.1) 52.29%);
+    background: linear-gradient(90deg, rgba(49, 142, 239, 0.1) 45.71%, rgba(244, 88, 78, 0.1) 52.29%);
     margin-bottom: 5px;
 }
-.win-game-info{
+
+.win-game-info {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
     color: rgb(86, 78, 244);
     text-align: right;
 }
-.win-game-text{
+
+.win-game-text {
     display: flex;
     flex-direction: column;
     -webkit-box-align: center;
@@ -640,7 +701,7 @@ body {
     justify-content: center;
 }
 
-.win-game-img-box{
+.win-game-img-box {
     display: flex;
     flex-wrap: wrap;
     margin: -1px;
@@ -652,7 +713,8 @@ body {
     width: 20px;
     height: 20px;
 }
-.win-game-img-style{
+
+.win-game-img-style {
     border-style: solid;
     display: block;
     vertical-align: middle;
@@ -666,27 +728,27 @@ body {
     border: none;
 }
 
-.build-win-one{
+.build-win-one {
     margin-bottom: 2px;
     color: rgb(153, 153, 153);
     font-weight: 500;
     font-size: 11px;
 }
 
-.build-win-two{
+.build-win-two {
     color: rgb(153, 153, 153);
     font-weight: 700;
     font-size: 11px;
     margin-bottom: 7px;
 }
 
-.build-win-thi{
+.build-win-thi {
     color: rgb(153, 153, 153);
     font-weight: 500;
     font-size: 11px;
 }
 
-.summoner-name{
+.summoner-name {
     width: 100px;
     text-align: center;
     color: rgb(249, 249, 249);
@@ -695,7 +757,8 @@ body {
     white-space: nowrap;
     font-size: 11px;
 }
-.frvizneed{
+
+.frvizneed {
     position: relative;
     width: 40px;
     height: 40px;
@@ -704,7 +767,7 @@ body {
     overflow: hidden;
 }
 
-.ebmaf{
+.ebmaf {
     display: inline-block;
     overflow: hidden;
     transform: translateZ(0px);
@@ -712,7 +775,7 @@ body {
     height: 100%;
 }
 
-.gpvoyimg{
+.gpvoyimg {
     max-width: 100%;
     width: 100%;
     height: 100%;
@@ -721,13 +784,14 @@ body {
     transition: transform 0.3s ease 0s;
 }
 
-.aenclek{
+.aenclek {
     display: flex;
     -webkit-box-align: center;
     align-items: center;
     margin-bottom: 5px;
 }
-.jurxazcpgcmw{
+
+.jurxazcpgcmw {
     color: rgb(255, 255, 255);
     font-weight: 700;
     font-size: 12px;
@@ -737,39 +801,39 @@ body {
     padding: 1px;
 }
 
-.spell-img-box{
+.spell-img-box {
     display: flex;
     flex-direction: column;
     margin: 0px 2px;
 }
 
-.spell-img-once{
+.spell-img-once {
     width: 19px;
     height: 19px;
     border-radius: 2px;
     background: rgb(0, 0, 0);
 }
 
-.iafoul{
+.iafoul {
     display: flex;
     flex-direction: column;
     -webkit-box-align: center;
     align-items: center;
     width: 50px;
-    margin: 0px 19px; 
+    margin: 0px 19px;
 }
 
 .position-img {
     width: 30px;
 }
 
-.right-img-box{
+.right-img-box {
     width: 80%;
 
     margin-top: 30px;
 }
 
-.img-one-box{
+.img-one-box {
     display: flex;
     align-items: center;
     justify-content: center;
