@@ -334,29 +334,29 @@ private void registerUserIfNotExists(String oauth2Id, String nickname, String em
 
 ### 리그 오브 레전드 챔피언 숙련도 검색 기능
 
-- **목표**: 사용자가 원하는 LoL 챔피언의 숙련도 정보를 검색할 수 있는 기능 구현
+- **목표** : 사용자가 원하는 LoL 챔피언의 숙련도 정보를 검색할 수 있는 기능 구현
 
-- **기술 스택**:  
+- **기술 스택** :  
   - **Java** – 백엔드 연동 및 데이터 처리  
   - **JavaScript** – 객체지향 방식으로 프론트엔드 로직 구현  
   - **API 연동** – 외부 API를 통한 챔피언 숙련도 검색  
   - **HTML/CSS** – UI 구성  
   - **Git** – 버전 관리  
 
-- **프로젝트 개요**:  
+- **프로젝트 개요** :  
   LoL API를 활용해 챔피언 숙련도 데이터를 실시간으로 받아와, 사용자가 입력한 검색어에 따라 자동완성 및 조회 기능을 제공. 사용자는 원하는 챔피언 정보를 빠르게 확인할 수 있음.
 
-- **기여 내용**:  
-  - **자동완성 구현**: 챔피언 이름 입력 시 관련 챔피언 추천  
-  - **UI 개선**: 검색 시작 시 리스트 자동 표시 및 클릭 선택 가능  
-  - **API 연동**: 챔피언 숙련도 JSON 데이터를 받아와 파싱 및 표시  
-  - **디버깅/최적화**: 비동기 처리 및 이벤트 충돌 해결, API 호출 최소화
+- **기여 내용** :  
+  - **자동완성 구현** : 챔피언 이름 입력 시 관련 챔피언 추천  
+  - **UI 개선** : 검색 시작 시 리스트 자동 표시 및 클릭 선택 가능  
+  - **API 연동** : 챔피언 숙련도 JSON 데이터를 받아와 파싱 및 표시  
+  - **디버깅/최적화** : 비동기 처리 및 이벤트 충돌 해결, API 호출 최소화
 
-- **기술적 도전 및 해결**:  
-  - **무작위 출력 문제 해결**: JavaScript의 `then()` 처리로 출력 순서가 꼬이는 문제 발생 → `Promise.all()`을 사용해 모든 데이터를 수집 후 출력  
-  - **API 최적화**: 중복 호출 방지 및 캐싱 적용으로 응답 속도 개선
+- **기술적 도전 및 해결** :  
+  - **무작위 출력 문제 해결** : JavaScript의 `then()` 처리로 출력 순서가 꼬이는 문제 발생 → `Promise.all()`을 사용해 모든 데이터를 수집 후 출력  
+  - **API 최적화** : 중복 호출 방지 및 캐싱 적용으로 응답 속도 개선
 
-- **결과**:  
+- **결과** :  
   - 실시간 자동완성 검색과 숙련도 조회 기능을 제공  
   - 직관적인 UI/UX로 사용자 편의성 향상
  
@@ -515,5 +515,82 @@ https://github.com/user-attachments/assets/dc859b60-f5f8-46b0-bba0-271e77f7841a
 https://github.com/user-attachments/assets/a74c4126-7e6d-4200-bf89-8ba6150b818c
 
 
+</br>
+
+### 유저 검색 자동완성 기능
+
+- **목표**
+  - 사용자가 이전에 검색한 소환사명을 저장해 자동완성 기능을 제공함으로써, 반복 입력의 불편을 줄이고 사용자 경험(UX)을 개선하는 것을 목표.
+  - 실제 사용자 데이터를 기반으로 검색 기능을 점진적으로 고도화할 수 있는 구조를 설계
+
+- **기술 스택**:  
+  - **Java** – 백엔드 연동 및 데이터 처리  
+  - **JavaScript** – 객체지향 방식으로 프론트엔드 로직 구현  
+  - **Riot API** – 소환사 정보 조회를 위한 외부 API 연동
+  - **HTML/CSS** – 검색 UI 및 자동완성 레이아웃 구성
+  - **Git** – 버전 관리
+  - **MongoDB** - 자동완성용 유저 데이터 저장 및 조회
+
+- **프로젝트 개요** :  
+  사용자가 소환사명을 검색할 때 자동완성 기능을 제공하며, 해당 검색 기록을 MongoDB에 저장함으로써 검색 시점 기준의 실사용 데이터를 누적할 수 있는 기능을 구현. 프론트엔드에서는 검색창 입력에 따라 추천 리스트가 동적으로 출력되며, 서버는 이를 위해 최근 검색된 유저 정보를 정렬하여 데이터 제공
+
+- **기여 내용**:  
+  - **자동완성 구현** : 입력값 기준으로 MongoDB에서 gameName이 일치하는 데이터를 검색하여 리스트 출력
+  - **검색 기록 저장 기능 개발** : Riot API 호출 후 gameName + tagLine을 MongoDB에 저장
+  - **UI 개선** : 자동완성 리스트를 검색창 하단에 자연스럽게 표시하고 클릭 선택 가능하도록 구현
+  - **중복 방지 로직 구현** : 이미 존재하는 유저 정보가 있을 경우 lastSearchedAt만 업데이트되도록 처리
+
+- **기술적 도전 및 해결** :  
+  - **URL 인코딩 문제** : 사용자명이 `"Hide on bush#KR1"`과 같이 띄어쓰기 및 특수문자(#)를 포함할 경우 URL 인코딩 문제 발생 →  `JavaScript`에서 `#`을 `~`으로 변경하고, 서버 측에서 다시 `~`을 분리하여 처리함. 또한 `encodeURIComponent`로 인코딩을 명확히 함.
+  - **중복 데이터 저장** : MongoDB에 중복된 gameName + tagLine 조합이 계속 저장됨 → `db.userInfo.createIndex({ gameName: 1, tagLine: 1 }, { unique: true })`를 통해 복합 유니크 인덱스를 생성하고, Java에서는 `Optional<UserInfo>`로 존재 여부를 확인 후 저장하도록 수정
+
+- **결과** :
+  - 최근 검색된 10개 소환사명을 자동완성 형태로 출력 가능
+  - 사용자 입력 기반으로 MongoDB에 점진적으로 데이터 축적
+  - Riot API와의 연동을 안정적으로 처리하며 사용자 경험을 향상시킴
+
+#### 주요 구현코드 예시 - 유저 DB 저장
+``` java
+    // 사용자가 입력한 gameName과 tagLine으로 자동완성용 유저 정보를 MongoDB에 저장 또는 업데이트하는 메서드
+    public void saveOrUpdateAutoCompleteUser(String gameName, String tagLine){
+        // 이미 해당 gameName + tagLine 조합이 MongoDB에 저장되어 있는지 확인
+        Optional<UserInfo> searchUsers = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
+
+        // DB에 존재하지 않는 경우 (신규 유저)
+        if (searchUsers.isEmpty()) {
+            AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName.replaceAll(" ", "%20"), tagLine.replaceAll(" ", "%20"));
+
+            // API에서 유저 정보가 정상적으로 응답되었을 경우에만 저장
+            if (dto != null) {
+                UserInfo user = new UserInfo();
+                user.setGameName(gameName);
+                user.setTagLine(tagLine);
+                user.setPuuid(dto.getPuuid());
+                user.setLastSearchedAt(System.currentTimeMillis());
+                riotInfoRepository.save(user);
+            } else {
+                // API에서 정보를 가져오지 못했을 경우 로그 출력
+                System.out.println("유저 정보 없음");
+            }
+
+        } else {
+            // 이미 존재하는 유저일 경우
+            UserInfo user = searchUsers.get();
+
+            // Riot API로부터 최신 puuid 정보 받아서 갱신 (예: 닉네임 변경으로 인한 정보 일치 여부)
+            AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName.replaceAll(" ", "%20"), tagLine.replaceAll(" ", "%20"));
+            if (dto != null){
+                user.setPuuid(dto.getPuuid());
+            }
+            user.setLastSearchedAt(System.currentTimeMillis());
+            riotInfoRepository.save(user);
+        }
+    }
+```
+
+</br>
+
+#### 자동검색 시연
+![palygame3](https://github.com/user-attachments/assets/ded8702c-fe80-43f9-ab5f-6e54d7da6319)
 
 
