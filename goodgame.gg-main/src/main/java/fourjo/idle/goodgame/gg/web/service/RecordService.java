@@ -47,13 +47,25 @@ public class RecordService {
         Optional<UserInfo> searchUsers = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
 
         if (searchUsers.isEmpty()) {
-            UserInfo user = new UserInfo();
-            user.setGameName(gameName);
-            user.setTagLine(tagLine);
-            user.setLastSearchedAt(System.currentTimeMillis());
-            riotInfoRepository.save(user);
+            AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName.replaceAll(" ", "%20"), tagLine.replaceAll(" ", "%20"));
+            if (dto != null) {
+                UserInfo user = new UserInfo();
+                user.setGameName(gameName);
+                user.setTagLine(tagLine);
+                user.setPuuid(dto.getPuuid());
+                user.setLastSearchedAt(System.currentTimeMillis());
+                riotInfoRepository.save(user);
+            } else {
+                System.out.println("유저 정보 없음");
+            }
+
         } else {
             UserInfo user = searchUsers.get();
+
+            AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName.replaceAll(" ", "%20"), tagLine.replaceAll(" ", "%20"));
+            if (dto != null){
+                user.setPuuid(dto.getPuuid());
+            }
             user.setLastSearchedAt(System.currentTimeMillis());
             riotInfoRepository.save(user);
         }
@@ -206,13 +218,13 @@ public class RecordService {
         return championMasteryList;
     }
 
-    public List<ChampionMasteryDto> filterChampionMasteryBySearchTerm(List<ChampionMasteryDto> masteryList, String searchTerm) {
-        if (searchTerm == null || searchTerm.isEmpty()) {
+    public List<ChampionMasteryDto> filterChampionMasteryBySearchTerm(List<ChampionMasteryDto> masteryList, String searchInput) {
+        if (searchInput == null || searchInput.isEmpty()) {
             return masteryList;
         }
 
         try {
-            int searchId = Integer.parseInt(searchTerm);
+            int searchId = Integer.parseInt(searchInput);
             return masteryList.stream()
                     .filter(mastery -> mastery.getChampionId() == searchId)
                     .collect(Collectors.toList());

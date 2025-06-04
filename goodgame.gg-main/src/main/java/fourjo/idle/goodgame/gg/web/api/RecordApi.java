@@ -42,7 +42,6 @@ public class RecordApi {
     @PostMapping("/user/store")
     @Operation(summary ="MongoDB 저장", description = "MongoDB에 직접 입력해서 저장할 수 있습니다.")
     public ResponseEntity<CMRespDto<?>> storeUser(@RequestParam String gameName, @RequestParam String tagLine){
-
         recordService.saveOrUpdateAutoCompleteUser(gameName, tagLine);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", null));
