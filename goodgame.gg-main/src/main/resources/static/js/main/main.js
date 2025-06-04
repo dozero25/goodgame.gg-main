@@ -136,6 +136,7 @@ class ComponentEvent {
 
             let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
             MainApi.getInstance().inputSummonerInfoForMongoDB(gameName, tagLine);
+
             if(successFlag){
                 location.href = `/record/${encoded}`;
             } else {

@@ -44,10 +44,13 @@ public class RecordService {
     }
 
     public void saveOrUpdateAutoCompleteUser(String gameName, String tagLine){
+        AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
+        gameName = gameName.replaceAll("%20", " ");
+        tagLine = tagLine.replaceAll("%20", " ");
         Optional<UserInfo> searchUsers = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
 
         if (searchUsers.isEmpty()) {
-            AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName.replaceAll(" ", "%20"), tagLine.replaceAll(" ", "%20"));
+
             if (dto != null) {
                 UserInfo user = new UserInfo();
                 user.setGameName(gameName);
@@ -62,7 +65,6 @@ public class RecordService {
         } else {
             UserInfo user = searchUsers.get();
 
-            AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName.replaceAll(" ", "%20"), tagLine.replaceAll(" ", "%20"));
             if (dto != null){
                 user.setPuuid(dto.getPuuid());
             }
