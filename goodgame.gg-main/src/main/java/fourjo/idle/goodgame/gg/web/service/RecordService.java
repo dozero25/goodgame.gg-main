@@ -3,7 +3,10 @@ package fourjo.idle.goodgame.gg.web.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.DuplicateKeyException;
+import fourjo.idle.goodgame.gg.entity.UserInfo;
 import fourjo.idle.goodgame.gg.exception.CustomRiotResponseCodeException;
+import fourjo.idle.goodgame.gg.mongoRepository.RiotInfoRepository;
 import fourjo.idle.goodgame.gg.web.dto.record.AccountDto;
 import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
 import fourjo.idle.goodgame.gg.web.dto.record.LeagueDto;
@@ -28,10 +31,32 @@ public class RecordService {
     private final RiotApiKeyDto riotApiKeyDto;
     private final HttpClient httpClient;
 
-    public RecordService(RiotApiKeyDto riotApiKeyDto) {
+    private final RiotInfoRepository riotInfoRepository;
+
+    public RecordService(RiotApiKeyDto riotApiKeyDto, RiotInfoRepository riotInfoRepository) {
         this.riotApiKeyDto = riotApiKeyDto;
+        this.riotInfoRepository = riotInfoRepository;
         this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
         this.httpClient = HttpClientBuilder.create().build();
+    }
+    public List<UserInfo> getAutoCompleteResults(String input){
+        return riotInfoRepository.findByGameNameStartingWithOrderByLastSearchedAtDesc(input);
+    }
+
+    public void saveOrUpdateAutoCompleteUser(String gameName, String tagLine){
+        Optional<UserInfo> searchUsers = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
+
+        if (searchUsers.isEmpty()) {
+            UserInfo user = new UserInfo();
+            user.setGameName(gameName);
+            user.setTagLine(tagLine);
+            user.setLastSearchedAt(System.currentTimeMillis());
+            riotInfoRepository.save(user);
+        } else {
+            UserInfo user = searchUsers.get();
+            user.setLastSearchedAt(System.currentTimeMillis());
+            riotInfoRepository.save(user);
+        }
     }
 
     public AccountDto searchSummonerInfoByGameNameAndTagLine(String gameName, String tagLine){

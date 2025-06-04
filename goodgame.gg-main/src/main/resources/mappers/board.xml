@@ -143,21 +143,18 @@
 
 
     <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ좋아요 추천ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ  -->
-    <!-- 좋아요 존재 여부 조회 -->
     <select id="likeByBoardIndexAndUserIndex" parameterType="integer" resultType="integer">
         SELECT COUNT(userIndex)
         FROM board_like_mst
         WHERE boardIndex = #{boardIndex} AND userIndex = #{userIndex}
     </select>
 
-    <!-- 게시글 좋아요 수 조회 -->
     <select id="likeCountByBoardIndex" parameterType="integer" resultType="integer">
         SELECT COUNT(boardIndex)
         FROM board_like_mst
         WHERE boardIndex = #{boardIndex}
     </select>
 
-    <!-- 게시글 좋아요 수 업데이트 -->
     <update id="likeUpdate" parameterType="integer">
         UPDATE board_mst
         SET boardLikeCount = (
@@ -168,7 +165,6 @@
         WHERE boardIndex = #{boardIndex}
     </update>
 
-    <!-- 좋아요 추가 (중복 무시) -->
     <insert id="likeAdd" parameterType="integer">
         INSERT IGNORE INTO board_like_mst (boardLikeId, boardIndex, userIndex, boardLike, boardBad)
         VALUES (0, #{boardIndex}, #{userIndex}, 1, 0)

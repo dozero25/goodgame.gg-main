@@ -64,11 +64,12 @@ class ComponentEvent {
         seachButton.onclick = () => {
             // gameNameAndTagLine = searchInput.value;
             gameNameAndTagLine = "hide on bush#kr1";
-            gameNameAndTagLine = gameNameAndTagLine.replace("#", "-");
+            gameNameAndTagLine = gameNameAndTagLine.replace("#", "~"); 
+            const encoded = encodeURIComponent(gameNameAndTagLine);
             let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
             
             if(successFlag){
-                location.href = `/record/${gameNameAndTagLine}`;
+                location.href = `/record/${encoded}`;
             } else {
                 searchInput.focus();
             }
