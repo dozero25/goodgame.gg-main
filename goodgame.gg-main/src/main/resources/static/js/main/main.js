@@ -1,6 +1,7 @@
 window.onload = () => {
     HeaderService.getInstance().loadHeader();
     RotationsService.getInstance().loadRotationsChampion();
+    MainService.getInstance().addInputAutocomplete();
     ComponentEvent.getInstance().addClickSearchButton();
 }
 
@@ -35,6 +36,34 @@ class MainApi{
 
         return returnData;
     }
+
+    async inputSummonerInfoForMongoDB(gameName, TagLine){
+        
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/user/store`, {
+                method : "POST",
+                headers : {"Content-Type": "application/json"},
+                body : JSON.stringify({gameName, TagLine}), 
+            });
+            const result = await responese.json();
+            return result.data;
+        } catch (error) {
+            console.log("inputSummonerInfoForMongoDB", error);
+            return error;
+        }
+    }
+
+    async getAutoCompleteList(inputValue){
+        try {
+            const responese = await fetch(`http://localhost:8000/api/record/auto/users?input=${encodeURIComponent(inputValue)}`);
+            const result = await responese.json();
+
+            return result.data;
+        } catch (error) {
+            console.log("getAutoCompleteList", error);
+            return [];
+        }
+    }
 }
 
 class MainService{
@@ -44,6 +73,42 @@ class MainService{
             this.#instance = new MainService();
         }
         return this.#instance;
+    }
+
+    addInputAutocomplete() {
+        const searchInput = document.querySelector(".search");
+        const autocompleteBox = document.getElementById("autocomplete-box");
+
+        searchInput.addEventListener("input", async () => {
+            const inputValue = searchInput.value.trim();
+            if (inputValue.length === 0) {
+                autocompleteBox.innerHTML = "";
+                autocompleteBox.style.display = "none";
+                return;
+            }
+
+            const inputUserList = await MainApi.getInstance().getAutoCompleteList(inputValue);
+            autocompleteBox.innerHTML = "";
+
+            if (inputUserList.length === 0) {
+                autocompleteBox.style.display = "none";
+                return;
+            }
+
+            inputUserList.forEach(user => {
+                const item = document.createElement("div");
+                item.classList.add("autocomplete-item");
+                item.textContent = `${user.gameName}#${user.tagLine}`;
+                item.onclick = () => {
+                    searchInput.value = `${user.gameName}#${user.tagLine}`;
+                    autocompleteBox.innerHTML = "";
+                    autocompleteBox.style.display = "none";
+                };
+                autocompleteBox.appendChild(item);
+            });
+
+            autocompleteBox.style.display = "block";
+        });
     }
 
 }
@@ -62,12 +127,15 @@ class ComponentEvent {
         const seachButton = document.querySelector(".search-button");
 
         seachButton.onclick = () => {
-            // gameNameAndTagLine = searchInput.value;
-            gameNameAndTagLine = "hide on bush#kr1";
-            gameNameAndTagLine = gameNameAndTagLine.replace("#", "~"); 
+            gameNameAndTagLine = searchInput.value;
+            // gameNameAndTagLine = "hide on bush#kr1";
+            gameNameAndTagLine = gameNameAndTagLine.replace("#", "~");
             const encoded = encodeURIComponent(gameNameAndTagLine);
-            let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
             
+            const [gameName, tagLine] = gameNameAndTagLine.split("~");
+
+            let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
+            MainApi.getInstance().inputSummonerInfoForMongoDB(gameName, tagLine);
             if(successFlag){
                 location.href = `/record/${encoded}`;
             } else {

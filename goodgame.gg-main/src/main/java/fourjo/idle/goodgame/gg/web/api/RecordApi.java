@@ -33,7 +33,7 @@ public class RecordApi {
     private SummonerDto summonerDto = new SummonerDto();
     private List<String> matchesList = new ArrayList<>();
 
-    @GetMapping
+    @GetMapping("/auto/users")
     public ResponseEntity<CMRespDto<List<UserInfo>>> autocomplete(@RequestParam String input){
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", recordService.getAutoCompleteResults(input)));
