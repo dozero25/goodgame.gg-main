@@ -85,8 +85,8 @@
             rd.roleId,
             rm.roleName
         from user_mst um
-            left join role_dtl rd on(um.userId = rd.userId)
-            left join role_mst rm on(rm.roleId = rd.roleId)
+            inner join role_dtl rd on(um.userId = rd.userId)
+            inner join role_mst rm on(rm.roleId = rd.roleId)
         where
             um.userId = #{userId}
     </select>
