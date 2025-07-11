@@ -128,12 +128,8 @@ class ComponentEvent {
 
         seachButton.onclick = () => {
             gameNameAndTagLine = searchInput.value;
-            // gameNameAndTagLine = "hide on bush#kr1";
             gameNameAndTagLine = gameNameAndTagLine.replace("#", "~");
-            const encoded = encodeURIComponent(gameNameAndTagLine);
-
-            console.log(encoded);
-            
+            const encoded = encodeURIComponent(gameNameAndTagLine); 
             const [gameName, tagLine] = gameNameAndTagLine.split("~");
 
             let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine(encoded);
