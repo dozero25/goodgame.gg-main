@@ -50,7 +50,7 @@ class RecordApi {
 
             return result.data;
         } catch (error) {
-            console.error("searchAccountInfoPuuid : ", error);
+            console.error("recordError : ", error);
             return error;
         }
     }
@@ -62,7 +62,7 @@ class RecordApi {
 
             return result.data;
         } catch (error) {
-            console.error("searchSummonerInfoByEncryptedPUUID : ", error);
+            console.error("recordError : ", error);
             return error;
         }
     }
@@ -74,7 +74,7 @@ class RecordApi {
 
             return result.data;
         } catch (error) {
-            console.error("searchMatchsByMatchId : ", error);
+            console.error("recordError : ", error);
             return error;
         }
     }

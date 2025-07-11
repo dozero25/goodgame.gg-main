@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface RiotInfoRepository extends MongoRepository<UserInfo, String> {
     Optional<UserInfo> findUserByGameNameAndTagLine(String gameName, String tagLine);
     List<UserInfo> findByGameNameStartingWithOrderByLastSearchedAtDesc(String input);
+
+    Optional<UserInfo> findByPuuid(String puuid);
 }

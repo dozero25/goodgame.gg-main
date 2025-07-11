@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DuplicateKeyException;
+import com.mongodb.ErrorCategory;
+import com.mongodb.MongoWriteException;
+import fourjo.idle.goodgame.gg.entity.MatchRecord;
 import fourjo.idle.goodgame.gg.entity.UserInfo;
 import fourjo.idle.goodgame.gg.exception.CustomRiotResponseCodeException;
 import fourjo.idle.goodgame.gg.mongoRepository.RiotInfoRepository;
 import fourjo.idle.goodgame.gg.web.dto.record.AccountDto;
 import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
-import fourjo.idle.goodgame.gg.web.dto.record.LeagueDto;
+import fourjo.idle.goodgame.gg.web.dto.record.league.LeagueEntryDto;
 import fourjo.idle.goodgame.gg.web.dto.record.matches.MatchDto;
 import fourjo.idle.goodgame.gg.web.dto.record.SummonerDto;
 import fourjo.idle.goodgame.gg.web.dto.riotKey.RiotApiKeyDto;
@@ -45,31 +48,31 @@ public class RecordService {
 
     public void saveOrUpdateAutoCompleteUser(String gameName, String tagLine){
         AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
-        gameName = gameName.replaceAll("%20", " ");
-        tagLine = tagLine.replaceAll("%20", " ");
-        Optional<UserInfo> searchUsers = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
+        if (dto == null) {
+            System.out.println("유저 정보 없음");
+            return;
+        }
 
-        if (searchUsers.isEmpty()) {
+        String decodedGameName = gameName.replaceAll("%20", " ");
+        String decodedTagLine = tagLine.replaceAll("%20", " ");
 
-            if (dto != null) {
-                UserInfo user = new UserInfo();
-                user.setGameName(gameName);
-                user.setTagLine(tagLine);
-                user.setPuuid(dto.getPuuid());
-                user.setLastSearchedAt(System.currentTimeMillis());
-                riotInfoRepository.save(user);
-            } else {
-                System.out.println("유저 정보 없음");
-            }
+        Optional<UserInfo> optionalUser = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
+        Optional<UserInfo> duplicatePuuidUser = riotInfoRepository.findByPuuid(dto.getPuuid());
 
-        } else {
-            UserInfo user = searchUsers.get();
+        if (duplicatePuuidUser.isPresent() && optionalUser.isEmpty()) {
+            System.out.println("동일 puuid가 이미 존재하므로 저장하지 않음");
+            return;
+        }
 
-            if (dto != null){
-                user.setPuuid(dto.getPuuid());
-            }
+        try {
+            UserInfo user = optionalUser.orElseGet(UserInfo::new);
+            user.setGameName(decodedGameName);
+            user.setTagLine(decodedTagLine);
+            user.setPuuid(dto.getPuuid());
             user.setLastSearchedAt(System.currentTimeMillis());
             riotInfoRepository.save(user);
+        } catch (DuplicateKeyException e) {
+            System.out.println("중복 키 오류 발생 - 다른 요청이 먼저 저장함");
         }
     }
 
@@ -129,6 +132,16 @@ public class RecordService {
             HttpEntity entity = response.getEntity();
             summonerDto = objectMapper.readValue(entity.getContent(), SummonerDto.class);
 
+            Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(summonerDto.getPuuid());
+
+            UserInfo userInfo = optionalUserInfo.orElseGet(UserInfo::new);
+
+            userInfo.setPuuid(summonerDto.getPuuid());
+            userInfo.setSummonerDto(summonerDto);
+            userInfo.setLastSearchedAt(System.currentTimeMillis());
+
+            riotInfoRepository.save(userInfo);
+
         } catch (IOException e){
             e.printStackTrace();
             return null;
@@ -151,6 +164,27 @@ public class RecordService {
 
             matchesList = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
 
+            Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(puuid);
+            UserInfo userInfo = optionalUserInfo.orElseGet(() -> {
+                UserInfo newUser = new UserInfo();
+                newUser.setPuuid(puuid);
+                return newUser;
+            });
+
+            List<String> existingList = userInfo.getMatchDtoList();
+            if (existingList == null) {
+                existingList = new ArrayList<>();
+            }
+
+            Set<String> mergedSet = new LinkedHashSet<>(existingList);
+            mergedSet.addAll(matchesList);
+
+            userInfo.setMatchDtoList(new ArrayList<>(mergedSet));
+
+            userInfo.setLastSearchedAt(System.currentTimeMillis());
+
+            riotInfoRepository.save(userInfo);
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -158,33 +192,52 @@ public class RecordService {
         return matchesList;
     }
 
-    public MatchDto searchMatchInfoByMatchId (String matchId){
-        MatchDto matchDto = new MatchDto();
-        String apiKey = riotApiKeyDto.getMyKey();
-        String url = riotApiKeyDto.getSeverUrlAsia() + "/lol/match/v5/matches/"+matchId+"?api_key=" + apiKey;
-
-        try {
-            HttpGet request = new HttpGet(url);
-            HttpResponse response = httpClient.execute(request);
-
-            riotResponseCodeError(response);
-
-            HttpEntity entity = response.getEntity();
-
-            matchDto = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+    public void updateAllMatchRecordsForUser(List<String> matchesList, String puuid) throws IOException {
+        Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(puuid);
+        if (optionalUserInfo.isEmpty()) {
+            System.out.println("No user found with puuid: " + puuid);
+            return;
         }
-        return matchDto;
+        UserInfo userInfo = optionalUserInfo.get();
+
+        List<MatchRecord> existingList = userInfo.getMatchRecordsList();
+        if (existingList == null) {
+            existingList = new ArrayList<>();
+        }
+
+        Map<String, MatchRecord> recordMap = new HashMap<>();
+        for (MatchRecord record : existingList) {
+            recordMap.put(record.getMatchId(), record);
+        }
+
+        for (String matchId : matchesList) {
+            MatchDto matchDto = searchMatchDtoFromApi(matchId);
+            recordMap.put(matchId, new MatchRecord(matchId, matchDto));
+        }
+
+        List<MatchRecord> mergedList = new ArrayList<>(recordMap.values());
+        userInfo.setMatchRecordsList(mergedList);
+        userInfo.setLastSearchedAt(System.currentTimeMillis());
+        riotInfoRepository.save(userInfo);
     }
 
-    public List<LeagueDto> searchLeagueBySummonerName(String enCodeSummonerName){
-        List<LeagueDto> leagueList = new ArrayList<LeagueDto>();
+    private MatchDto searchMatchDtoFromApi(String matchId) throws IOException {
         String apiKey = riotApiKeyDto.getMyKey();
-        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/entries/by-summoner/" + enCodeSummonerName + "?api_key=" + apiKey;
+        String url = riotApiKeyDto.getSeverUrlAsia() + "/lol/match/v5/matches/" + matchId + "?api_key=" + apiKey;
 
+        HttpGet request = new HttpGet(url);
+        HttpResponse response = httpClient.execute(request);
+        riotResponseCodeError(response);
+
+        HttpEntity entity = response.getEntity();
+        return objectMapper.readValue(entity.getContent(), new TypeReference<MatchDto>() {});
+    }
+
+
+    public List<LeagueEntryDto> searchLeagueByEncryptedPUUID(String encryptedPUUID){
+        List<LeagueEntryDto> leagueEntryList = new ArrayList<>();
+        String apiKey = riotApiKeyDto.getMyKey();
+        String url = riotApiKeyDto.getServerUrl() + "/lol/league/v4/entries/by-puuid/" + encryptedPUUID + "?api_key=" + apiKey;
         try {
             HttpGet request = new HttpGet(url);
             HttpResponse response = httpClient.execute(request);
@@ -192,12 +245,21 @@ public class RecordService {
             riotResponseCodeError(response);
 
             HttpEntity entity = response.getEntity();
-            leagueList = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
+            leagueEntryList = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
+
+            Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(encryptedPUUID);
+
+            UserInfo userInfo = optionalUserInfo.orElseGet(UserInfo::new);
+
+            userInfo.setLeagueEntryDto(leagueEntryList);
+            userInfo.setLastSearchedAt(System.currentTimeMillis());
+
+            riotInfoRepository.save(userInfo);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return leagueList;
+        return leagueEntryList;
     }
 
     public List<ChampionMasteryDto> searchChampionMasteryByPuuid(String puuid, String sortBy, String order, String search){

@@ -1,11 +1,11 @@
 package fourjo.idle.goodgame.gg.web.api;
 
+import fourjo.idle.goodgame.gg.entity.MatchRecord;
 import fourjo.idle.goodgame.gg.entity.UserInfo;
 import fourjo.idle.goodgame.gg.web.dto.CMRespDto;
 import fourjo.idle.goodgame.gg.web.dto.record.AccountDto;
 import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
-import fourjo.idle.goodgame.gg.web.dto.record.LeagueDto;
-import fourjo.idle.goodgame.gg.web.dto.record.matches.MatchDto;
+import fourjo.idle.goodgame.gg.web.dto.record.league.LeagueEntryDto;
 import fourjo.idle.goodgame.gg.web.dto.record.SummonerDto;
 import fourjo.idle.goodgame.gg.web.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -57,7 +57,11 @@ public class RecordApi {
         gameName = gameName.replaceAll(" ", "%20");
         tagLine = tagLine.replaceAll(" ", "%20");
 
-        accountDto = recordService.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
+        if ("kr1".equalsIgnoreCase(tagLine)) {
+            tagLine = "KR1";
+        }
+
+//        accountDto = recordService.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
         recordService.saveOrUpdateAutoCompleteUser(gameName, tagLine);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", accountDto));
@@ -65,9 +69,9 @@ public class RecordApi {
 
     @GetMapping("/get/account/info")
     @Operation(summary ="accountInfo 가져오기", description = "puuid로 account의 정보를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchAccountInfoByPuuid(){
+    public ResponseEntity<CMRespDto<?>> searchAccountInfoByPuuid(String puuid){
 
-        recordService.searchAccountInfoByPuuid(accountDto.getPuuid());
+        recordService.searchAccountInfoByPuuid(puuid);
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", accountDto));
@@ -75,9 +79,9 @@ public class RecordApi {
 
     @GetMapping("/get/summoner/info")
     @Operation(summary ="SummonerInfo 가져오기", description = "puuid로 Summoner의 정보를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchSummonerInfoByEncryptedPUUID(){
+    public ResponseEntity<CMRespDto<?>> searchSummonerInfoByEncryptedPUUID(String puuid){
 
-        summonerDto =  recordService.searchSummonerInfoByEncryptedPUUID(accountDto.getPuuid());
+        summonerDto =  recordService.searchSummonerInfoByEncryptedPUUID(puuid);
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", summonerDto));
@@ -85,34 +89,32 @@ public class RecordApi {
 
     @GetMapping("/get/matches")
     @Operation(summary ="Matches List 가져오기", description = "puuid로 Matches 리스트를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(@RequestParam int start){
-        matchesList = recordService.searchMatchesByPuuid(summonerDto.getPuuid(), start);
+    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(@RequestParam int start, String puuid){
+
+
+        matchesList = recordService.searchMatchesByPuuid(puuid, start);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchesList));
     }
 
     @GetMapping("/get/matches/info")
     @Operation(summary ="Matches Info 가져오기", description = "matchesList에서 각각 api에 정보를 가져와서 matchDtoList에 저장합니다.")
-    public ResponseEntity<CMRespDto<?>> searchMatchInfoByMatchId(){
-        List<MatchDto> matchDtoList = new ArrayList<>();
+    public ResponseEntity<CMRespDto<?>> searchMatchInfoByMatchId(String puuid) throws IOException {
 
-        for (String index : matchesList){
-            matchDtoList.add(recordService.searchMatchInfoByMatchId(index));
-        }
+        List<MatchRecord> matchRecordList = new ArrayList<>();
+        recordService.updateAllMatchRecordsForUser(matchesList, puuid);
 
         return ResponseEntity.ok()
-                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchDtoList));
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchRecordList));
     }
 
     @GetMapping("/get/league")
-    @Operation(summary ="Summoner League List 가져오기", description = "id로 League 리스트를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchLeagueBySummonerName(){
-
-
-        List<LeagueDto> leagueList = recordService.searchLeagueBySummonerName(summonerDto.getId());
+    @Operation(summary ="Summoner League List 가져오기", description = "puuid로 League 리스트를 가져옵니다.")
+    public ResponseEntity<CMRespDto<?>> searchLeagueBySummonerName(@RequestParam String puuid){
+        List<LeagueEntryDto> leagueEntryDTO = recordService.searchLeagueByEncryptedPUUID(puuid);
 
         return ResponseEntity.ok()
-                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", leagueList));
+                .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", leagueEntryDTO));
     }
 
     @GetMapping("/get/championMastery")

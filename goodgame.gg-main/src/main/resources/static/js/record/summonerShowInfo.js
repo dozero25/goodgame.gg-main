@@ -16,8 +16,8 @@ class SummonerApi{
             type: "get",
             url: `http://localhost:8000/api/record/get/account/info`,
             dataType: "json",
-            success: responese => {
-                returnData = responese.data;
+            success: response => {
+                returnData = response.data;
             },
             error: error => {
                 console.log(error);
@@ -27,43 +27,6 @@ class SummonerApi{
         return returnData;
     }
 
-    searchSummonerInfoByEncryptedPUUID() {
-        let returnData = null;
-
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/summoner/info",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
-    }
-
-    searchLeagueBySummonerName() {
-        let returnData = null;
-
-        $.ajax({
-            async: false,
-            type: "get",
-            url: "http://localhost:8000/api/record/get/league",
-            dataType: "json",
-            success: responese => {
-                returnData = responese.data;
-            },
-            error: error => {
-                console.log(error);
-            }
-        });
-
-        return returnData;
-    }
 }
 
 class SummonerService{
@@ -78,9 +41,9 @@ class SummonerService{
 
     summonerShowInfo(){
         const accountData = SummonerApi.getInstance().searchAccountInfoPuuid();
-        const summonerData = SummonerApi.getInstance().searchSummonerInfoByEncryptedPUUID();
-        const leagueData = SummonerApi.getInstance().searchLeagueBySummonerName();
-        
+        const userData = UserInfoDataApi.getInstance().searchUserByPuuid(accountData.puuid);
+        console.log(userData);
+
 
         const profilLeft = document.querySelector(".profil-left");
         const profilRight = document.querySelector(".profil-right");
@@ -90,11 +53,11 @@ class SummonerService{
 
         profilLeft.innerHTML = `
             <div class="profil-img">
-                <img src="${window.BASE_URL}/img/profileicon/${summonerData.profileIconId}.png" alt="">
+                <img src="${window.BASE_URL}/img/profileicon/${userData.summonerDto.profileIconId}.png" alt="">
             </div>
              <div class="profil-summoner">
-                <h2>${accountData.gameName} #${accountData.tagLine}</h2>
-                <h4>소환사 레벨 : ${summonerData.summonerLevel}</h1>
+                <h2>${userData.gameName} #${userData.tagLine}</h2>
+                <h4>소환사 레벨 : ${userData.summonerDto.summonerLevel}</h1>
             </div>
         `;
 

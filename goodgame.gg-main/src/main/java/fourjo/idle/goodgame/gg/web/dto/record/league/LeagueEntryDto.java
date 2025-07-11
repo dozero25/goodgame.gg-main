@@ -1,13 +1,13 @@
-package fourjo.idle.goodgame.gg.web.dto.record;
+package fourjo.idle.goodgame.gg.web.dto.record.league;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LeagueDto {
+public class LeagueEntryDto {
     private String leagueId;
-    private String summonerId;
+    private String puuid;
     private String queueType;
     private String tier;
     private String rank;
@@ -19,4 +19,6 @@ public class LeagueDto {
     private boolean veteran;
     private boolean freshBlood;
     private boolean inactive;
+
+    private MiniSeriesDto miniSeries;
 }

@@ -131,10 +131,12 @@ class ComponentEvent {
             // gameNameAndTagLine = "hide on bush#kr1";
             gameNameAndTagLine = gameNameAndTagLine.replace("#", "~");
             const encoded = encodeURIComponent(gameNameAndTagLine);
+
+            console.log(encoded);
             
             const [gameName, tagLine] = gameNameAndTagLine.split("~");
 
-            let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine();
+            let successFlag = MainApi.getInstance().searchSummonerInfoByGameNameAndTagLine(encoded);
             MainApi.getInstance().inputSummonerInfoForMongoDB(gameName, tagLine);
 
             if(successFlag){
