@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PerksDto {
-    private PerkStatsDto statsDto;
+    private PerkStatsDto statPerks;
     private List<PerkStyleDto> styles;
 }

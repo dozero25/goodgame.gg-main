@@ -684,6 +684,16 @@ body {
     margin-bottom: 5px;
 }
 
+.game-info-user-arena {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 83px;
+    padding: 0px 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
 .win-game-info {
     display: flex;
     -webkit-box-align: center;

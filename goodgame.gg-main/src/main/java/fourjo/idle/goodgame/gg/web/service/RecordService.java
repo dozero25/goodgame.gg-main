@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DuplicateKeyException;
-import com.mongodb.ErrorCategory;
-import com.mongodb.MongoWriteException;
 import fourjo.idle.goodgame.gg.entity.MatchRecord;
 import fourjo.idle.goodgame.gg.entity.UserInfo;
 import fourjo.idle.goodgame.gg.exception.CustomRiotResponseCodeException;
@@ -149,10 +147,10 @@ public class RecordService {
         return summonerDto;
     }
 
-    public List<String> searchMatchesByPuuid (String puuid, int minCount){
+    public List<String> searchMatchesByPuuid(String puuid, int minCount) {
         List<String> matchesList = new ArrayList<>();
         String apiKey = riotApiKeyDto.getMyKey();
-        String url = riotApiKeyDto.getSeverUrlAsia() + "/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start="+minCount+"&count="+(minCount+9)+"&api_key=" + apiKey;
+        String url = riotApiKeyDto.getSeverUrlAsia() + "/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=" + minCount + "&count=10&api_key=" + apiKey;
 
         try {
             HttpGet request = new HttpGet(url);
@@ -161,7 +159,6 @@ public class RecordService {
             riotResponseCodeError(response);
 
             HttpEntity entity = response.getEntity();
-
             matchesList = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
 
             Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(puuid);
@@ -176,13 +173,11 @@ public class RecordService {
                 existingList = new ArrayList<>();
             }
 
-            Set<String> mergedSet = new LinkedHashSet<>(existingList);
-            mergedSet.addAll(matchesList);
+            Set<String> matchSet = new LinkedHashSet<>(existingList);
+            matchSet.addAll(matchesList);
 
-            userInfo.setMatchDtoList(new ArrayList<>(mergedSet));
-
+            userInfo.setMatchDtoList(new ArrayList<>(matchSet));
             userInfo.setLastSearchedAt(System.currentTimeMillis());
-
             riotInfoRepository.save(userInfo);
 
         } catch (IOException e) {
@@ -190,6 +185,8 @@ public class RecordService {
             return null;
         }
         return matchesList;
+
+
     }
 
     public void updateAllMatchRecordsForUser(List<String> matchesList, String puuid) throws IOException {
@@ -205,14 +202,16 @@ public class RecordService {
             existingList = new ArrayList<>();
         }
 
-        Map<String, MatchRecord> recordMap = new HashMap<>();
+        Map<String, MatchRecord> recordMap = new LinkedHashMap<>();
         for (MatchRecord record : existingList) {
             recordMap.put(record.getMatchId(), record);
         }
 
         for (String matchId : matchesList) {
-            MatchDto matchDto = searchMatchDtoFromApi(matchId);
-            recordMap.put(matchId, new MatchRecord(matchId, matchDto));
+            if (!recordMap.containsKey(matchId)) {
+                MatchDto matchDto = searchMatchDtoFromApi(matchId);
+                recordMap.put(matchId, new MatchRecord(matchId, matchDto));
+            }
         }
 
         List<MatchRecord> mergedList = new ArrayList<>(recordMap.values());

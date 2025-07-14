@@ -39,17 +39,14 @@ class SummonerService{
         return this.#instance;
     }
 
-    summonerShowInfo(){
-        const accountData = SummonerApi.getInstance().searchAccountInfoPuuid();
-        const userData = UserInfoDataApi.getInstance().searchUserByPuuid(accountData.puuid);
-        console.log(userData);
-
+    async summonerShowInfo(){
+        const accountData = SummonerApi.getInstance().searchAccountInfoPuuid(); 
+        const userData = await UserInfoDataApi.getInstance().searchUserByPuuid(accountData.puuid, start, size);
 
         const profilLeft = document.querySelector(".profil-left");
         const profilRight = document.querySelector(".profil-right");
         
-
-        const winning = leagueData.length != 0 ? ((leagueData[0].wins / (leagueData[0].wins + leagueData[0].losses)) * 100).toFixed(1) : "";
+        const winning = userData.leagueEntryDto.length != 0 ? ((userData.leagueEntryDto[0].wins / (userData.leagueEntryDto[0].wins + userData.leagueEntryDto[0].losses)) * 100).toFixed(1) : "";
 
         profilLeft.innerHTML = `
             <div class="profil-img">
@@ -65,19 +62,19 @@ class SummonerService{
             <div class="rank-box">
                 <div class="rank-img" style="margin-left: 10px;">
                     <div class="img-box">
-                        <img src="/static/images/tier/${leagueData.length != 0 ? leagueData[0].tier : "unranked"}.png" onerror="this.style.display='none'" alt="">
+                        <img src="/static/images/tier/${userData.leagueEntryDto[0].tier != 0 ? userData.leagueEntryDto[0].tier : "unranked"}.png" onerror="this.style.display='none'" alt="">
                     </div>
                 </div>
                 <div class="rank-info">
                     <div class="rank-score" >
                         <div>
-                            <h2 style="font-size : 20px">${leagueData.length != 0 ? leagueData[0].tier : "Unranked"}</h2>
+                            <h2 style="font-size : 20px">${userData.leagueEntryDto.length != 0 ? userData.leagueEntryDto[0].tier : "Unranked"}</h2>
                         </div>
                         <div>
-                            <h4 style="font-size : 15px">${leagueData.length != 0 ? leagueData[0].leaguePoints : 0}LP</h4>
+                            <h4 style="font-size : 15px">${userData.leagueEntryDto.length != 0 ? userData.leagueEntryDto[0].leaguePoints : 0}LP</h4>
                         </div>
                         <div>
-                            <h2 style="font-size : 20px">${leagueData.length != 0 ? leagueData[0].wins : ""}승 ${leagueData.length != 0 ? leagueData[0].losses : ""}패</h2>
+                            <h2 style="font-size : 20px">${userData.leagueEntryDto.length != 0 ? userData.leagueEntryDto[0].wins : ""}승 ${userData.leagueEntryDto.length != 0 ? userData.leagueEntryDto[0].losses : ""}패</h2>
                         </div>
                         <div>
                             <h4 style="font-size : 15px">승률 ${winning}%</h4>

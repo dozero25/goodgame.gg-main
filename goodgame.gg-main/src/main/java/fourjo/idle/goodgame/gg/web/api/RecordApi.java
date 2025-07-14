@@ -2,6 +2,7 @@ package fourjo.idle.goodgame.gg.web.api;
 
 import fourjo.idle.goodgame.gg.entity.MatchRecord;
 import fourjo.idle.goodgame.gg.entity.UserInfo;
+import fourjo.idle.goodgame.gg.mongoRepository.RiotInfoRepository;
 import fourjo.idle.goodgame.gg.web.dto.CMRespDto;
 import fourjo.idle.goodgame.gg.web.dto.record.AccountDto;
 import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class RecordApi {
 
 
     private final RecordService recordService;
+    private final RiotInfoRepository riotInfoRepository;
 
     private AccountDto accountDto = new AccountDto();
     private SummonerDto summonerDto = new SummonerDto();
@@ -61,7 +64,7 @@ public class RecordApi {
             tagLine = "KR1";
         }
 
-//        accountDto = recordService.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
+        accountDto = recordService.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
         recordService.saveOrUpdateAutoCompleteUser(gameName, tagLine);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", accountDto));
@@ -69,9 +72,9 @@ public class RecordApi {
 
     @GetMapping("/get/account/info")
     @Operation(summary ="accountInfo 가져오기", description = "puuid로 account의 정보를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchAccountInfoByPuuid(String puuid){
+    public ResponseEntity<CMRespDto<?>> searchAccountInfoByPuuid(){
 
-        recordService.searchAccountInfoByPuuid(puuid);
+        accountDto = recordService.searchAccountInfoByPuuid(accountDto.getPuuid());
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", accountDto));
@@ -79,9 +82,9 @@ public class RecordApi {
 
     @GetMapping("/get/summoner/info")
     @Operation(summary ="SummonerInfo 가져오기", description = "puuid로 Summoner의 정보를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchSummonerInfoByEncryptedPUUID(String puuid){
+    public ResponseEntity<CMRespDto<?>> searchSummonerInfoByEncryptedPUUID(){
 
-        summonerDto =  recordService.searchSummonerInfoByEncryptedPUUID(puuid);
+        summonerDto =  recordService.searchSummonerInfoByEncryptedPUUID(accountDto.getPuuid());
 
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", summonerDto));
@@ -89,10 +92,30 @@ public class RecordApi {
 
     @GetMapping("/get/matches")
     @Operation(summary ="Matches List 가져오기", description = "puuid로 Matches 리스트를 가져옵니다.")
-    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(@RequestParam int start, String puuid){
-
+    public ResponseEntity<CMRespDto<?>> searchMatchesByPuuid(@RequestParam int start, String puuid) throws IOException {
 
         matchesList = recordService.searchMatchesByPuuid(puuid, start);
+
+        Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(puuid);
+        if (optionalUserInfo.isEmpty()) {
+            // 유저 없으면 저장할 수 없으니 그냥 반환
+            return ResponseEntity.ok(new CMRespDto<>(HttpStatus.OK.value(), "No user info found", matchesList));
+        }
+        UserInfo userInfo = optionalUserInfo.get();
+        List<MatchRecord> storedRecords = userInfo.getMatchRecordsList();
+
+        boolean anyMatchExists = storedRecords != null && storedRecords.stream()
+                .anyMatch(record -> matchesList.contains(record.getMatchId()));
+
+        if (anyMatchExists) {
+            // 하나라도 있으면 10개 모두 저장/업데이트
+            recordService.updateAllMatchRecordsForUser(matchesList, puuid);
+        } else {
+            System.out.println("No existing match records found, skipping update.");
+        }
+
+        System.out.println(matchesList);
+
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchesList));
     }

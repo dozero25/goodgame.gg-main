@@ -127,7 +127,8 @@ class ComponentEvent {
         const seachButton = document.querySelector(".search-button");
 
         seachButton.onclick = () => {
-            gameNameAndTagLine = searchInput.value;
+            // gameNameAndTagLine = searchInput.value;
+            gameNameAndTagLine = "Hide on bush#kr1";
             gameNameAndTagLine = gameNameAndTagLine.replace("#", "~");
             const encoded = encodeURIComponent(gameNameAndTagLine); 
             const [gameName, tagLine] = gameNameAndTagLine.split("~");

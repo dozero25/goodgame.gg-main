@@ -7,6 +7,9 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ParticipantDto {
 
+    private int allInPings;
+    private int assistMePings;
+
     private int assists;
 
     private int baronKills;
@@ -16,8 +19,13 @@ public class ParticipantDto {
     private int champLevel;
     private int championId;
     private String championName;
+
+    private int commandPings;
+
     private int championTransform;
     private int consumablesPurchased;
+
+    private ChallengesDto challenges;
 
     private int damageDealtToBuildings;
     private int damageDealtToObjectives;
@@ -27,6 +35,10 @@ public class ParticipantDto {
     private int detectorWardsPlaced;
     private int doubleKills;
     private int dragonKills;
+    private boolean eligibleForProgression;
+
+    private int enemyMissingPings;
+    private int enemyVisionPings;
 
     private boolean firstBloodAssist;
     private boolean firstBloodKill;
@@ -35,6 +47,9 @@ public class ParticipantDto {
 
     private boolean gameEndedInEarlySurrender;
     private boolean gameEndedInSurrender;
+
+    private int holdPings;
+    private int getBackPings;
     private int goldEarned;
     private int goldSpent;
 
@@ -64,7 +79,10 @@ public class ParticipantDto {
     private int magicDamageDealtToChampions;
     private int magicDamageTaken;
 
+    private MissionsDto missions;
+
     private int neutralMinionsKilled;
+    private int needVisionPings;
     private int nexusKills;
     private int nexusTakedowns;
     private int nexusLost;
@@ -72,7 +90,23 @@ public class ParticipantDto {
     private int objectivesStolen;
     private int objectivesStolenAssists;
 
+    private int onMyWayPings;
+
     private int participantId;
+
+    private int playerScore0;
+    private int playerScore1;
+    private int playerScore2;
+    private int playerScore3;
+    private int playerScore4;
+    private int playerScore5;
+    private int playerScore6;
+    private int playerScore7;
+    private int playerScore8;
+    private int playerScore9;
+    private int playerScore10;
+    private int playerScore11;
+
     private int pentaKills;
     private PerksDto perks;
     private int physicalDamageDealt;
@@ -97,6 +131,7 @@ public class ParticipantDto {
     private int spell2Casts;
     private int spell3Casts;
     private int spell4Casts;
+    private int subteamPlacement;
     private int summoner1Casts;
     private int summoner1Id;
     private int summoner2Casts;
@@ -110,10 +145,15 @@ public class ParticipantDto {
     private String teamPosition;
     private int timeCCingOthers;
     private int timePlayed;
+
+    private int totalAllyJungleMinionsKilled;
     private int totalDamageDealt;
     private int totalDamageDealtToChampions;
     private int totalDamageShieldedOnTeammates;
     private int totalDamageTaken;
+
+    private int totalEnemyJungleMinionsKilled;
+
     private int totalHeal;
     private int totalHealsOnTeammates;
     private int totalMinionsKilled;
@@ -136,7 +176,7 @@ public class ParticipantDto {
     private int wardsKilled;
     private int wardsPlaced;
 
-    private String win;
+    private boolean win;
 
 
 }
