@@ -642,7 +642,7 @@ https://github.com/user-attachments/assets/a74c4126-7e6d-4200-bf89-8ba6150b818c
   - 사용자 전적 갱신 시 중복 데이터 없이 깔끔한 출력 구현
   - 상세 정보 UI 기능 정상 복구 및 일관된 DOM 구조 확보
 
-#### 주요 구현코드 예시 - 유저 데이터
+#### 주요 구현코드 예시 - 자동완성용 소환사 정보 DB 저장 메서드
 ``` JAVA
       // 자동완성용 유저 정보를 저장하거나 업데이트하는 메서드
       public void saveOrUpdateAutoCompleteUser(String gameName, String tagLine){
