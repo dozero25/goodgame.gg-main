@@ -594,3 +594,92 @@ https://github.com/user-attachments/assets/a74c4126-7e6d-4200-bf89-8ba6150b818c
 ![palygame3](https://github.com/user-attachments/assets/ded8702c-fe80-43f9-ab5f-6e54d7da6319)
 
 
+</br>
+
+### 리그 오브 레전드 관련 데이터 MongoDB에 저장
+- **문제**
+  - 유저를 검색하고 보통 4~5초 시간이 걸리고 전적 결과 UI가 나옴
+  - 또 다른 전적을 보기 위해, 더보기 버튼을 누르면 또 다시 API 요청을 하기 때문에 상당한 시간이 소요
+
+- **목표**
+  - 전적 결과를 포함한 유저의 전반적인 데이터를 **MongoDB**에 저장
+  - 이유는 현재 정형 데이터 형식을 띄고 있지만, 리그나 게임 테마가 변경될 경우 관련 데이터가 사라지거나, 구조가 변경이 되는 경우를 확인 EX) 1년전 ParticipantDto.win 데이터는 **String**타입이었지만, 현재 **boolean**타입으로 변경
+
+- **기술 스택**:  
+  - **Java** – 백엔드 연동 및 데이터 처리  
+  - **JavaScript** – 객체지향 방식으로 프론트엔드 로직 구현  
+  - **Riot API** – 소환사 정보 조회를 위한 외부 API 연동
+  - **HTML/CSS** – 검색 UI 및 자동완성 레이아웃 구성
+  - **Git** – 버전 관리
+  - **MongoDB** - 자동완성용 유저 데이터 저장 및 조회
+ 
+- **프로젝트 개요** :
+기존 Riot API 기반 리그 오브 레전드 소환사 전적 조회 서비스에 MongoDB를 연동하여, 전적 데이터를 안정적으로 저장하고 효율적으로 관리하는 기능을 구현 또한, 새로운 게임 모드(아레나 등)에 대응하는 UI 및 데이터 구조 개선, 대량 데이터 점진적 로딩과 전적 갱신 기능 등 사용자 경험과 시스템 안정성을 동시에 개선하는 작업을 수행
+  
+
+- **기여 내용**:  
+  - MongoDB에 소환사 기준 최근 10게임 전적 데이터를 저장하는 기능을 구현하고, 기존 기능에 MongoDB 연동을 추가하여 구조를 리팩토링함
+  - Java 백엔드에서 MongoDB 데이터를 클라이언트로 전송하는 API 기능 완성
+  - 새로운 게임 모드(아레나 등) 추가에 따른 DTO 및 UI 구조 변경, 아레나 특성 이미지 CDN 변경 및 전용 UI 구현
+  - Augment 데이터 저장 및 출력 구조 개선과 함께, 대량 전적 데이터를 10개 단위 점진적으로 로딩하는 기능 개발
+  - 전적 갱신 버튼 클릭 시 중복 출력 문제 해결을 위한 DOM 중복 검사 및 필터링 로직 구현
+  - .detail-view-info가 정상적으로 렌더링되도록 .match-box와 함께 공통 부모 div로 감싸 DOM에 추가하는 구조 변경
+
+- **기술적 도전 및 해결** :  
+  - MongoDB의 저장 방식과 _id 덮어쓰기 특성을 이해하지 못해 기존 전적이 사라지는 문제 발생 → 덮어쓰기 대신 기존 데이터에 이어 붙이는 방식으로 저장 로직 수정
+  - MongoDB에서 리스트 순서 보장이 안되는 문제를 LinkedHashMap을 사용해 해결
+  - Riot CDN에서 아레나 특성 이미지 미지원 문제를 CommunityDragon CDN 적용으로 해결
+  - Augment 데이터 매칭과 저장 방식 협의 및 구현
+  - 대량 데이터 처리 시 호출 및 렌더링 지연 문제를 10개 단위 점진적 로딩으로 최적화
+  - UI 중복 출력 문제를 기존 UI 내 matchId 데이터 중복 검사로 해결
+  - .detail-view-info가 DOM에 추가되지 않아 style이 적용 안 되는 문제를 공통 부모 div로 감싸 한 번에 렌더링하는 방식으로 해결
+
+- **결과** :
+  - MongoDB 연동 기반 안정적인 소환사 전적 저장 및 관리 기능 확보
+  - 다양한 게임 모드에 대응하는 확장성 높은 데이터 및 UI 구조 완성
+  - API Key 문제에도 안정적인 데이터 수집 체계 유지
+  - 대량 데이터 로딩과 UI 출력 성능 향상
+  - 사용자 전적 갱신 시 중복 데이터 없이 깔끔한 출력 구현
+  - 상세 정보 UI 기능 정상 복구 및 일관된 DOM 구조 확보
+
+#### 주요 구현코드 예시 - 유저 데이터
+``` JAVA
+      // 자동완성용 유저 정보를 저장하거나 업데이트하는 메서드
+      public void saveOrUpdateAutoCompleteUser(String gameName, String tagLine){
+          // 게임명과 태그라인으로 외부 API에서 유저 정보 조회
+          AccountDto dto = this.searchSummonerInfoByGameNameAndTagLine(gameName, tagLine);
+          if (dto == null) {
+              System.out.println("유저 정보 없음");
+              return;
+          }
+      
+          // URL 인코딩된 공백(%20)을 실제 공백으로 복원
+          String decodedGameName = gameName.replaceAll("%20", " ");
+          String decodedTagLine = tagLine.replaceAll("%20", " ");
+      
+          // DB에서 해당 게임명+태그라인 유저 정보 조회
+          Optional<UserInfo> optionalUser = riotInfoRepository.findUserByGameNameAndTagLine(gameName, tagLine);
+          // 같은 puuid가 이미 DB에 있는지 조회 (중복 저장 방지용)
+          Optional<UserInfo> duplicatePuuidUser = riotInfoRepository.findByPuuid(dto.getPuuid());
+      
+          // puuid가 DB에 이미 있고, 게임명+태그라인 조합은 없으면 저장하지 않음 (중복 방지)
+          if (duplicatePuuidUser.isPresent() && optionalUser.isEmpty()) {
+              System.out.println("동일 puuid가 이미 존재하므로 저장하지 않음");
+              return;
+          }
+      
+          try {
+              // DB에 없으면 새 객체 생성, 있으면 기존 객체 업데이트
+              UserInfo user = optionalUser.orElseGet(UserInfo::new);
+              user.setGameName(decodedGameName);
+              user.setTagLine(decodedTagLine);
+              user.setPuuid(dto.getPuuid());
+              user.setLastSearchedAt(System.currentTimeMillis()); // 마지막 검색 시간 갱신
+              riotInfoRepository.save(user);
+          } catch (DuplicateKeyException e) {
+              // 동시 저장 시 중복 키 예외 처리
+              System.out.println("중복 키 오류 발생 - 다른 요청이 먼저 저장함");
+          }
+      }
+
+```
