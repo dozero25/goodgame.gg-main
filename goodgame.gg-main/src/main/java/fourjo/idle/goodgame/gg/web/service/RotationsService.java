@@ -62,7 +62,7 @@ public class RotationsService {
         ChampionInfoDto championInfoDto = new ChampionInfoDto();
 
         try {
-            HttpGet request = new HttpGet("https://ddragon.leagueoflegends.com/cdn/14.23.1/data/ko_KR/champion/"+championEnum+".json");
+            HttpGet request = new HttpGet("https://ddragon.leagueoflegends.com/cdn/15.13.1/data/ko_KR/champion/"+championEnum+".json");
             HttpResponse response = httpClient.execute(request);
 
             HttpEntity entity = response.getEntity();

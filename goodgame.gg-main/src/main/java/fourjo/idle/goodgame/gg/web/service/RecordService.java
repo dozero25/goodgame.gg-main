@@ -274,6 +274,17 @@ public class RecordService {
 
             HttpEntity entity = response.getEntity();
             championMasteryList = objectMapper.readValue(entity.getContent(), new TypeReference<>() {});
+
+            Optional<UserInfo> optionalUserInfo = riotInfoRepository.findByPuuid(puuid);
+
+            UserInfo userInfo = optionalUserInfo.orElseGet(UserInfo::new);
+
+            userInfo.setChampionMasteryDto(championMasteryList);
+            userInfo.setLastSearchedAt(System.currentTimeMillis());
+
+            riotInfoRepository.save(userInfo);
+
+
         } catch (IOException e){
             e.printStackTrace();
             return null;

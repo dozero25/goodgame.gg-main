@@ -5,11 +5,12 @@ window.onload = async () => {
 
     await RecordShowInfoService.getInstance().recodeMatchesShowInfo();
 
-    ComponentEvent.getInstance().addClickEventShowGameDetailInfo();
+    await ComponentEvent.getInstance().addClickEventShowGameDetailInfo();
     ComponentEvent.getInstance().addClickATag();
     ComponentEvent.getInstance().addClickATagTwice();
     ComponentEvent.getInstance().addClickATagThird();
     ComponentEvent.getInstance().addClickShowMoreButton();
+    ComponentEvent.getInstance().addClickRecodeRenewalBtn();
 }
 
 let gameNameAndTagLine = "";
@@ -129,10 +130,20 @@ class RecordShowInfoService {
 
         const fragment = document.createDocumentFragment();
         const daedkkeInfo = document.querySelector(".daedkke-info");
+
+        const existingMatchIds = new Set(
+            Array.from(document.querySelectorAll(".match-box"))
+                .map(box => box.dataset.matchid)
+        );
+
         const arenaQueueIds = [1700];
 
         const htmlList = await Promise.all(userData.matchRecordsList.map(async (record, i) => {
             const match = record.matchDto;
+            const matchId = match.metadata.matchId;
+
+            if (existingMatchIds.has(matchId)) return null;
+
             const queueId = match.info.queueId;
             const isArena = arenaQueueIds.includes(queueId);
 
@@ -153,13 +164,20 @@ class RecordShowInfoService {
                 start + i + 1
             );
 
-            return html;
+            return { html, matchId };
         }));
 
-        htmlList.forEach(html => {
+        htmlList.filter(Boolean).forEach(({ html, matchId }) => {
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = html;
-            while (tempDiv.firstChild) fragment.appendChild(tempDiv.firstChild);
+
+            const matchBox = tempDiv.firstElementChild;
+            const detailView = tempDiv.querySelector(".detail-view-info");
+
+            matchBox.dataset.matchid = matchId;
+
+            fragment.appendChild(matchBox);
+            fragment.appendChild(detailView);
         });
 
         daedkkeInfo.appendChild(fragment);
@@ -429,13 +447,21 @@ class ComponentEvent {
 
     addClickShowMoreButton() {
         const button = document.querySelector(".showMoreBtn");
-
+        const accountData = SummonerApi.getInstance().searchAccountInfoPuuid();
         button.addEventListener("click", async () => {
             button.disabled = true;
             start += size;
 
             try {
-                await RecordShowInfoService.getInstance().recodeMatchesShowInfo(start, size);
+                const userData = await UserInfoDataApi.getInstance().searchUserByPuuid(accountData.puuid, start, size);
+
+                if (userData && userData.matchRecordsList && userData.matchRecordsList.length > 0) {
+                    await RecordShowInfoService.getInstance().recodeMatchesShowInfo(start, size);
+                } else {
+                    await RecordApi.getInstance().searchMatchsByMatchId(start, accountData.puuid);
+                    await RecordApi.getInstance().searchMatchInfoByMatchId(accountData.puuid);
+                    await RecordShowInfoService.getInstance().recodeMatchesShowInfo(start, size);
+                }
             } catch (error) {
                 console.error(error);
             } finally {
@@ -446,21 +472,28 @@ class ComponentEvent {
         })
     }
 
-    addClickEventShowGameDetailInfo() {
-        const button = document.querySelectorAll(".action");
-        const detailViewInfo = document.querySelectorAll(".detail-view-info");
+    async addClickEventShowGameDetailInfo() {
+        const buttons = document.querySelectorAll(".action");
+        const detailViewInfos = document.querySelectorAll(".detail-view-info");
 
-        button.forEach((btn, index) => {
+        console.log(buttons.length);
+        console.log(detailViewInfos.length);
 
-            btn.onclick = () => {
-                if (detailViewInfo[index].style.display != "none") {
-                    detailViewInfo[index].style.display = "none";
-                    button[index].classList.replace("active", "active-trans");
-                } else {
-                    detailViewInfo[index].style.display = "block";
-                    button[index].classList.replace("active-trans", "active");
-                }
-            }
+        if (buttons.length !== detailViewInfos.length) {
+            console.warn("[경고] 버튼 개수와 detail-view-info 개수가 다릅니다.");
+        }
+
+        buttons.forEach((btn, index) => {
+            const detail = detailViewInfos[index];
+
+            btn.addEventListener("click", () => {
+                const isVisible = detail.style.display !== "none";
+                detail.style.display = isVisible ? "none" : "block";
+                btn.classList.replace(
+                    isVisible ? "active" : "active-trans",
+                    isVisible ? "active-trans" : "active"
+                );
+            });
         });
     }
 
@@ -513,12 +546,41 @@ class ComponentEvent {
         });
     }
 
-    // 챔피언 이름 정리 함수, 피들스틱 챔프의 이름이 cdn으로 보내진 값과 달라서 사용
+    addClickRecodeRenewalBtn() {
+        const renewalBtn = document.querySelector(".recode-renewal-btn");
+        const renewalRotate = document.querySelector(".fa-arrows-rotate");
+
+        const accountData = SummonerApi.getInstance().searchAccountInfoPuuid();
+
+        renewalBtn.addEventListener("click", async () => {
+            renewalBtn.disabled = true;
+
+            renewalRotate.classList.add("spinning");
+            const startIndex = 0;
+
+            try {
+                const newMatchIds = await RecordApi.getInstance().searchMatchsByMatchId(startIndex, accountData.puuid);
+
+                if (newMatchIds && newMatchIds.length > 0) {
+                    await RecordApi.getInstance().searchMatchInfoByMatchId(accountData.puuid, newMatchIds);
+
+                    await RecordShowInfoService.getInstance().recodeMatchesShowInfo(startIndex, size);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setTimeout(() => {
+                    renewalRotate.classList.remove("spinning");
+                    renewalBtn.disabled = false;
+                }, 3000);
+            }
+        })
+    }
+
     fixChampionName(name) {
         return name === "FiddleSticks" ? "Fiddlesticks" : name;
     }
 
-    // queueId -> 게임 모드 이름 매핑
     queueNameMap = {
         420: "솔로랭크",
         490: "일반게임",
@@ -527,7 +589,6 @@ class ComponentEvent {
         1700: "아레나"
     };
 
-    // 승/패 텍스트 색상 처리 함수
     getWinTextColorHTML(winStatus) {
         const color = winStatus === "WIN" ? "#0004ff" : "#f4584e";
         return `<font color=\"${color}\">${winStatus}</font>`;
@@ -568,161 +629,161 @@ class ComponentEvent {
 
         if (rankGameQueues.includes(queueName)) {
             return `
-        <div class="${matchResultClass}">
-        <div class="match-info-fir">
-            <span class="info-text text-fir">${queueName}</span>
-            <span class="info-text text-sec">${timeAgo}</span>
-            <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
-            <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
-        </div>
-        <div class="match-info-sec">
-            <div class="cop-one">
-                <div class="cop-two">
-                    <div class="cop-four">
-                        <img src="${window.BASE_URL}/img/champion/${champName}.png" alt="">
-                    </div>
-                    <span class="cop-five">${participant.champLevel}</span>
+            <div class="${matchResultClass}">
+                <div class="match-info-fir">
+                    <span class="info-text text-fir">${queueName}</span>
+                    <span class="info-text text-sec">${timeAgo}</span>
+                    <span class="info-text text-thi">${this.getWinTextColorHTML(participantObj.win)}</span>
+                    <span class="info-text text-four">${duration.getMinutes()}:${duration.getSeconds().toString().padStart(2, '0')}</span>
                 </div>
-                <div class="cop-three">
-                    <div class="disflex diflmar">
-                        <div class="disflex"><img src="/static/images/spell/${participant.summoner1Id}.png" alt="" class="spell-img"></div>
-                        <div class="disflex" style="margin-left: 2px;"><img src="/static/images/spell/${participant.summoner2Id}.png" alt="" class="spell-img"></div>
+                <div class="match-info-sec">
+                    <div class="cop-one">
+                        <div class="cop-two">
+                            <div class="cop-four">
+                                <img src="${window.BASE_URL}/img/champion/${champName}.png" alt="">
+                            </div>
+                            <span class="cop-five">${participant.champLevel}</span>
+                        </div>
+                        <div class="cop-three">
+                            <div class="disflex diflmar">
+                                <div class="disflex"><img src="/static/images/spell/${participant.summoner1Id}.png" alt="" class="spell-img"></div>
+                                <div class="disflex" style="margin-left: 2px;"><img src="/static/images/spell/${participant.summoner2Id}.png" alt="" class="spell-img"></div>
+                            </div>
+                            <div class="disflex diflmar" style="margin-top: 2px;">
+                                <div class="disflex"><img src="/static/images/perks/${participant.perks.styles[0].selections[0].perk}.png" alt="" class="spell-img"></div>
+                                <div class="disflex" style="margin-left: 2px;"><img src="/static/images/perks/${participant.perks.styles[1].style}.png" alt="" class="spell-img"></div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="disflex diflmar" style="margin-top: 2px;">
-                        <div class="disflex"><img src="/static/images/perks/${participant.perks.styles[0].selections[0].perk}.png" alt="" class="spell-img"></div>
-                        <div class="disflex" style="margin-left: 2px;"><img src="/static/images/perks/${participant.perks.styles[1].style}.png" alt="" class="spell-img"></div>
+                </div>
+                <div class="match-info-thi">
+                    <div class="text-kidecs">
+                        <span>${participant.kills} / <span style="color: rgb(244, 88, 78);">${participant.deaths}</span> / ${participant.assists} (${kda})</span>
+                    </div>
+                    <div class="text-kidecs">
+                        <span>CS : ${participant.totalMinionsKilled} (${(participant.totalMinionsKilled / duration.getMinutes()).toFixed(2)})</span>
+                    </div>
+                    <div style="display: flex;">
+                        <span class="text-ck">연속킬 : </span>
+                        <span class="text-ck">${participantObj.maxContinuityKill == "" ? "X" : participantObj.maxContinuityKill}
+                        </span>
+                    </div>
+                </div>
+                <div class="kda-info">
+                    <div class="kda-info-center">
+                        <div class="text-kidecs">
+                            <span>킬관여 : ${Math.round(((participant.kills + participant.assists) / participantObj.sumAllKill) * 100)}%</span>
+                        </div>
+                        <div class="text-kidecs">
+                            <span>제어와드 : ${participant.visionWardsBoughtInGame}</span>
+                        </div>
+                        <div class="text-kidecs">
+                            <span>골드 : ${participant.goldEarned}</span>
+                        </div>
+                        <div class="text-kidecs">
+                            <span>피해량 : ${participant.physicalDamageDealtToChampions + participant.magicDamageDealtToChampions}</span>
+                        </div>
                     </div>
                 </div>
 
+                <ul class="show-match-summoner">
+                    <li class="summoner-list">
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[0].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[0].championName}.png" alt="">
+                            </div>
+                            <a target="_target" href="#" class="href-summoner">${participantsInfo[0].riotIdGameName + "#" + participantsInfo[0].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[0].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[0].riotIdTagline}>
+                        </div>
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[5].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[5].championName}.png" alt="">5
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[5].riotIdGameName + "#" + participantsInfo[5].riotIdTagline}</a>
+                            <input type="hidden" value = ${(participantsInfo[5].riotIdGameName).replaceAll(" ", "~") + "-" + participantsInfo[5].riotIdTagline}>
+                            </div>
+                    </li>
+                    <li class="summoner-list">
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[1].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[1].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[1].riotIdGameName + "#" + participantsInfo[1].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[1].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[1].riotIdTagline}>
+                        </div>
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[6].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[6].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[6].riotIdGameName + "#" + participantsInfo[6].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[6].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[6].riotIdTagline}>
+                        </div>
+                    </li>
+                    <li class="summoner-list">
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[2].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[2].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[2].riotIdGameName + "#" + participantsInfo[2].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[2].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[2].riotIdTagline}>
+                        </div>
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[7].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[7].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[7].riotIdGameName + "#" + participantsInfo[7].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[7].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[7].riotIdTagline}>
+                        </div>
+                    </li>
+                    <li class="summoner-list">
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[3].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[3].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[3].riotIdGameName + "#" + participantsInfo[3].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[3].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[3].riotIdTagline}>
+                        </div>
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[8].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[8].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[8].riotIdGameName + "#" + participantsInfo[8].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[8].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[8].riotIdTagline}>
+                        </div>
+                    </li>
+                    <li class="summoner-list">
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[4].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[4].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[4].riotIdGameName + "#" + participantsInfo[4].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[4].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[4].riotIdTagline}>
+                        </div>
+                        <div class="sulist-fcc">
+                            <div class="sulist-fcc-img">
+                                <img src="${window.BASE_URL}/img/champion/${participantsInfo[9].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[9].championName}.png" alt="">
+                            </div>
+                            <a target="_blank" href="#" class="href-summoner">${participantsInfo[9].riotIdGameName + "#" + participantsInfo[9].riotIdTagline}</a>
+                            <input type="hidden" value = ${participantsInfo[9].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[9].riotIdTagline}>
+                        </div>
+                    </li>
+                </ul>
+                <div class="action-form">
+                    <button class="action active-trans">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="match-info-thi">
-            <div class="text-kidecs">
-                <span>${participant.kills} / <span style="color: rgb(244, 88, 78);">${participant.deaths}</span> / ${participant.assists} (${kda})</span>
+            <div class="detail-view-info" style="display: none">
+            <div class="sel-gasang">
+                <button class="sel-gasang-btn">개요</button>
+                <button class="sel-gasang-btn">상세</button>
             </div>
-            <div class="text-kidecs">
-                <span>CS : ${participant.totalMinionsKilled} (${(participant.totalMinionsKilled / duration.getMinutes()).toFixed(2)})</span>
-            </div>
-            <div style="display: flex;">
-                <span class="text-ck">연속킬 : </span>
-                <span class="text-ck">${participantObj.maxContinuityKill == "" ? "X" : participantObj.maxContinuityKill}
-                </span>
-            </div>
-        </div>
-        <div class="kda-info">
-            <div class="kda-info-center">
-                <div class="text-kidecs">
-                    <span>킬관여 : ${Math.round(((participant.kills + participant.assists) / participantObj.sumAllKill) * 100)}%</span>
-                </div>
-                <div class="text-kidecs">
-                    <span>제어와드 : ${participant.visionWardsBoughtInGame}</span>
-                </div>
-                <div class="text-kidecs">
-                    <span>골드 : ${participant.goldEarned}</span>
-                </div>
-                <div class="text-kidecs">
-                    <span>피해량 : ${participant.physicalDamageDealtToChampions + participant.magicDamageDealtToChampions}</span>
-                </div>
-            </div>
-        </div>
-
-        <ul class="show-match-summoner">
-            <li class="summoner-list">
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[0].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[0].championName}.png" alt="">
-                    </div>
-                    <a target="_target" href="#" class="href-summoner">${participantsInfo[0].riotIdGameName + "#" + participantsInfo[0].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[0].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[0].riotIdTagline}>
-                </div>
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[5].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[5].championName}.png" alt="">5
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[5].riotIdGameName + "#" + participantsInfo[5].riotIdTagline}</a>
-                    <input type="hidden" value = ${(participantsInfo[5].riotIdGameName).replaceAll(" ", "~") + "-" + participantsInfo[5].riotIdTagline}>
-                    </div>
-            </li>
-            <li class="summoner-list">
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[1].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[1].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[1].riotIdGameName + "#" + participantsInfo[1].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[1].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[1].riotIdTagline}>
-                </div>
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[6].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[6].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[6].riotIdGameName + "#" + participantsInfo[6].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[6].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[6].riotIdTagline}>
-                </div>
-            </li>
-            <li class="summoner-list">
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[2].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[2].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[2].riotIdGameName + "#" + participantsInfo[2].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[2].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[2].riotIdTagline}>
-                </div>
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[7].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[7].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[7].riotIdGameName + "#" + participantsInfo[7].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[7].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[7].riotIdTagline}>
-                </div>
-            </li>
-            <li class="summoner-list">
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[3].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[3].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[3].riotIdGameName + "#" + participantsInfo[3].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[3].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[3].riotIdTagline}>
-                </div>
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[8].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[8].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[8].riotIdGameName + "#" + participantsInfo[8].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[8].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[8].riotIdTagline}>
-                </div>
-            </li>
-            <li class="summoner-list">
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[4].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[4].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[4].riotIdGameName + "#" + participantsInfo[4].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[4].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[4].riotIdTagline}>
-                </div>
-                <div class="sulist-fcc">
-                    <div class="sulist-fcc-img">
-                        <img src="${window.BASE_URL}/img/champion/${participantsInfo[9].championName == "FilddleSticks" ? "Filddlesticks" : participantsInfo[9].championName}.png" alt="">
-                    </div>
-                    <a target="_blank" href="#" class="href-summoner">${participantsInfo[9].riotIdGameName + "#" + participantsInfo[9].riotIdTagline}</a>
-                    <input type="hidden" value = ${participantsInfo[9].riotIdGameName.replaceAll(" ", "~") + "-" + participantsInfo[9].riotIdTagline}>
-                </div>
-            </li>
-        </ul>
-        <div class="action-form">
-            <button class="action active-trans">
-                <i class="fa-solid fa-chevron-up"></i>
-            </button>
-        </div>
-        </div>
-        <div class="detail-view-info" style="display : none">
-        <div class="sel-gasang">
-            <button class="sel-gasang-btn">개요</button>
-            <button class="sel-gasang-btn">상세</button>
-        </div>
-        <div class="ingame-info-box">
-            <div>
+            <div class="ingame-info-box">
                 <div>
-                    <div class="max-or-min" >
+                    <div>
+                        <div class="max-or-min" >
                         <div class="mom-box">
                             <span class="mom-box-sub">최고딜량</span>
                             <span class="mom-box-exp">${bestplayers.bestDamge}</span>
@@ -1774,7 +1835,7 @@ class ComponentEvent {
                         </button>
                     </div>
                 </div>
-                <div class="detail-view-info" style="display : none">
+                <div class="detail-view-info" style="display: none">
                             <div class="sel-gasang">
                                 <button class="sel-gasang-btn">개요</button>
                                 <button class="sel-gasang-btn">상세</button>
@@ -2813,7 +2874,7 @@ class ComponentEvent {
                         </button>
                     </div>
                 </div>
-                <div class="detail-view-info" style="display : none">
+                <div class="detail-view-info" style="display: none">
                     <div class="sel-gasang">
                                 <button class="sel-gasang-btn">개요</button>
                                 <button class="sel-gasang-btn">상세</button>

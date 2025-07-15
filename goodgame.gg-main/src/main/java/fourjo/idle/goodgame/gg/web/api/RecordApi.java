@@ -85,7 +85,8 @@ public class RecordApi {
     public ResponseEntity<CMRespDto<?>> searchSummonerInfoByEncryptedPUUID(){
 
         summonerDto =  recordService.searchSummonerInfoByEncryptedPUUID(accountDto.getPuuid());
-
+        List<LeagueEntryDto> leagueEntryDTO = recordService.searchLeagueByEncryptedPUUID(accountDto.getPuuid());
+        List<ChampionMasteryDto> championMasteryList = recordService.searchChampionMasteryByPuuid(accountDto.getPuuid(), null, null, null);
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", summonerDto));
     }

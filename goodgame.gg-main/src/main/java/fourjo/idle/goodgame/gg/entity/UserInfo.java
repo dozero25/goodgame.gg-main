@@ -1,5 +1,6 @@
 package fourjo.idle.goodgame.gg.entity;
 
+import fourjo.idle.goodgame.gg.web.dto.record.champions.ChampionMasteryDto;
 import fourjo.idle.goodgame.gg.web.dto.record.league.LeagueEntryDto;
 import fourjo.idle.goodgame.gg.web.dto.record.SummonerDto;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class UserInfo {
 
     private SummonerDto summonerDto;
     private List<LeagueEntryDto> leagueEntryDto;
+    private List<ChampionMasteryDto> championMasteryDto;
 
     private List<String> matchDtoList;
     private List<MatchRecord> matchRecordsList;

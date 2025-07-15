@@ -169,7 +169,8 @@ body {
     margin-top: 10px;
     margin-bottom: 50px;
 }
-.showMoreButonBox{
+
+.showMoreButonBox {
     width: 100%;
     min-height: 108px;
     margin-top: 10px;
@@ -837,16 +838,44 @@ body {
     width: 30px;
 }
 
-.right-img-box {
-    width: 80%;
-
-    margin-top: 30px;
+.recode-renewal-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.img-one-box {
+.recode-renewal-btn {
+    background-color: #f57c00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.recode-renewal-btn:hover {
+    background-color: #a34900;
+}
+
+.right-img-box {
+    width: 100%;
+    margin-top: 30px;
+
+}
+
+.img-one-box a {
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    margin-left: 30px;
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
