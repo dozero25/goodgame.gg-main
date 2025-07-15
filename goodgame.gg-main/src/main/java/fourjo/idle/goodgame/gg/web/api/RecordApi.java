@@ -114,7 +114,9 @@ public class RecordApi {
         } else {
             System.out.println("No existing match records found, skipping update.");
         }
-        
+
+        System.out.println(matchesList);
+
         return ResponseEntity.ok()
                 .body(new CMRespDto<>(HttpStatus.OK.value(), "Successfully", matchesList));
     }

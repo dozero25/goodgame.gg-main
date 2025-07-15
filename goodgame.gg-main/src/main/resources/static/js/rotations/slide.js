@@ -112,7 +112,9 @@ class RotationsService {
             let championInfoList = responseData[i];
             let championKey = Object.keys(championInfoList)[0]; //리스트 i번째 맵에 0번 키 (리스트 개당 오브젝트하나)
             let championInfo = championInfoList[championKey];
-            
+
+            console.log(championInfo);
+
             championInfo.spells.forEach((spell, j) => {
                 //툴팁 정리
                 spell.tooltip = spell.tooltip.replace(/{{.*?}}/g, '[?]');
