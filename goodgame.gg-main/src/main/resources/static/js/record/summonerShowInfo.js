@@ -40,9 +40,8 @@ class SummonerService {
     }
 
     async summonerShowInfo() {
-        const accountData = SummonerApi.getInstance().searchAccountInfoPuuid();
         const summonerData = await RecordApi.getInstance().searchSummonerInfoByEncryptedPUUID();
-        const userData = await UserInfoDataApi.getInstance().searchUserByPuuid(accountData.puuid, start, size);
+        const userData = await UserInfoDataApi.getInstance().searchUserByPuuid(summonerData.puuid, start, size);
 
         const profilLeft = document.querySelector(".profil-left");
         const profilRight = document.querySelector(".profil-right");
